@@ -47,11 +47,11 @@ Follow these steps to test your blockchain knowledge:
    - Utilize the contract address found in `contract-info/contract-address.txt` to interact with the pre-deployed contract.
    - Consult the step-by-step instructions in `guides/remix-instructions.md` for guidance.
 
-4. **Submit Your Answer:** ✅
-   - **Compute the cryptographic hash** of your answer as specified in the respective quiz file. 🔑
-   - In Remix, call the contract's `checkQuizAnswer` function.
-   - Pass the **quiz ID** and the **hash of your answer** as arguments.
-   - If the contract returns `true`, **Congratulations!** 🎉 You have successfully completed the quiz.
+4. **Submit Your Answer: ✅**  
+- Check the quiz instructions to see what input is needed to complete it.  
+- In Remix, call the contract’s `checkQuizAnswer` function.  
+- Pass the quiz ID as the first argument and the required answer as the second argument (e.g., a hash if specified).  
+- If the contract returns `true`, Congratulations! 🎉 You have successfully completed the quiz.
 
 ## ➕ Adding New Quizzes (For Administrators/Contributors)
 
