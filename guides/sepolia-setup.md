@@ -76,9 +76,6 @@ These are the most common and easiest ways to get Sepolia ETH.
 
 ## ☁️ Exploring Google Cloud (Less Direct)
 
-Google Cloud doesn't directly provide Sepolia ETH faucets. However, you can use it to run infrastructure that helps you interact with the Sepolia network or potentially run your own private testnet (advanced).
-
-- **Google Cloud Marketplace:** You might find pre-configured blockchain development environments that could include tools for interacting with testnets. Search the marketplace for relevant terms.
-- **Virtual Machines:** You could set up a virtual machine on Google Cloud and install Ethereum development tools (like `geth` or `anvil`) to interact with Sepolia or run a local testnet. This is more technical and requires blockchain development knowledge.
+Google Cloud supports a Sepolia Faucet. Simply visit this address (https://cloud.google.com/application/web3/faucet/ethereum/sepolia) and add your wallet address.
 
 **For most users looking to get Sepolia ETH for testing, using the Web2 cloud-based faucets (like Alchemy, Infura, and Paradigm) is the easiest and most direct approach.**
