@@ -40,7 +40,7 @@ Follow these steps to test your blockchain knowledge:
 
 2. **Connect to Sepolia:** 🔗
    - Use **Metamask** or another compatible wallet to connect to the **Sepolia testnet**.
-   - Ensure you have some **test ETH** to pay for transaction fees (instructions on obtaining test ETH can be found in `guides/sepolia-setup.md`). 💰
+   - Ensure you have some **test ETH** to pay for transaction fees (instructions on obtaining test ETH can be found in `guides/info-for-sepolia-faucets.md`). 💰
 
 3. **Open the Contract in Remix:** 💻
    - Go to the **Remix IDE**: [https://remix.ethereum.org](https://remix.ethereum.org).
