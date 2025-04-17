@@ -1,67 +1,84 @@
-# 🏆 Proof of Escape 🗝️
+# 🦊 Adding Sepolia Network to MetaMask
 
-Welcome to the **Proof of Escape** repository! This project is designed to help students learn blockchain concepts through **interactive quizzes and challenges**.
+Before you can get Sepolia ETH, you need to ensure the Sepolia test network is added to your MetaMask wallet. Here's how:
 
-## 🚀 Overview
+**Method 1: Automatic Addition via a Website (Recommended for Beginners)**
 
-**Proof of Escape** is a **blockchain-based educational game** where participants:
+Many Sepolia ETH faucet websites offer a convenient way to add the network automatically.
 
-- Answer quiz questions 🤔
-- Compute cryptographic hashes 🔑
-- Submit their answers **on-chain** 🔗
+1. **Visit a Sepolia Faucet:** Go to a reputable Sepolia faucet website (e.g., [Alchemy Sepolia Faucet](https://sepoliafaucet.com/), [Infura Sepolia Faucet](https://faucet.sepolia.infura.io/)).
+2. **Connect Your Wallet:** The faucet will likely have a button to "Connect Wallet" or similar. Click it and follow the prompts to connect your MetaMask.
+3. **Look for "Add Sepolia Network":** Once connected, the faucet might display a prompt asking if you want to add the Sepolia network to MetaMask. Approve this request within your MetaMask extension.
 
-The smart contract is **pre-deployed on the Sepolia testnet**, allowing students to interact with it directly without the complexities of deployment.
+**Method 2: Manual Addition via MetaMask Settings**
 
-## 📂 Repository Structure
+If the automatic method doesn't work or you prefer manual configuration:
 
-Here's a breakdown of the project's organization:
+1. **Open MetaMask:** Click the MetaMask extension icon in your browser.
+2. **Open the Network Menu:** Click the network dropdown menu at the top of the MetaMask window (it likely displays "Ethereum Mainnet" by default).
+3. **Click "Add Network":** Scroll down the network list and click the "Add Network" button.
+4. **Select "Add a network manually":** On the "Add a network" page, click the "Add a network manually" option.
+5. **Enter Sepolia Network Details:** You'll need to fill in the following details:
+   - **Network Name:** `Sepolia`
+   - **New RPC URL:** `https://rpc.sepolia.org`
+   - **Chain ID:** `11155111`
+   - **Currency Symbol (Optional):** `SEP`
+   - **Block Explorer URL (Optional):** `https://sepolia.etherscan.io`
+6. **Save:** After entering all the details, click the "Save" button.
 
-- **`questions/`**: ❓ Quiz questions and instructions. Each quiz resides in its own Markdown file (e.g., `quiz1.md`, `quiz2.md`).
-- **`guides/`**: 📚 Step-by-step guides for:
-    - Connecting to the Sepolia testnet 🌐
-    - Using the Remix IDE 🛠️
-    - Submitting your answers ✍️
-- **`contract-info/`**: 📜 Important contract details:
-    - `contract-address.txt`: The **deployed contract address** on the Sepolia testnet. 📍
-    - `abi.json`: The **Application Binary Interface (ABI)** for interacting with the contract in Remix or other tools. ⚙️
-    - `etherscan-link.md`: A direct link to the **verified contract on the Sepolia block explorer**. <0xF0><0x9F><0xAA><0x9E>🔎
-- **`README.md`**: 📖 This file you're currently reading, providing a project overview and participation instructions.
-- **`LICENSE`**: 📄 The **license** under which this content is distributed.
+**Verification:**
 
-## 🧑‍🎓 How to Participate
-
-Follow these steps to test your blockchain knowledge:
-
-1. **Get the Quiz Questions:** 🧐
-   - Navigate to the `questions/` folder.
-   - Select the quiz file you wish to attempt.
-   - Carefully read and understand the instructions within the quiz file.
-
-2. **Connect to Sepolia:** 🔗
-   - Use **Metamask** or another compatible wallet to connect to the **Sepolia testnet**.
-   - Ensure you have some **test ETH** to pay for transaction fees (instructions on obtaining test ETH can be found in `guides/sepolia-setup.md`). 💰
-
-3. **Open the Contract in Remix:** 💻
-   - Go to the **Remix IDE**: [https://remix.ethereum.org](https://remix.ethereum.org).
-   - Utilize the contract address found in `contract-info/contract-address.txt` to interact with the pre-deployed contract.
-   - Consult the step-by-step instructions in `guides/remix-instructions.md` for guidance.
-
-4. **Submit Your Answer:** ✅
-   - **Compute the cryptographic hash** of your answer as specified in the respective quiz file. 🔑
-   - In Remix, call the contract's `checkQuizAnswer` function.
-   - Pass the **quiz ID** and the **hash of your answer** as arguments.
-   - If the contract returns `true`, **Congratulations!** 🎉 You have successfully completed the quiz.
-
-## ➕ Adding New Quizzes (For Administrators/Contributors)
-
-If you have the necessary permissions, you can contribute new learning material:
-
-- Create a new Markdown file within the `questions/` directory.
-- Formulate a new quiz question and include any relevant hints for students.
-- Ensure the corresponding correct answer hash is set within the smart contract.
-
-## 📜 License
-
-This project is licensed under the **MIT License**. For complete details, please refer to the `LICENSE` file.
+- Once added, you should see "Sepolia" in your network dropdown menu at the top of your MetaMask.
+- You can now switch to the Sepolia network to receive your test ETH.
 
 ---
+
+# 💧 Getting Sepolia Testnet ETH: A Quick Guide
+
+Sepolia ETH is used for interacting with smart contracts on the Sepolia test network. Since it has no real-world value, you'll need to obtain it from faucets. Here's how:
+
+## 🌐 Using Web2 Cloud Faucets
+
+These are the most common and easiest ways to get Sepolia ETH.
+
+### 1. Alchemy Faucet
+
+- **Access:** Go to the [Alchemy Sepolia Faucet](https://sepoliafaucet.com/).
+- **Method:**
+    - You'll typically need to connect using your wallet address (e.g., from MetaMask).
+    - Some faucets might require you to create an account or log in.
+    - Follow the on-screen instructions, which might involve clicking a button or completing a CAPTCHA.
+- **Amount:** The amount of ETH received varies but is usually sufficient for testing.
+- **Frequency:** Faucets often have limits on how frequently you can request ETH (e.g., once every 24 hours).
+
+### 2. Infura Faucet
+
+- **Access:** Visit the [Infura Sepolia Faucet](https://faucet.sepolia.infura.io/).
+- **Method:**
+    - You'll likely need to connect your wallet address.
+    - Follow the prompts to request ETH.
+- **Amount & Frequency:** Similar to Alchemy, the amount and frequency are usually limited.
+
+### 3. Paradigm Faucet
+
+- **Access:** Check out the [Paradigm Faucet](https://faucet.paradigm.xyz/).
+- **Method:**
+    - This faucet might require you to tweet a message with your wallet address to verify you're a real user.
+    - After tweeting, you'll usually paste the tweet URL into the faucet to receive ETH.
+- **Amount & Frequency:** Varies, so check the faucet's instructions.
+
+### General Tips for Web2 Faucets:
+
+- **Wallet Required:** You'll need a Web3 wallet like MetaMask to receive the test ETH. Ensure your wallet is connected to the Sepolia test network.
+- **Be Patient:** Transactions on the testnet might take a few moments to confirm.
+- **Rate Limiting:** Be aware of the faucet's rate limits to avoid being blocked.
+- **Check Multiple Faucets:** If one faucet is down or rate-limited, try another.
+
+## ☁️ Exploring Google Cloud (Less Direct)
+
+Google Cloud doesn't directly provide Sepolia ETH faucets. However, you can use it to run infrastructure that helps you interact with the Sepolia network or potentially run your own private testnet (advanced).
+
+- **Google Cloud Marketplace:** You might find pre-configured blockchain development environments that could include tools for interacting with testnets. Search the marketplace for relevant terms.
+- **Virtual Machines:** You could set up a virtual machine on Google Cloud and install Ethereum development tools (like `geth` or `anvil`) to interact with Sepolia or run a local testnet. This is more technical and requires blockchain development knowledge.
+
+**For most users looking to get Sepolia ETH for testing, using the Web2 cloud-based faucets (like Alchemy, Infura, and Paradigm) is the easiest and most direct approach.**
