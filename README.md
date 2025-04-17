@@ -19,6 +19,7 @@ Here's a breakdown of the project's organization:
 - **`questions/`**: ❓ Quiz questions and instructions. Each quiz resides in its own Markdown file (e.g., `quiz1.md`, `quiz2.md`).
 - **`guides/`**: 📚 Step-by-step guides for:
     - Connecting to the Sepolia testnet 🌐
+    - Getting Sepolia ETH from faucets
     - Using the Remix IDE 🛠️
     - Submitting your answers ✍️
 - **`contract-info/`**: 📜 Important contract details:
