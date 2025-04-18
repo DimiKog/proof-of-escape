@@ -26,13 +26,13 @@ Or go directly to the first transaction (coinbase transaction):
 
 ### 🔍 How to Extract the Message
 
-1. Scroll to the **"Input Scripts"** or **"Coinbase"** section of the transaction.
-2. You'll see a long hexadecimal string like this: 04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e207468652…
+1. Scroll to the **"JSON** section of the representation of the transaction.
+2. You'll see a long hexadecimal string in the sigscript section of the transaction (a string like this: 04ffff001d0104455468652054696d65732030332f4a616e2f32303039204368616e63656c6c6f72206f6e207468652…)
 3. Decode this hex string to ASCII using one of the following:
 - Online: [https://www.rapidtables.com/convert/number/hex-to-ascii.html](https://www.rapidtables.com/convert/number/hex-to-ascii.html)
 - Terminal (Linux/macOS):
   ```bash
-  echo "546865..." | xxd -r -p
+  echo "04ffff001..." | xxd -r -p
   ```
 4. Ιdentify the **political title** in the sentence.
   - It's not "prime".
