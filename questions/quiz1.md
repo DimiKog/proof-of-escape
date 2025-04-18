@@ -1,11 +1,31 @@
-# Quiz 1: Blockchain Basics
+## 🔍 Question 1 – Blockchain Fundamentals
 
-**Question:** What is the technology you are learning in this course?
+Blockchain technology is the foundation of many decentralized systems. It enables distributed ledgers, secure transactions, and transparent data sharing.
 
-**Hint:** Think about the core concept that powers distributed ledgers.
+**Question:**  
+What is the core technology you are learning in this course?
 
-**What to do:**
-1. Find the correct answer.
-2. Use a hashing tool to calculate the keccak256 hash of the answer. Make sure the hash is formatted with a `0x` prefix.
-3. Call the `checkQuizAnswer` function in the contract with the quiz ID and your hash.
-4. If your answer is correct, you will see a confirmation message in the console.
+Your goal is to:
+- Identify the correct term.
+- Format it properly.
+- Hash it using `keccak256` (as used in Solidity).
+- Submit the resulting hash to the smart contract.
+
+---
+
+### 🌐 Helpful Hint:
+
+The answer refers to the core concept that powers distributed ledgers.
+
+---
+
+### 🛠️ Instructions:
+
+1. Determine the correct term for the core technology used in this course.
+2. Use the term in **all lowercase**. No punctuation. No extra characters.
+3. Compute the `keccak256` hash of the term (as a UTF-8 string).
+4. Submit the resulting hash to the smart contract.
+
+> ⚠️ Note: Do NOT include any whitespace or quotes in the string before hashing.
+
+---
