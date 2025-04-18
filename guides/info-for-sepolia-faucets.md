@@ -18,7 +18,7 @@ These are the most common and easiest ways to get Sepolia ETH.
 
 ### 2. Infura Faucet
 
-- **Access:** Visit the [Infura Sepolia Faucet]((https://www.infura.io/zh/faucet/sepolia)).
+- **Access:** Visit the [Infura Sepolia Faucet](https://www.infura.io/zh/faucet/sepolia).
 - **Method:**
     - You'll likely need to connect your wallet address.
     - Follow the prompts to request ETH.
