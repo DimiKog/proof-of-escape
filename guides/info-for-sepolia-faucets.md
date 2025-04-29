@@ -24,14 +24,6 @@ These are the most common and easiest ways to get Sepolia ETH.
     - Follow the prompts to request ETH.
 - **Amount & Frequency:** Similar to Alchemy, the amount and frequency are usually limited.
 
-### 3. Paradigm Faucet
-
-- **Access:** Check out the [Paradigm Faucet](https://faucet.paradigm.xyz/).
-- **Method:**
-    - This faucet might require you to tweet a message with your wallet address to verify you're a real user.
-    - After tweeting, you'll usually paste the tweet URL into the faucet to receive ETH.
-- **Amount & Frequency:** Varies, so check the faucet's instructions.
-
 ### General Tips for Web2 Faucets:
 
 - **Wallet Required:** You'll need a Web3 wallet like MetaMask to receive the test ETH. Ensure your wallet is connected to the Sepolia test network.
