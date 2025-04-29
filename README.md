@@ -53,13 +53,6 @@ Follow these steps to test your blockchain knowledge:
 - Pass the quiz ID as the first argument and the required answer as the second argument (e.g., a hash if specified).  
 - If the contract returns `true`, Congratulations! 🎉 You have successfully completed the quiz.
 
-## ➕ Adding New Quizzes (For Administrators/Contributors)
-
-If you have the necessary permissions, you can contribute new learning material:
-
-- Create a new Markdown file within the `questions/` directory.
-- Formulate a new quiz question and include any relevant hints for students.
-- Ensure the corresponding correct answer hash is set within the smart contract.
 
 ## 📜 License
 
