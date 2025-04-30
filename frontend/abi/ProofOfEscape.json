@@ -2,83 +2,13 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "quizId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "bytes32",
-                "name": "answerHash",
-                "type": "bytes32"
-            }
-        ],
-        "name": "checkQuizAnswer",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "success",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "internalType": "address",
-                "name": "rewardTokenAddress",
-                "type": "address"
-            },
-            {
-                "internalType": "address",
-                "name": "initialOwner",
+                "name": "tokenAddress",
                 "type": "address"
             }
         ],
         "stateMutability": "nonpayable",
         "type": "constructor"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-            }
-        ],
-        "name": "OwnableInvalidOwner",
-        "type": "error"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "account",
-                "type": "address"
-            }
-        ],
-        "name": "OwnableUnauthorizedAccount",
-        "type": "error"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "previousOwner",
-                "type": "address"
-            },
-            {
-                "indexed": true,
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
-            }
-        ],
-        "name": "OwnershipTransferred",
-        "type": "event"
     },
     {
         "anonymous": false,
@@ -125,20 +55,6 @@
         "type": "event"
     },
     {
-        "inputs": [],
-        "name": "register",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "renounceOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
         "inputs": [
             {
                 "internalType": "uint256",
@@ -147,25 +63,18 @@
             },
             {
                 "internalType": "bytes32",
-                "name": "correctHash",
+                "name": "answerHash",
                 "type": "bytes32"
             }
         ],
-        "name": "setQuizHash",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
+        "name": "checkQuizAnswer",
+        "outputs": [
             {
-                "internalType": "address",
-                "name": "newOwner",
-                "type": "address"
+                "internalType": "bool",
+                "name": "success",
+                "type": "bool"
             }
         ],
-        "name": "transferOwnership",
-        "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
@@ -194,6 +103,25 @@
         "type": "function"
     },
     {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "quizId",
+                "type": "uint256"
+            }
+        ],
+        "name": "getQuizHash",
+        "outputs": [
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [],
         "name": "owner",
         "outputs": [
@@ -204,6 +132,32 @@
             }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "quizCompletions",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "register",
+        "outputs": [],
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -236,6 +190,24 @@
             }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "quizId",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "correctHash",
+                "type": "bytes32"
+            }
+        ],
+        "name": "setQuizHash",
+        "outputs": [],
+        "stateMutability": "nonpayable",
         "type": "function"
     }
 ]
