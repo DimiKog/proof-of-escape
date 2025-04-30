@@ -1,61 +1,108 @@
 # 🏆 Proof of Escape 🗝️
 
-Welcome to the **Proof of Escape** repository! This project is designed to help students learn blockchain concepts through **interactive quizzes and challenges**.
+Welcome to the **Proof of Escape** repository! This project is designed to help students learn blockchain concepts through **interactive, on-chain quizzes and rewards**.
+
+---
 
 ## 🚀 Overview
 
-**Proof of Escape** is a **blockchain-based educational game** where participants:
+**Proof of Escape** is a blockchain-based educational game where participants:
 
 - Answer quiz questions 🤔
 - Compute cryptographic hashes 🔑
-- Submit their answers **on-chain** 🔗
+- Submit their answers on-chain 🔗
+- Earn **ESCAPE tokens** as proof of completion 🎁
 
-The smart contract is **pre-deployed on the Sepolia testnet**, allowing students to interact with it directly without the complexities of deployment.
+The smart contract is **pre-deployed on the Sepolia testnet**, so you don't need to deploy anything yourself. Just connect your wallet and start playing.
+
+---
 
 ## 📂 Repository Structure
 
-Here's a breakdown of the project's organization:
+Here's how the project is organized:
 
-- **`questions/`**: ❓ Quiz questions and instructions. Each quiz resides in its own Markdown file (e.g., `quiz1.md`, `quiz2.md`).
-- **`guides/`**: 📚 Step-by-step guides for:
-    - Connecting to the Sepolia testnet 🌐
-    - Getting Sepolia ETH from faucets  💧
-    - Using the Remix IDE 🛠️
-    - Submitting your answers ✍️
-- **`contract-info/`**: 📜 Important contract details:
-    - `contract-address.txt`: The **deployed contract address** on the Sepolia testnet. 📍
-    - `abi.json`: The **Application Binary Interface (ABI)** for interacting with the contract in Remix or other tools. ⚙️
-    - `etherscan-link.md`: A direct link to the **verified contract on the Sepolia block explorer**. <0xF0><0x9F><0xAA><0x9E>🔎
-- **`README.md`**: 📖 This file you're currently reading, providing a project overview and participation instructions.
-- **`LICENSE`**: 📄 The **license** under which this content is distributed.
+- **`questions/`**: ❓ Quiz instructions and questions. Each quiz lives in its own Markdown file (e.g., `quiz1.md`, `quiz2.md`).
+- **`guides/`**: 📚 Helpful resources including:
+  - How to connect to Sepolia 🌐
+  - How to get Sepolia ETH from faucets 💧
+  - Using Remix to interact with smart contracts 🛠️
+- **`contract-info/`**: 📜 Deployment info:
+  - `contract-address.txt`: The deployed **ProofOfEscape** contract address on Sepolia
+  - `abi.json`: The contract's ABI for frontend or Remix use
+  - `etherscan-link.md`: Direct link to the verified smart contract on Sepolia Etherscan 🔎
+- **`frontend/`**: 🖥️ A ready-to-use interface for submitting answers and testing hashes
+- **`README.md`**: 📖 This file, containing general project information
+- **`LICENSE`**: 📄 MIT License for content usage
+
+---
 
 ## 🧑‍🎓 How to Participate
 
 Follow these steps to test your blockchain knowledge:
 
-1. **Get the Quiz Questions:** 🧐
-   - Navigate to the `questions/` folder.
-   - Select the quiz file you wish to attempt.
-   - Carefully read and understand the instructions within the quiz file.
+### 1. 📄 Get the Quiz Instructions
 
-2. **Connect to Sepolia:** 🔗
-   - Use **Metamask** or another compatible wallet to connect to the **Sepolia testnet**.
-   - Ensure you have some **test ETH** to pay for transaction fees (instructions on obtaining test ETH can be found in `guides/info-for-sepolia-faucets.md`). 💰
+- Navigate to the `questions/` folder
+- Pick a quiz file (e.g., `quiz1.md`)
+- Read the question and formatting rules carefully
 
-3. **Open the Contract in Remix:** 💻
-   - Go to the **Remix IDE**: [https://remix.ethereum.org](https://remix.ethereum.org).
-   - Utilize the contract address found in `contract-info/contract-address.txt` to interact with the pre-deployed contract.
-   - Consult the step-by-step instructions in `guides/remix-instructions.md` for guidance.
+### 2. 🌐 Connect to Sepolia
 
-4. **Submit Your Answer: ✅**  
-- Check the quiz instructions to see what input is needed to complete it.  
-- In Remix, call the contract’s `checkQuizAnswer` function.  
-- Pass the quiz ID as the first argument and the required answer as the second argument (e.g., a hash if specified).  
-- If the contract returns `true`, Congratulations! 🎉 You have successfully completed the quiz.
+- Open MetaMask and switch to the **Sepolia testnet**
+- Get test ETH using one of the faucet links in `guides/info-for-sepolia-faucets.md`
 
+### 3. 💻 Interact with the Contract
+
+You can use **Remix** or the **frontend web app**:
+
+#### ✅ Remix Option:
+
+- Open [Remix IDE](https://remix.ethereum.org)
+- Go to the "Deploy & Run" tab and choose "Injected Provider - MetaMask"
+- Paste the contract address from `contract-info/contract-address.txt`
+- Click "At Address" to load the deployed contract
+
+#### ✅ Frontend Option:
+
+- Run the app locally (see `frontend/README.md`)
+- Connect your wallet
+- Register and submit your answers through the interface
+
+---
+
+## 📝 Submit Your Answer
+
+1. **Check the quiz file** to see what format is expected (e.g., hash).
+2. If required, compute the answer’s keccak256 hash (you can use the hash tool on the site).
+3. Call the `checkQuizAnswer(quizId, answerHash)` function.
+4. If your answer is correct:
+   - ✅ You'll see a success message
+   - 🎁 You'll automatically receive **10 ESCAPE tokens**
+   - 🧾 Your completion will be stored on-chain
+
+> ⚠️ Each quiz can only be completed **once per wallet**. Further submissions will be rejected.
+
+---
+
+## 🎁 Token Rewards
+
+Each correct answer earns you:
+- **10 ESCAPE tokens**
+- Distributed automatically from the contract to your wallet
+
+You can view your balance directly in MetaMask or by checking the ESCAPE token address.
+
+---
+
+## 📊 Quiz Completion Tracking
+
+The contract tracks how many users have completed each quiz.
+
+---
 
 ## 📜 License
 
-This project is licensed under the **MIT License**. For complete details, please refer to the `LICENSE` file.
+This project is licensed under the MIT License.
+See the LICENSE file for details.
 
 ---

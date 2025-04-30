@@ -96,7 +96,8 @@ You can submit your answer using either:
 
 If your answer is correct:
 - You will see a success message or event
-- You will be awarded an Escape Token 🎉
+- You will be awarded 10 ESCAPE Tokens 🎉
+- Your quiz completion will be recorded
 
 If not:
 - You will receive an error or failure message

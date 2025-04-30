@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proof of Escape</title>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
+</head>
+
+<body>
+    <h1>🔐 Proof of Escape</h1>
+
+    <!-- Wallet Connection (top-left, remains as-is) -->
+    <p><strong>Connected Wallet:</strong> <span id="walletAddress">Not connected</span></p>
+    <button id="connectButton">Connect Wallet</button>
+    <button id="registerButton">Register</button>
+
+    <hr>
+
+    <!-- Centered Quiz & Hash Tool -->
+    <div style="display: flex; flex-direction: column; align-items: center; margin-top: 40px;">
+
+        <!-- Quiz Form -->
+        <div style="max-width: 500px; text-align: center;">
+            <h2>📨 Submit a Quiz Answer</h2>
+            <label for="quizId">Quiz ID:</label><br />
+            <input type="number" id="quizId" /><br /><br />
+
+            <label for="answer">Your Answer:</label><br />
+            <input type="text" id="answer" /><br /><br />
+
+            <button id="submitAnswer">Submit Answer</button>
+            <p id="result"></p>
+        </div>
+
+        <hr style="width: 80%; margin: 40px 0;" />
+
+        <!-- Hash Tool -->
+        <div style="max-width: 500px; text-align: center;">
+            <h2>🧪 Try keccak256 Hash Yourself</h2>
+            <p>Type your answer below exactly as you would submit it (lowercase, no spaces or punctuation).</p>
+            <input id="hashTestInput" type="text" placeholder="Type your answer..." style="width: 300px;" />
+            <button onclick="generateHash()">Generate Hash</button>
+            <p><strong>Hash Output:</strong></p>
+            <pre id="hashResult" style="font-family: monospace; color: blue;"></pre>
+        </div>
+
+    </div>
+</body>
+
+</html>

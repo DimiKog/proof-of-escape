@@ -1,1 +1,4 @@
-This the address of the Smart Contract at Sepolia Network
+This the address of the Smart Contract on Sepolia Network
+
+- Token address: 0xcec3f1b99ec152cc3ddb920ceea15fcc2213c12b
+- ProofOfEscape Smart Contract Address: 0x8b08da6119a27ffeacb0e0c65493705a4b113367
