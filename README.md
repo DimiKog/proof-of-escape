@@ -42,10 +42,10 @@ Then visit http://localhost:8000 in your browser.
 ⸻ ----------------------------------------------------
 
 ## 3. 🌐 Connect Your Wallet
-	•	Open MetaMask and switch to the Sepolia Testnet
-	•	Get free test ETH from a faucet (see guides/info-for-sepolia-faucets.md)
-	•	On the page, click “Connect Wallet”
-	•	Once connected, click “Register” to begin
+	- Open MetaMask and switch to the Sepolia Testnet
+	- Get free test ETH from a faucet (see guides/info-for-sepolia-faucets.md)
+	- On the page, click “Connect Wallet”
+	- Once connected, click “Register” to begin
 
 ⸻ ----------------------------------------------------
 
