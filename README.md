@@ -54,9 +54,9 @@ You can:
 
 ## 4. 📄 Read the Quiz Instructions
 
-	•	Go to the questions/ folder
-	•	Open any quiz file (e.g., quiz1.md)
-	•	Follow the instructions to find the correct answer format
+- Navigate to the `questions/` folder in the repository
+- Open any quiz file (e.g., `quiz1.md`)
+- Read the instructions carefully to understand what format your answer should be in (e.g., raw string or keccak256 hash)
 
 ⸻ 
 
@@ -82,7 +82,7 @@ Use the on-page form:
    - 🎁 You’ll automatically receive **10 ESCAPE tokens**
    - 📌 Your completion will be recorded on-chain
 
-⚠️ You can only complete each quiz once per wallet.
+> ⚠️ **You can only complete each quiz once per wallet.**
 
 ⸻ 
 
