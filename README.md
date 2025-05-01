@@ -88,6 +88,7 @@ Use the on-page form:
 ## 💰 Rewards
 
 Each time you successfully complete a quiz:
+
 	•	You receive 10 ESCAPE tokens minted directly to your wallet
 	•	You can view your balance in MetaMask after adding the token address
 
@@ -101,6 +102,9 @@ The smart contract tracks how many users have solved each quiz.
 ⸻ 
 
 ## 📂 Repository Structure
+
+The repository's structure is as follows:
+
 	•	questions/ – Markdown files with quiz instructions
 	•	guides/ – How to connect to Sepolia, get test ETH, and use Remix
 	•	frontend/ – The local HTML/JS-based interface
@@ -118,4 +122,4 @@ See the LICENSE file for details.
 
 ⸻
 
-## Happy learning and escaping! 🔐
+Happy learning and escaping! 🔐
