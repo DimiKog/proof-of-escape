@@ -62,9 +62,10 @@ You can:
 
 ## 5. 🧪 Try the Hash Tool (Optional)
 
-If the quiz requires a keccak256 hash, you can:
-	•	Use the built-in hash tester at the bottom of the homepage
-	•	Or generate the hash in Remix, or using a Solidity-based tool
+If the quiz requires a `keccak256` hash, you can:
+
+- 🧪 Use the built-in hash tester at the bottom of the homepage
+- 💻 Or generate the hash using Remix or any Solidity-based hashing tool
 
 ⸻ ----------------------------------------------------
 
@@ -81,7 +82,7 @@ Use the on-page form:
    - 🎁 You’ll automatically receive **10 ESCAPE tokens**
    - 📌 Your completion will be recorded on-chain
 
-## ⚠️ You can only complete each quiz once per wallet.
+⚠️ You can only complete each quiz once per wallet.
 
 ⸻ 
 
