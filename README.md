@@ -13,96 +13,102 @@ Welcome to the **Proof of Escape** repository! This project is designed to help 
 - Submit their answers on-chain 🔗
 - Earn **ESCAPE tokens** as proof of completion 🎁
 
-The smart contract is **pre-deployed on the Sepolia testnet**, so you don't need to deploy anything yourself. Just connect your wallet and start playing.
+You do **not** need to deploy any smart contracts yourself — the game is pre-deployed on the **Sepolia testnet**, and ready to use!
 
 ---
 
-## 📂 Repository Structure
+## 🧰 Getting Started
 
-Here's how the project is organized:
+Follow these steps to play the game locally:
 
-- **`questions/`**: ❓ Quiz instructions and questions. Each quiz lives in its own Markdown file (e.g., `quiz1.md`, `quiz2.md`).
-- **`guides/`**: 📚 Helpful resources including:
-  - How to connect to Sepolia 🌐
-  - How to get Sepolia ETH from faucets 💧
-  - Using Remix to interact with smart contracts 🛠️
-- **`contract-info/`**: 📜 Deployment info:
-  - `contract-address.txt`: The deployed **ProofOfEscape** contract address on Sepolia
-  - `abi.json`: The contract's ABI for frontend or Remix use
-  - `etherscan-link.md`: Direct link to the verified smart contract on Sepolia Etherscan 🔎
-- **`frontend/`**: 🖥️ A ready-to-use interface for submitting answers and testing hashes
-- **`README.md`**: 📖 This file, containing general project information
-- **`LICENSE`**: 📄 MIT License for content usage
+### 1. 📦 Clone the Repository
 
----
+```bash
+git clone https://github.com/DimiKog/proof-of-escape.git
+cd proof-of-escape
+```
 
-## 🧑‍🎓 How to Participate
+⸻ ----------------------------------------------------
 
-Follow these steps to test your blockchain knowledge:
+## 2. 🖥️ Launch the Frontend Locally
 
-### 1. 📄 Get the Quiz Instructions
+From the frontend/ folder, start a local web server:
+```bash 
+cd frontend
+python3 -m http.server 8000
+```
+Then visit http://localhost:8000 in your browser.
 
-- Navigate to the `questions/` folder
-- Pick a quiz file (e.g., `quiz1.md`)
-- Read the question and formatting rules carefully
+⸻ ----------------------------------------------------
 
-### 2. 🌐 Connect to Sepolia
+## 3. 🌐 Connect Your Wallet
+	•	Open MetaMask and switch to the Sepolia Testnet
+	•	Get free test ETH from a faucet (see guides/info-for-sepolia-faucets.md)
+	•	On the page, click “Connect Wallet”
+	•	Once connected, click “Register” to begin
 
-- Open MetaMask and switch to the **Sepolia testnet**
-- Get test ETH using one of the faucet links in `guides/info-for-sepolia-faucets.md`
+⸻ ----------------------------------------------------
 
-### 3. 💻 Interact with the Contract
+## 4. 📄 Read the Quiz Instructions
+	•	Go to the questions/ folder
+	•	Open any quiz file (e.g., quiz1.md)
+	•	Follow the instructions to find the correct answer format
 
-You can use **Remix** or the **frontend web app**:
+⸻ ----------------------------------------------------
 
-#### ✅ Remix Option:
+## 5. 🧪 Try the Hash Tool (Optional)
 
-- Open [Remix IDE](https://remix.ethereum.org)
-- Go to the "Deploy & Run" tab and choose "Injected Provider - MetaMask"
-- Paste the contract address from `contract-info/contract-address.txt`
-- Click "At Address" to load the deployed contract
+If the quiz requires a keccak256 hash, you can:
+	•	Use the built-in hash tester at the bottom of the homepage
+	•	Or generate the hash in Remix, or using a Solidity-based tool
 
-#### ✅ Frontend Option:
+⸻ ----------------------------------------------------
 
-- Run the app locally (see `frontend/README.md`)
-- Connect your wallet
-- Register and submit your answers through the interface
+## 6. ✅ Submit Your Answer
 
----
+Use the on-page form:
+	1.	Enter the quiz ID and your answer
+	2.	The app will compute the hash (if required) and call the contract’s checkQuizAnswer(...) function
+	3.	If your answer is correct:
+	•	✅ You’ll get a success message
+	•	🎁 You’ll automatically receive 10 ESCAPE tokens
+	•	📌 Your completion will be recorded on-chain
 
-## 📝 Submit Your Answer
+## ⚠️ You can only complete each quiz once per wallet.
 
-1. **Check the quiz file** to see what format is expected (e.g., hash).
-2. If required, compute the answer’s keccak256 hash (you can use the hash tool on the site).
-3. Call the `checkQuizAnswer(quizId, answerHash)` function.
-4. If your answer is correct:
-   - ✅ You'll see a success message
-   - 🎁 You'll automatically receive **10 ESCAPE tokens**
-   - 🧾 Your completion will be stored on-chain
+⸻ ----------------------------------------------------
 
-> ⚠️ Each quiz can only be completed **once per wallet**. Further submissions will be rejected.
+## 💰 Rewards
 
----
+Each time you successfully complete a quiz:
+	•	You receive 10 ESCAPE tokens minted directly to your wallet
+	•	You can view your balance in MetaMask after adding the token address
 
-## 🎁 Token Rewards
-
-Each correct answer earns you:
-- **10 ESCAPE tokens**
-- Distributed automatically from the contract to your wallet
-
-You can view your balance directly in MetaMask or by checking the ESCAPE token address.
-
----
+⸻ ----------------------------------------------------
 
 ## 📊 Quiz Completion Tracking
 
-The contract tracks how many users have completed each quiz.
+The smart contract tracks how many users have solved each quiz.
+(You can view these stats via the frontend or in Remix with quizCompletions(quizId).)
 
----
+⸻ ----------------------------------------------------
+
+## 📂 Repository Structure
+	•	questions/ – Markdown files with quiz instructions
+	•	guides/ – How to connect to Sepolia, get test ETH, and use Remix
+	•	frontend/ – The local HTML/JS-based interface
+	•	contract-info/ – ABI, contract address, and Etherscan link
+	•	contracts/ – Solidity source code (ProofOfEscape.sol, EscapeToken.sol)
+	•	README.md – This file
+	•	LICENSE – Project license (MIT)
+
+⸻ ----------------------------------------------------
 
 ## 📜 License
 
 This project is licensed under the MIT License.
 See the LICENSE file for details.
 
----
+⸻
+
+## Happy learning and escaping! 🔐
