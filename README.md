@@ -42,6 +42,7 @@ Then visit http://localhost:8000 in your browser.
 ⸻ ----------------------------------------------------
 
 ## 3. 🌐 Connect Your Wallet
+
 	- Open MetaMask and switch to the Sepolia Testnet
 	- Get free test ETH from a faucet (see guides/info-for-sepolia-faucets.md)
 	- On the page, click “Connect Wallet”
@@ -50,6 +51,7 @@ Then visit http://localhost:8000 in your browser.
 ⸻ ----------------------------------------------------
 
 ## 4. 📄 Read the Quiz Instructions
+
 	•	Go to the questions/ folder
 	•	Open any quiz file (e.g., quiz1.md)
 	•	Follow the instructions to find the correct answer format
