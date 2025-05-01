@@ -89,8 +89,8 @@ Use the on-page form:
 
 Each time you successfully complete a quiz:
 
-	•	You receive 10 ESCAPE tokens minted directly to your wallet
-	•	You can view your balance in MetaMask after adding the token address
+- 🎁 You receive **10 ESCAPE tokens** minted directly to your wallet
+- 👛 You can view your token balance in MetaMask by adding the ESCAPE token address manually
 
 ⸻ 
 
