@@ -64,15 +64,18 @@ If the quiz requires a keccak256 hash, you can:
 
 ⸻ ----------------------------------------------------
 
-## 6. ✅ Submit Your Answer
+### 6. ✅ Submit Your Answer
 
 Use the on-page form:
-	1.	Enter the quiz ID and your answer
-	2.	The app will compute the hash (if required) and call the contract’s checkQuizAnswer(...) function
-	3.	If your answer is correct:
-	•	✅ You’ll get a success message
-	•	🎁 You’ll automatically receive 10 ESCAPE tokens
-	•	📌 Your completion will be recorded on-chain
+
+1. Enter the **quiz ID** and your **answer**
+2. The app will:
+   - Compute the keccak256 hash of your answer (if required)
+   - Call the smart contract’s `checkQuizAnswer(...)` function
+3. If your answer is correct:
+   - ✅ You’ll see a success message
+   - 🎁 You’ll automatically receive **10 ESCAPE tokens**
+   - 📌 Your completion will be recorded on-chain
 
 ## ⚠️ You can only complete each quiz once per wallet.
 
