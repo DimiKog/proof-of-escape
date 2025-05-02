@@ -27,21 +27,18 @@ function generateHash() {
 function copyHashToClipboard() {
     const hashText = document.getElementById("hashResult").textContent.trim();
 
-    if (!/^0x[0-9a-f]{64}$/i.test(hashText)) {
-        alert("⚠️ No valid hash to copy.");
+    if (!hashText || !/^0x[0-9a-f]{64}$/.test(hashText)) {
+        alert("⚠️ No valid hash to copy!");
         return;
     }
 
-    // Set the value in the answer input field
+    // Paste into answer field
     document.getElementById("answer").value = hashText;
 
     // Also copy to clipboard
     navigator.clipboard.writeText(hashText)
         .then(() => alert("✅ Hash copied and pasted into the answer field!"))
-        .catch(err => {
-            console.error("Clipboard write failed:", err);
-            alert("❌ Clipboard copy failed.");
-        });
+        .catch(() => alert("❌ Failed to copy hash."));
 }
 
 async function connectWallet() {
