@@ -105,9 +105,9 @@ To see your tokens in MetaMask:
 3.	Paste the ESCAPE token contract address: 0xcec3f1b99ec152cc3ddb920ceea15fcc2213c12b
 4.	Click “Next”, then “Add Custom Token.”
 
-	✅ You will now see your ESCAPE balance in MetaMask.
+✅ You will now see your ESCAPE balance in MetaMask.
 	
-	🔎 If you ever forget the token address, you can also find it in contract-info/contract-address.txt.
+🔎 If you ever forget the token address, you can also find it in contract-info/contract-address.txt.
 
 ## 📊 Quiz Completion Tracking
 
