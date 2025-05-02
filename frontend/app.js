@@ -23,6 +23,23 @@ function generateHash() {
     document.getElementById("hashResult").textContent = hash;
 }
 
+window.copyHashToClipboard = function () {
+    const hashText = document.getElementById("hashResult").textContent.trim();
+
+    if (!hashText || !/^0x[0-9a-f]{64}$/.test(hashText)) {
+        alert("⚠️ No valid hash to use!");
+        return;
+    }
+
+    // Copy to clipboard and auto-fill the answer input
+    navigator.clipboard.writeText(hashText)
+        .then(() => {
+            document.getElementById("answer").value = hashText;
+            alert("✅ Hash copied and pasted into the answer field!");
+        })
+        .catch(() => alert("❌ Failed to copy hash."));
+};
+
 async function connectWallet() {
     if (window.ethereum) {
         provider = new ethers.BrowserProvider(window.ethereum);
@@ -86,6 +103,6 @@ async function submitAnswer() {
         }
     } catch (err) {
         console.error(err);
-        document.getElementById("result").textContent = "⚠️ Error submitting your hash.";
+        document.getElementById("result").textContent = "⚠️ " + (err?.reason || err?.message);
     }
 }

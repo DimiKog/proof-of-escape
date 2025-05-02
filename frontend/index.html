@@ -47,11 +47,14 @@
         <!-- Hash Tool -->
         <div style="max-width: 500px; text-align: center;">
             <h2>🧪 Try keccak256 Hash Yourself</h2>
-            <p>Type your answer below exactly as you would submit it (lowercase, no spaces or punctuation).</p>
+            <p>Type your answer below exactly as you would submit it (lowercase, no punctuation).</p>
+
             <input id="hashTestInput" type="text" placeholder="Type your answer..." style="width: 300px;" />
             <button onclick="generateHash()">Generate Hash</button>
+
             <p><strong>Hash Output:</strong></p>
             <pre id="hashResult" style="font-family: monospace; color: blue;"></pre>
+            <button onclick="copyHashToClipboard()">📋 Copy Hash</button>
         </div>
 
     </div>
