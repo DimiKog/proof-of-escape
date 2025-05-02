@@ -15,6 +15,7 @@ function initialize() {
     document.getElementById("connectButton").onclick = connectWallet;
     document.getElementById("registerButton").onclick = register;
     document.getElementById("submitAnswer").onclick = submitAnswer;
+    document.getElementById("copyHashButton").onclick = copyHashToClipboard;
 }
 
 function generateHash() {
