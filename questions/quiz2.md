@@ -68,7 +68,7 @@ Follow the steps below to complete the quiz:
 #### 🧪 Option A – Use the In-App Hash Tool (Recommended)
 
 1. Open the Proof of Escape homepage.
-2. Scroll to the **“🧪 Try keccak256 Hash Yourself”** section.
+2. Scroll down to the **“🧪 Try keccak256 Hash Yourself”** section.
 3. Enter your formatted answer.
 4. Copy the generated hash (should begin with `0x...`).
 
@@ -96,14 +96,14 @@ You can submit via either:
 2. Call the `register()` function (only once per wallet).
 3. Call `checkQuizAnswer(quizId, answerHash)` with:
    - `quizId = 2`
-   - `answerHash = 0x...`
+   - `answerHash = 0x...` (your computed hash)
 
 #### 🌐 In the Frontend:
 
 1. Visit `http://localhost:8000`
 2. Connect your wallet and click **Register**
-3. Enter `Quiz ID = 2` and your original answer
-4. The app will hash and submit it automatically
+3. Enter `Quiz ID = 2` and **paste the full keccak256 hash** of your answer
+4. Submit it through the form
 
 ---
 

@@ -44,7 +44,7 @@ Click the “Register” button once your wallet is connected.
 	2.	The frontend will:
 	•	Convert the answer to lowercase and trim whitespace
 	•	Hash the answer using keccak256
-	•	Submit it to the smart contract
+	•	Submit the hash to the smart contract
 	3.	If your answer is correct:
 	•	✅ A success message will appear
 	•	🎁 You’ll receive 10 ESCAPE tokens

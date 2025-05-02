@@ -71,12 +71,14 @@ If the quiz requires a `keccak256` hash, you can:
 
 ### 6. ✅ Submit Your Answer
 
-Use the on-page form:
+Use the on-page form to submit your response:
 
-1. Enter the **quiz ID** and your **answer**
+1. Enter the **quiz ID** and your **keccak256 hash** of the answer  
+   - Your hash must begin with `0x` and be exactly 66 characters long.
+   - Make sure you've followed the quiz instructions to format your input correctly before hashing.
 2. The app will:
-   - Compute the keccak256 hash of your answer (if required)
-   - Call the smart contract’s `checkQuizAnswer(...)` function
+   - Validate the hash format
+   - Call the smart contract’s `checkQuizAnswer(...)` function with your hash
 3. If your answer is correct:
    - ✅ You’ll see a success message
    - 🎁 You’ll automatically receive **10 ESCAPE tokens**

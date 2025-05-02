@@ -70,10 +70,10 @@ You can use either of the following methods:
 
 ### 4. Submit Your Answer
 
-You can submit your answer using:
+You can submit your hash using either:
 
 - 🧪 **Remix IDE**, or  
-- 🖥️ **Proof of Escape frontend** (`index.html`)
+- 🖥️ **Proof of Escape frontend**
 
 #### 💻 In Remix:
 
@@ -88,8 +88,8 @@ You can submit your answer using:
 1. Launch the frontend (`http://localhost:8000`)
 2. Click **Connect Wallet**
 3. Click **Register**
-4. Enter `Quiz ID = 1` and paste the correct answer
-5. The system will hash your input and submit it
+4. Enter `Quiz ID = 1` and **paste the full keccak256 hash** of your answer
+5. The contract will validate your submission
 
 ---
 
