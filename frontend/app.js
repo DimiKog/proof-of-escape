@@ -62,26 +62,30 @@ async function register() {
 async function submitAnswer() {
     if (!contract) return alert("Connect wallet first");
 
-    const quizId = document.getElementById("quizId").value;
-    const answer = document.getElementById("answer").value.toLowerCase().trim();
+    const quizId = document.getElementById("quizId").value.trim();
+    const userHash = document.getElementById("answer").value.trim().toLowerCase();
 
-    if (!answer) return alert("Please enter an answer");
+    if (!userHash) return alert("Please enter a hash");
 
-    const hash = ethers.keccak256(ethers.toUtf8Bytes(answer));
+    // Validate format: must be 66 characters and start with 0x
+    if (!/^0x[0-9a-f]{64}$/.test(userHash)) {
+        alert("❌ Invalid hash format. Please paste a valid keccak256 hash starting with 0x.");
+        return;
+    }
 
     try {
-        const tx = await contract.checkQuizAnswer(quizId, hash);
+        const tx = await contract.checkQuizAnswer(quizId, userHash);
         const receipt = await tx.wait();
         const event = receipt.logs.find(log =>
             log.topics[0] === ethers.id("QuizCompleted(address,uint256,string)")
         );
         if (event) {
-            document.getElementById("result").textContent = "✅ Correct answer! Token reward sent!";
+            document.getElementById("result").textContent = "✅ Correct hash submitted! Token reward sent!";
         } else {
-            document.getElementById("result").textContent = "❌ Answer submitted but was incorrect.";
+            document.getElementById("result").textContent = "❌ Hash submitted but answer was incorrect.";
         }
     } catch (err) {
         console.error(err);
-        document.getElementById("result").textContent = "⚠️ Error submitting answer.";
+        document.getElementById("result").textContent = "⚠️ Error submitting your hash.";
     }
 }
