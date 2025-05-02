@@ -22,16 +22,24 @@
     <div style="display: flex; flex-direction: column; align-items: center; margin-top: 40px;">
 
         <!-- Quiz Form -->
-        <div style="max-width: 500px; text-align: center;">
-            <h2>📨 Submit a Quiz Answer</h2>
-            <label for="quizId">Quiz ID:</label><br />
-            <input type="number" id="quizId" /><br /><br />
+        <!-- Centered Quiz Submission Form -->
+        <div style="display: flex; justify-content: center; margin-top: 40px;">
+            <div
+                style="border: 1px solid #ccc; padding: 30px 40px; border-radius: 12px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1); max-width: 400px; width: 100%; text-align: center;">
 
-            <label for="answer">Your Answer:</label><br />
-            <input type="text" id="answer" /><br /><br />
+                <h2 style="margin-bottom: 20px;">📩 Submit a Quiz Answer</h2>
 
-            <button id="submitAnswer">Submit Answer</button>
-            <p id="result"></p>
+                <label for="quizId">Quiz ID:</label><br />
+                <input type="number" id="quizId" style="width: 100%; margin: 5px 0 20px 0; padding: 8px;" /><br />
+
+                <label for="answer">Your keccak256 Hash (starts with 0x):</label><br />
+                <input type="text" id="answer" style="width: 100%; margin: 5px 0 20px 0; padding: 8px;" /><br />
+
+                <button id="submitAnswer" style="padding: 8px 16px; font-weight: bold;">Submit Answer</button>
+
+                <p id="result" style="margin-top: 20px; font-weight: bold;"></p>
+
+            </div>
         </div>
 
         <hr style="width: 80%; margin: 40px 0;" />
