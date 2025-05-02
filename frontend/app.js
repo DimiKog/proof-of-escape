@@ -91,19 +91,27 @@ async function submitAnswer() {
     }
 }
 
-window.copyHashToClipboard = function () {
-    const hashText = document.getElementById("hashResult").textContent.trim();
+function copyHashToClipboard() {
+    const hashElement = document.getElementById("hashResult");
+    const answerInput = document.getElementById("answer");
 
-    if (!hashText || !/^0x[0-9a-f]{64}$/.test(hashText)) {
-        alert("⚠️ No valid hash to use!");
+    const hashText = hashElement?.textContent.trim();
+
+    if (!hashText || !/^0x[0-9a-f]{64}$/i.test(hashText)) {
+        alert("⚠️ No valid hash found to copy!");
         return;
     }
 
-    // Paste into answer field
-    document.getElementById("answer").value = hashText;
+    try {
+        // Paste hash into the answer input field
+        answerInput.value = hashText;
 
-    // Also copy to clipboard
-    navigator.clipboard.writeText(hashText)
-        .then(() => alert("✅ Hash copied and pasted into the answer field!"))
-        .catch(() => alert("❌ Failed to copy hash."));
-};
+        // Copy to clipboard
+        navigator.clipboard.writeText(hashText)
+            .then(() => alert("✅ Hash copied and pasted into the answer field!"))
+            .catch(() => alert("❌ Failed to copy hash to clipboard."));
+    } catch (e) {
+        console.error("Clipboard/paste error:", e);
+        alert("❌ Unexpected error occurred.");
+    }
+}
