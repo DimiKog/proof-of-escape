@@ -95,7 +95,7 @@ Each time you successfully complete a quiz:
 
 ⸻ 
 
-##👛 How to View ESCAPE Tokens in MetaMask
+## 👛 How to View ESCAPE Tokens in MetaMask
 
 After answering a quiz correctly, you’ll automatically receive 10 ESCAPE tokens to your wallet.
 
