@@ -95,6 +95,20 @@ Each time you successfully complete a quiz:
 
 ⸻ 
 
+##👛 How to View ESCAPE Tokens in MetaMask
+
+After answering a quiz correctly, you’ll automatically receive 10 ESCAPE tokens to your wallet.
+
+To see your tokens in MetaMask:
+	1.	Open MetaMask and switch to the Sepolia network.
+	2.	Click “Import tokens” at the bottom of the Assets tab.
+	3.	Paste the ESCAPE token contract address: 0xcec3f1b99ec152cc3ddb920ceea15fcc2213c12b
+	4.	Click “Next”, then “Add Custom Token.”
+
+	✅ You will now see your ESCAPE balance in MetaMask.
+	
+	🔎 If you ever forget the token address, you can also find it in contract-info/contract-address.txt.
+
 ## 📊 Quiz Completion Tracking
 
 The smart contract tracks how many users have solved each quiz.
