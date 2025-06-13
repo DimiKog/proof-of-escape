@@ -42,3 +42,15 @@ button {
 button:hover {
   background-color: #3182ce;
 }
+
+.quiz-hint {
+  font-weight: bold;
+  text-decoration: underline;
+  margin-top: 10px;
+}
+
+.quiz-reward {
+  font-weight: bold;
+  color: #e53e3e; /* red tone */
+  margin-top: 8px;
+}

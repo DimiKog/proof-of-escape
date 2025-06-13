@@ -76,8 +76,8 @@ document.getElementById("quizDropdown").addEventListener("change", event => {
 
     if (quiz) {
         document.getElementById("quizDescription").textContent = quiz.description;
-        document.getElementById("quizHint").textContent = quiz.hashHint || "";
-        document.getElementById("quizReward").textContent = quiz.reward || "10";
+        document.getElementById("quizHint").innerHTML = `<span class="quiz-hint">Hint:</span> ${quiz.hashHint || ""}`;
+        document.getElementById("quizReward").innerHTML = `<span class="quiz-reward">Reward: ${quiz.reward || "10"} ESCAPE tokens</span>`;
         if (quiz.details) {
             document.getElementById("quizDetailsContent").textContent = quiz.details;
             document.getElementById("quizDetails").style.display = "block";
