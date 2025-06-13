@@ -130,13 +130,13 @@ Access to these stats will be provided through the front-end (feature under deve
 ### 📂 Repository Structure
 
 The repository’s structure is as follows:
-- questions/ – Markdown files with quiz instructions
-- guides/ – How to connect to Sepolia, get test ETH, and use Remix
-- frontend/ – The local HTML/JS-based interface
-- contract-info/ – ABI, contract address, and Etherscan link
-- contracts/ – Solidity source code (ProofOfEscape.sol, EscapeToken.sol)
-- README.md – This file
-- LICENSE – Project license (MIT)
+- **questions/** – Markdown files with quiz instructions
+- **guides/** – How to connect to Sepolia, get test ETH, and use Remix
+- **frontend/** – The local HTML/JS-based interface
+- **contract-info/** – ABI, contract address, and Etherscan link
+- **contracts/** – Solidity source code (ProofOfEscape.sol, EscapeToken.sol)
+- **README.md** – This file
+- **LICENSE** – Project license (MIT)
 
 ⚠️ Note: Do not commit node_modules/ or other auto-generated files to the repository. Use .gitignore to exclude them.
 
