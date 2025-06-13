@@ -13,7 +13,7 @@ Welcome to the **Proof of Escape** repository! This project is designed to help 
 - Submit their answers on-chain 🔗
 - Earn **ESCAPE tokens** as proof of completion 🎁
 
-You do **not** need to deploy any smart contracts yourself — the game is pre-deployed on the **Sepolia testnet**, and ready to use!
+You do **not** need to deploy any smart contracts yourself — the game is pre-deployed on a custon QBFT Education Network based on **Hyperledger Besu**, and ready to use!
 
 ---
 
