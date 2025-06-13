@@ -51,11 +51,20 @@ function renderQuizzes() {
                 <h3>${quiz.title}</h3>
                 <p>${quiz.description}</p>
                 <p><strong>Reward:</strong> ${quiz.reward} ESCAPE tokens</p>
+                ${quiz.hashHint ? `<p><strong>Hint:</strong> ${quiz.hashHint}</p>` : ""}
                 <p><em>Use Quiz ID: ${quiz.id}</em></p>
+                <button onclick="startQuiz(${quiz.id})">Start Quiz</button>
             `;
             container.appendChild(card);
         }
     });
+}
+
+function startQuiz(id) {
+    document.getElementById("quizId").value = id;
+    document.getElementById("quizIdDisplay").textContent = "Quiz ID: " + id;
+    document.getElementById("answer").focus();
+    document.getElementById("answerSection").scrollIntoView({ behavior: "smooth" });
 }
 
 function initialize() {
