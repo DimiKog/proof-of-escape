@@ -57,10 +57,10 @@ Then visit http://localhost:8000 in your browser.
 ### 3. 🌐 Connect Your Wallet
 
 You can:
-	•	Open MetaMask and switch to the Sepolia Testnet
-	•	Get free test ETH from a faucet (see guides/info-for-sepolia-faucets.md)
-	•	On the page, click “Connect Wallet”
-	•	Once connected, click “Register” to begin
+- Open MetaMask and **add the custom QBFT Education Network** (details in the guides section [connect metamask](https://github.com/DimiKog/proof-of-escape/blob/main/guides/besu-setup-metamask.md)
+- Optionally, get test ESCAPE tokens from the in-app [faucet](https://github.com/DimiKog/proof-of-escape/blob/main/guides/info-for-besu-faucet.md)
+- On the page, click **“Connect Wallet”**
+- Once connected, click **“Register”** to begin
 
 ---
 
