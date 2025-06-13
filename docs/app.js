@@ -14,11 +14,10 @@ fetch("abi/ProofOfEscape.json")
 let quizzes = [];
 
 function loadQuizzes() {
-    fetch("quizzes.json")
+    return fetch("quizzes.json")
         .then(res => res.json())
         .then(data => {
             quizzes = data;
-            renderQuizzes();
         })
         .catch(err => console.error("Failed to load quizzes:", err));
 }
@@ -60,13 +59,15 @@ function startQuiz(id) {
     document.getElementById("answerSection").scrollIntoView({ behavior: "smooth" });
 }
 
-function initialize() {
+async function initialize() {
     document.getElementById("connectButton").onclick = connectWallet;
     document.getElementById("registerButton").onclick = register;
     document.getElementById("submitAnswer").onclick = submitAnswer;
     document.getElementById("generateHashButton").onclick = generateHash;
     document.getElementById("copyHashButton").onclick = copyHashToClipboard;
-    loadQuizzes();
+
+    await loadQuizzes(); // load quizzes after contract is ready
+    renderQuizzes();
 }
 
 document.getElementById("quizDropdown").addEventListener("change", event => {
