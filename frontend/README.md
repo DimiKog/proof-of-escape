@@ -69,7 +69,7 @@ Registration is required before submitting quiz answers.
 
 1. Enter the quiz ID in the form.
 2. Use the **Hash Tester** tool at the bottom of the page to convert your answer into a keccak256 hash.
-3. Copy the generated hash and paste it into the answer field.
+3. Copy the generated hash and paste it into the answer field. You can use the respective button to perform the action automatically.
 4. The frontend will submit the hash to the smart contract.
 5. If your hash matches the one registered on-chain:
    - ✅ A success message will appear
