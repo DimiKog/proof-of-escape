@@ -6,7 +6,7 @@ Welcome to the **Proof of Escape** repository! This project is designed to help 
 
 ## 🚀 Overview
 
-**Proof of Escape** is a blockchain-based educational game where participants:
+**Proof of Escape (PoE)** is a blockchain-based educational game where participants:
 
 - Answer quiz questions 🤔
 - Compute cryptographic hashes 🔑
