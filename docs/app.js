@@ -11,10 +11,17 @@ fetch("abi/ProofOfEscape.json")
         initialize();
     });
 
-const quizzes = [
-    { id: 1, title: "🔍 Blockchain Fundamentals", description: "What is the core technology you are learning in this course?", reward: 10 },
-    { id: 2, title: "🔍 Message in the Genesis", description: "Find the political title mentioned in the Genesis Block message.", reward: 10 }
-];
+let quizzes = [];
+
+function loadQuizzes() {
+    fetch("quizzes.json")
+        .then(res => res.json())
+        .then(data => {
+            quizzes = data;
+            renderQuizzes();
+        })
+        .catch(err => console.error("Failed to load quizzes:", err));
+}
 
 function getCompletedQuizzes() {
     return JSON.parse(localStorage.getItem("completedQuizzes") || "[]");
@@ -57,7 +64,7 @@ function initialize() {
     document.getElementById("submitAnswer").onclick = submitAnswer;
     document.getElementById("generateHashButton").onclick = generateHash;
     document.getElementById("copyHashButton").onclick = copyHashToClipboard;
-    renderQuizzes();
+    loadQuizzes();
 }
 
 function generateHash() {
