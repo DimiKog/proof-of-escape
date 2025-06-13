@@ -67,15 +67,16 @@ Registration is required before submitting quiz answers.
 
 ### 🧩 Submit Quiz Answer
 
-1. Enter the quiz ID and your answer in the form.
-2. The frontend will:
-   - Convert the answer to lowercase and trim whitespace
-   - Hash the answer using keccak256
-   - Submit the hash to the smart contract
-3. If your answer is correct:
+1. Enter the quiz ID in the form.
+2. Use the **Hash Tester** tool at the bottom of the page to convert your answer into a keccak256 hash.
+3. Copy the generated hash and paste it into the answer field.
+4. The frontend will submit the hash to the smart contract.
+5. If your hash matches the one registered on-chain:
    - ✅ A success message will appear
    - 🎁 You’ll receive 10 ESCAPE tokens
    - 📌 Your completion will be stored on-chain
+
+⚠️ You must submit the **hash** of the answer, not the plain text.
 
 Note: Each quiz can be completed only once.
 
@@ -86,8 +87,9 @@ Note: Each quiz can be completed only once.
 At the bottom of the page, you’ll find a keccak256 hash generator.
 
 Use it to:
-- Test how input formatting affects the hash
-- Confirm your answer hash before submitting
+- Type your answer (e.g., `blockchain`)
+- Convert it to a hash
+- Copy and paste the hash into the quiz submission form
 - Learn how Solidity’s keccak256 behaves
 
 ---
