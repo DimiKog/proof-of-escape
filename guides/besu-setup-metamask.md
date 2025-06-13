@@ -13,9 +13,8 @@ Follow these steps to connect MetaMask to the **Besu EduNet** private Ethereum n
 
 ## ➕ 2. Add a New Network
 
-1. Click your account icon (top right) → **Settings**
-2. Go to **Networks** → Click **Add network**
-3. Choose **Add a network manually**
+1. Click your network icon (top left) → **Select a Network**
+2. Choose **Add a custom network**
 
 ---
 
