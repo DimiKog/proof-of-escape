@@ -1,5 +1,6 @@
+// Use contract address from config.js
+const contractAddress = CONFIG.CONTRACT_ADDRESS;
 let provider, signer, contract;
-const contractAddress = "0x8b08da6119a27ffeacb0e0c65493705a4b113367";
 let abi;
 
 // Load ABI
