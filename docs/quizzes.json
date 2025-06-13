@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "title": "Blockchain Fundamentals",
+        "description": "What is the core technology you are learning in this course? Submit the keccak256 hash of the correct one-word answer.",
+        "hashHint": "The answer is one word, all lowercase, no punctuation or spaces. Hash it using keccak256 and submit the result starting with 0x."
+    },
+    {
+        "id": 2,
+        "title": "A Message in the Genesis",
+        "description": "Find the political title hidden in the Genesis Block coinbase transaction input. It’s one word and not 'prime'.",
+        "hashHint": "Format your answer to lowercase, no spaces, then hash it using keccak256. Submit the resulting 0x-prefixed hash."
+    }
+]

@@ -11,12 +11,53 @@ fetch("abi/ProofOfEscape.json")
         initialize();
     });
 
+const quizzes = [
+    { id: 1, title: "🔍 Blockchain Fundamentals", description: "What is the core technology you are learning in this course?", reward: 10 },
+    { id: 2, title: "🔍 Message in the Genesis", description: "Find the political title mentioned in the Genesis Block message.", reward: 10 }
+];
+
+function getCompletedQuizzes() {
+    return JSON.parse(localStorage.getItem("completedQuizzes") || "[]");
+}
+
+function markQuizCompleted(id) {
+    const completed = getCompletedQuizzes();
+    if (!completed.includes(id)) {
+        completed.push(id);
+        localStorage.setItem("completedQuizzes", JSON.stringify(completed));
+    }
+}
+
+function renderQuizzes() {
+    const container = document.getElementById("quizzesContainer");
+    if (!container) return;
+
+    container.innerHTML = "";
+    const completed = getCompletedQuizzes();
+
+    quizzes.forEach((quiz, index) => {
+        const shouldDisplay = index === 0 || completed.includes(quizzes[index - 1].id);
+        if (shouldDisplay && !completed.includes(quiz.id)) {
+            const card = document.createElement("div");
+            card.className = "quiz-card";
+            card.innerHTML = `
+                <h3>${quiz.title}</h3>
+                <p>${quiz.description}</p>
+                <p><strong>Reward:</strong> ${quiz.reward} ESCAPE tokens</p>
+                <p><em>Use Quiz ID: ${quiz.id}</em></p>
+            `;
+            container.appendChild(card);
+        }
+    });
+}
+
 function initialize() {
     document.getElementById("connectButton").onclick = connectWallet;
     document.getElementById("registerButton").onclick = register;
     document.getElementById("submitAnswer").onclick = submitAnswer;
     document.getElementById("generateHashButton").onclick = generateHash;
     document.getElementById("copyHashButton").onclick = copyHashToClipboard;
+    renderQuizzes();
 }
 
 function generateHash() {
@@ -91,6 +132,8 @@ async function submitAnswer() {
         );
         if (event) {
             document.getElementById("result").textContent = "✅ Correct hash submitted! Token reward sent!";
+            markQuizCompleted(parseInt(quizId));
+            renderQuizzes();
         } else {
             document.getElementById("result").textContent = "❌ Hash submitted but was incorrect.";
         }
