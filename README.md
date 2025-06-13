@@ -130,6 +130,8 @@ Access to these stats will be provided through the front-end (feature under deve
 ### 📂 Repository Structure
 
 The repository’s structure is as follows:
+
+```text
 proof-of-escape/
 ├── contracts/         # Solidity contracts (ProofOfEscape, EscapeToken)
 ├── frontend/          # Local HTML/JS frontend interface
@@ -138,6 +140,7 @@ proof-of-escape/
 ├── contract-info/     # ABI, deployed addresses
 ├── README.md          # This file
 ├── LICENSE            # MIT License
+```
 
 
 ⚠️ Note: Do not commit node_modules/ or other auto-generated files to the repository. Use .gitignore to exclude them.
