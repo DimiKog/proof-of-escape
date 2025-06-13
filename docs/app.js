@@ -36,26 +36,19 @@ function markQuizCompleted(id) {
 }
 
 function renderQuizzes() {
-    const container = document.getElementById("quizzesContainer");
-    if (!container) return;
-
-    container.innerHTML = "";
+    const dropdown = document.getElementById("quizDropdown");
     const completed = getCompletedQuizzes();
+    dropdown.innerHTML = '<option value="">-- Select Quiz --</option>';
 
     quizzes.forEach((quiz, index) => {
-        const shouldDisplay = index === 0 || completed.includes(quizzes[index - 1].id);
-        if (shouldDisplay && !completed.includes(quiz.id)) {
-            const card = document.createElement("div");
-            card.className = "quiz-card";
-            card.innerHTML = `
-                <h3>${quiz.title}</h3>
-                <p>${quiz.description}</p>
-                <p><strong>Reward:</strong> ${quiz.reward} ESCAPE tokens</p>
-                ${quiz.hashHint ? `<p><strong>Hint:</strong> ${quiz.hashHint}</p>` : ""}
-                <p><em>Use Quiz ID: ${quiz.id}</em></p>
-                <button onclick="startQuiz(${quiz.id})">Start Quiz</button>
-            `;
-            container.appendChild(card);
+        const isUnlocked = index === 0 || completed.includes(quizzes[index - 1].id);
+        const isCompleted = completed.includes(quiz.id);
+
+        if (isUnlocked && !isCompleted) {
+            const option = document.createElement("option");
+            option.value = quiz.id;
+            option.textContent = `#${quiz.id} - ${quiz.title}`;
+            dropdown.appendChild(option);
         }
     });
 }

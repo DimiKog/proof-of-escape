@@ -23,15 +23,23 @@
         <button id="registerButton">Register</button>
     </section>
 
-    <section id="answerSection">
-        <h2>📩 Submit a Quiz Answer</h2>
-        <label for="quizId">Quiz ID:</label>
-        <input type="number" id="quizId" placeholder="e.g., 1" />
-        <label for="answer">Your keccak256 Hash (starts with 0x):</label>
-        <input type="text" id="answer" placeholder="0x..." />
-        <button id="submitAnswer">Submit Answer</button>
-        <p id="result"></p>
-        <p><strong>Selected Quiz ID:</strong> <span id="quizIdDisplay">None</span></p>
+    <section id="quizSelector">
+        <h2>🧠 Choose a Quiz</h2>
+        <label for="quizDropdown">Select unlocked quiz:</label>
+        <select id="quizDropdown">
+            <option value="">-- Select Quiz --</option>
+        </select>
+
+        <div id="quizInfo" style="margin-top: 1rem;">
+            <p id="quizDescription"></p>
+            <details id="quizDetails" style="display: none;">
+                <summary>More Info</summary>
+                <p id="quizDetailsContent"></p>
+            </details>
+            <p><strong>Hint:</strong> <span id="quizHint"></span></p>
+            <p><em>Reward:</em> <span id="quizReward"></span> ESCAPE tokens</p>
+            <button id="startQuizBtn" style="margin-top: 1rem;">Start Quiz</button>
+        </div>
     </section>
 
     <section>
@@ -44,10 +52,20 @@
         <button id="copyHashButton">📋 Copy & Paste Hash</button>
     </section>
 
-    <section id="quizList">
-        <h2>🧠 Available Quizzes</h2>
-        <p>Complete quizzes progressively and earn tokens!</p>
-        <div id="quizzesContainer"></div>
+    <section id="answerSection">
+        <h2>📩 Submit a Quiz Answer</h2>
+        <div>
+            <label for="quizId">Quiz ID:</label>
+            <input type="number" id="quizId" placeholder="e.g., 1" />
+        </div>
+        <div>
+            <label for="answer">Your keccak256 Hash (starts with 0x):</label>
+            <input type="text" id="answer" placeholder="0x..." />
+        </div>
+        <input type="text" id="answer" placeholder="0x..." />
+        <button id="submitAnswer">Submit Answer</button>
+        <p id="result"></p>
+        <p><strong>Selected Quiz ID:</strong> <span id="quizIdDisplay">None</span></p>
     </section>
 
     <script src="config.js"></script>
