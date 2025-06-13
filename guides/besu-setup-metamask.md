@@ -43,7 +43,7 @@ Click **Save**.
 
 ## 💧 5. Get Test ETH
 
-Use the [Besu Faucet Guide](./besu-faucet.md) to request EDU-D tokens for gas fees.
+Use the [Besu Faucet Guide](https://github.com/DimiKog/proof-of-escape/blob/main/guides/info-for-besu-faucet.md) to request EDU-D tokens for gas fees.
 
 ---
 
