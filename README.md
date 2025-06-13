@@ -65,17 +65,18 @@ You can:
 ---
 
 ### 4. 📄 Read the Quiz Instructions
-	•	Navigate to the questions/ folder in the repository
-	•	Open any quiz file (e.g., quiz1.md)
-	•	Read the instructions carefully to understand what format your answer should be in (e.g., raw string or keccak256 hash)
+
+- Navigate to the questions/ folder in the repository
+- Open any quiz file (e.g., quiz1.md)
+- Read the instructions carefully to understand what format your answer should be in (e.g., keccak256 hash)
 
 ---
 
 ### 5. 🧪 Try the Hash Tool (Optional)
 
 If the quiz requires a keccak256 hash, you can:
-	•	🧪 Use the built-in hash tester at the bottom of the homepage
-	•	💻 Or generate the hash using Remix or any Solidity-based hashing tool
+	- 🧪 Use the built-in hash tester at the bottom of the homepage
+	- 💻 Or generate the hash using Remix or any Solidity-based hashing tool
 
 ---
 
