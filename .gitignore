@@ -20,3 +20,5 @@ logs/
 
 # ⛓️ VSCode
 .vscode/escape-token/broadcast/
+node_modules/
+.DS_Store
