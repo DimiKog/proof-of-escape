@@ -75,24 +75,24 @@ You can:
 ### 5. 🧪 Try the Hash Tool (Optional)
 
 If the quiz requires a keccak256 hash, you can:
-	- 🧪 Use the built-in hash tester at the bottom of the homepage
-	- 💻 Or generate the hash using Remix or any Solidity-based hashing tool
+- 🧪 Use the built-in hash tester at the bottom of the homepage
+- 💻 Or generate the hash using Remix or any Solidity-based hashing tool
 
 ---
 
 ### 6. ✅ Submit Your Answer
 
 Use the on-page form to submit your response:
-	1.	Enter the quiz ID and your keccak256 hash of the answer
-	•	Your hash must begin with 0x and be exactly 66 characters long.
-	•	Make sure you’ve followed the quiz instructions to format your input correctly before hashing.
-	2.	The app will:
-	•	Validate the hash format
-	•	Call the smart contract’s checkQuizAnswer(...) function with your hash
-	3.	If your answer is correct:
-	•	✅ You’ll see a success message
-	•	🎁 You’ll automatically receive 10 ESCAPE tokens
-	•	📌 Your completion will be recorded on-chain
+1. Enter the quiz ID and your keccak256 hash of the answer
+- Your hash must begin with 0x and be exactly 66 characters long.
+- Make sure you’ve followed the quiz instructions to format your input correctly before hashing.
+2. The app will:
+- Validate the hash format
+- Call the smart contract’s checkQuizAnswer(...) function with your hash
+3. If your answer is correct:
+- ✅ You’ll see a success message
+- 🎁 You’ll automatically receive 10 ESCAPE tokens
+- 📌 Your completion will be recorded on-chain
 
 ⚠️ You can only complete each quiz once per wallet.
 
@@ -101,8 +101,8 @@ Use the on-page form to submit your response:
 ### 💰 Rewards
 
 Each time you successfully complete a quiz:
-	•	🎁 You receive 10 ESCAPE tokens minted directly to your wallet
-	•	👛 You can view your token balance in MetaMask by adding the ESCAPE token address manually
+- 🎁 You receive 10 ESCAPE tokens minted directly to your wallet
+- 👛 You can view your token balance in MetaMask by adding the ESCAPE token address manually
 
 ---
 
@@ -111,10 +111,10 @@ Each time you successfully complete a quiz:
 After answering a quiz correctly, you’ll automatically receive 10 ESCAPE tokens to your wallet.
 
 To see your tokens in MetaMask:
-	1.	Open MetaMask and switch to the Sepolia network.
-	2.	Click “Import tokens” at the bottom of the Assets tab.
-	3.	Paste the ESCAPE token contract address: 0xcec3f1b99ec152cc3ddb920ceea15fcc2213c12b
-	4.	Click “Next”, then “Add Custom Token.”
+1. Open MetaMask and switch to the QBFT Education Network.
+2. Click “Import tokens” at the bottom of the Assets tab.
+3. Paste the ESCAPE token contract address: 0xb62C4826BfF365827c923a14CCB5137eA0360402
+4. Click “Next”, then “Add Custom Token.”
 
 ✅ You will now see your ESCAPE balance in MetaMask.
 
@@ -130,13 +130,13 @@ The smart contract tracks how many users have solved each quiz.
 ### 📂 Repository Structure
 
 The repository’s structure is as follows:
-	•	questions/ – Markdown files with quiz instructions
-	•	guides/ – How to connect to Sepolia, get test ETH, and use Remix
-	•	frontend/ – The local HTML/JS-based interface
-	•	contract-info/ – ABI, contract address, and Etherscan link
-	•	contracts/ – Solidity source code (ProofOfEscape.sol, EscapeToken.sol)
-	•	README.md – This file
-	•	LICENSE – Project license (MIT)
+- questions/ – Markdown files with quiz instructions
+- guides/ – How to connect to Sepolia, get test ETH, and use Remix
+- frontend/ – The local HTML/JS-based interface
+- contract-info/ – ABI, contract address, and Etherscan link
+- contracts/ – Solidity source code (ProofOfEscape.sol, EscapeToken.sol)
+- README.md – This file
+- LICENSE – Project license (MIT)
 
 ⚠️ Note: Do not commit node_modules/ or other auto-generated files to the repository. Use .gitignore to exclude them.
 
