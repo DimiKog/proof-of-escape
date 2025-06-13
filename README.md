@@ -68,7 +68,7 @@ You can:
 
 - Navigate to the **questions/ folder** in the repository
 - Open any quiz file (e.g., quiz1.md)
-- Read the instructions carefully to understand what format your answer should be in (e.g., keccak256 hash)
+- Read the instructions carefully to understand where you should search to find the answer and what format it should be in (e.g., keccak256 hash)
 
 ---
 
