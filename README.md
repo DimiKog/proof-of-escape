@@ -123,7 +123,7 @@ To see your tokens in MetaMask:
 ### 📊 Quiz Completion Tracking
 
 The smart contract tracks how many users have solved each quiz.
-(You can view these stats via the frontend or in Remix with quizCompletions(quizId).)
+Access to these stats will be provided through the front-end (feature under development for now).
 
 ---
 
