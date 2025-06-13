@@ -17,6 +17,18 @@ You do **not** need to deploy any smart contracts yourself — the game is pre-d
 
 ---
 
+## 🎯 Learning Objectives
+
+This game-based activity aims to help students achieve the following learning objectives:
+
+- 🦊 **Create and manage a wallet address** using MetaMask or a similar browser extension.
+- 🌐 **Interact with a live blockchain network**, understanding the role of testnets and gas.
+- 🧩 **Engage with a Web3 application and faucet**, observing how smart contracts are called via the frontend.
+- 🔐 **Get introduced to cryptographic concepts** such as keccak256 hashing and their role in blockchain security.
+- 🧠 **Enrich blockchain knowledge** by solving quiz challenges based on real blockchain concepts and block data exploration.
+
+---
+
 ## 🧰 Getting Started
 
 Follow these steps to play the game locally:
