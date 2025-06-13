@@ -69,6 +69,25 @@ function initialize() {
     loadQuizzes();
 }
 
+document.getElementById("quizDropdown").addEventListener("change", event => {
+    const id = parseInt(event.target.value);
+    const quiz = quizzes.find(q => q.id === id);
+
+    if (quiz) {
+        document.getElementById("quizDescription").textContent = quiz.description;
+        document.getElementById("quizHint").textContent = quiz.hashHint || "";
+        document.getElementById("quizReward").textContent = quiz.reward || "10";
+        if (quiz.details) {
+            document.getElementById("quizDetailsContent").textContent = quiz.details;
+            document.getElementById("quizDetails").style.display = "block";
+        } else {
+            document.getElementById("quizDetails").style.display = "none";
+        }
+
+        document.getElementById("startQuizBtn").onclick = () => startQuiz(quiz.id);
+    }
+});
+
 function generateHash() {
     const input = document.getElementById("hashTestInput").value.trim().toLowerCase();
     const hash = ethers.keccak256(ethers.toUtf8Bytes(input));
