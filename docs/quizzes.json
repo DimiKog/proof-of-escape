@@ -14,5 +14,13 @@
         "hashHint": "Format your answer to lowercase, no spaces, then hash it using keccak256. Submit the resulting 0x-prefixed hash.",
         "details": "The Genesis Block of Bitcoin contains a message that alludes to a newspaper headline. Within the coinbase input field, this message includes a political role relevant to the UK at the time. Decode the hex-encoded input and identify this title — remember, it is a role, not a person’s name.",
         "reward": 10
+    },
+    {
+        "id": 3,
+        "title": "The First NFT",
+        "description": "Explore one of the earliest and most iconic NFT projects on Ethereum. Use a blockchain explorer to find out what name it used for its token.",
+        "details": "CryptoKitties was among the first widely adopted NFT projects. It launched in late 2017 and used a custom ERC-721 smart contract. This quiz tests your ability to locate basic metadata from an existing deployed smart contract.",
+        "hashHint": "Use Etherscan and go to contract address 0x06012c8cf97BEaD5deAe237070F9587f8E7A266d. Look for the name of the token (not the symbol). Format your answer to lowercase, no spaces, then hash it using keccak256. Submit the 0x-prefixed hash.",
+        "reward": 20
     }
 ]
