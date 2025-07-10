@@ -27,3 +27,11 @@ logs/
 .vscode/escape-token/broadcast/
 node_modules/
 .DS_Store
+
+# Environment and config files
+.env
+.env.local
+.env.*
+
+# Ignore old JS scripts
+testToken.js
