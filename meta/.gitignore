@@ -12,10 +12,8 @@ escape-token/broadcast/
 escape-token/out/
 escape-token/cache/
 
-# Ignore legacy folder EXCEPT include it again
-legacy/*
-!legacy/
-!legacy/**
+# Ignore legacy folder
+legacy/
 
 # 🔐 Secrets
 .env
