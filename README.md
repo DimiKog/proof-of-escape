@@ -47,9 +47,10 @@ You can:
 
 ### 3. 📄 Read the Quiz Instructions
 
-- Navigate to the **questions/ folder** in the repository
-- Open any quiz file (e.g., quiz1.md)
-- Read the instructions carefully to understand where you should search to find the answer and what format it should be in (e.g., keccak256 hash)
+- Quiz instructions are displayed directly on the webpage after you register and connect your wallet.
+- Each quiz provides context, clues, and requirements to help you discover the correct answer.
+- Follow the on-screen hints to understand where to look (e.g., block data, Ethereum history) and how to format your answer for submission.
+- You must answer each quiz in order — you cannot move to the next quiz until you have correctly solved the previous one.
 
 ### 4. 🧪 Try the Hash Tool (Optional)
 
