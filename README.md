@@ -45,16 +45,17 @@ You can:
 - On the page, click **“Connect Wallet”**
 - Once connected, click **“Register”** to begin
 
-### 3. 📄 Read the Quiz Instructions
+### 3. 🧠 Choose and Solve a Quiz
 
-- Quiz instructions are displayed directly on the webpage after you register and connect your wallet.
-- Each quiz provides context, clues, and requirements to help you discover the correct answer.
-- Follow the on-screen hints to understand where to look (e.g., block data, Ethereum history) and how to format your answer for submission.
-- You must answer each quiz in order — you cannot move to the next quiz until you have correctly solved the previous one.
+Once registered and connected:
 
-### 4. 🔍 Use the Built-in Hash Tool
+- 🧠 Use the “Choose a Quiz” dropdown to select one of the unlocked quizzes.
+- You must answer each quiz **in order** — you can only access the next one after answering the current one **correctly**.
+- Read the quiz instructions that appear on screen. These provide clues and explain how to format your answer.
 
-- 🧪 Use the built-in hash tester located at the bottom of the homepage to compute your keccak256 hash.
+### 4. ✏️ Use the Built-in Hash Tool
+
+- ✏️ Use the built-in hash generator located just below the quiz section to compute your keccak256 hash.
 - This tool is required for formatting and hashing your answer correctly before submitting it on-chain.
 
 ### 5. ✅ Submit Your Answer
