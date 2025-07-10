@@ -7,7 +7,7 @@ This is the user-facing interface for the Proof of Escape educational blockchain
 ## ⚙️ Prerequisites
 
 - 🦊 MetaMask (or other Web3-compatible wallet)
-- 📡 Access to the Besu EduNet RPC (default: http://195.251.92.200)
+- 📡 Access to the QBFT_Besu_EduNet
 
 ---
 
