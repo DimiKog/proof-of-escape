@@ -15,6 +15,9 @@ escape-token/cache/
 # Ignore legacy folder
 legacy/
 
+# Ignore frontend folder
+frontend/
+
 # 🔐 Secrets
 .env
 .env.*

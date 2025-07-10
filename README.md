@@ -109,7 +109,6 @@ The repository’s structure is as follows:
 ```
 proof-of-escape/
 ├── contracts/         # Solidity contracts (ProofOfEscape, EscapeToken)
-├── frontend/          # Local HTML/JS frontend interface
 ├── guides/            # MetaMask, faucet, and Besu setup instructions
 ├── questions/         # Markdown files with quiz instructions
 ├── contract-info/     # ABI, deployed addresses
