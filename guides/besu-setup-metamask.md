@@ -1,6 +1,6 @@
-# 🦊 MetaMask Setup for Besu QBFTBesu_EduNet
+# 🦊 MetaMask Setup for Besu QBFT_Besu_EduNet
 
-Follow these steps to connect MetaMask to the **Besu EduNet** private Ethereum network:
+Follow these steps to connect MetaMask to the **QBFT_Besu_EduNet** private Ethereum network:
 
 ---
 
