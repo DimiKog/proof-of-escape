@@ -10,6 +10,11 @@ lib/
 remappings.txt
 escape-token/broadcast/
 
+# Ignore legacy folder EXCEPT include it again
+legacy/*
+!legacy/
+!legacy/**
+
 # 🔐 Secrets
 .env
 .env.*
