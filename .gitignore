@@ -40,3 +40,4 @@ testToken.js
 
 #Ignore of txt files
 *.txt
+!meta/*.txt
