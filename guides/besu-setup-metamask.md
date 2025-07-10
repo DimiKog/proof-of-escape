@@ -59,4 +59,4 @@ To track your rewards:
 
 ---
 
-✅ You’re now ready to use the **Proof of Escape** frontend with MetaMask on the Besu EduNet!
+✅ You’re now ready to use the **Proof of Escape** frontend with MetaMask on the QBFT_Besu_EduNet!
