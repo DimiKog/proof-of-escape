@@ -31,7 +31,7 @@ This game-based activity aims to help students achieve the following learning ob
 
 ## 🧰 Getting Started
 
-Follow these steps to play the game locally:
+Follow these steps to play the game:
 
 ### 1. 🌐 Launch the App via GitHub Pages
 
