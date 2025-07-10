@@ -33,48 +33,31 @@ This game-based activity aims to help students achieve the following learning ob
 
 Follow these steps to play the game locally:
 
-### 1. 📦 Clone the Repository
-
-```bash
-git clone https://github.com/DimiKog/proof-of-escape.git
-cd proof-of-escape
-```
-
----
-
-### 2. 🌐 Launch the App via GitHub Pages
+### 1. 🌐 Launch the App via GitHub Pages
 
 Visit the live version of the app here: [https://dimikog.github.io/proof-of-escape/](https://dimikog.github.io/proof-of-escape/)
 
----
-
-### 3. 🌐 Connect Your Wallet
+### 2. 🌐 Connect Your Wallet
 
 You can:
-- Open MetaMask and **add the custom QBFT Education Network** (details in the guides section [connect metamask](https://github.com/DimiKog/proof-of-escape/blob/main/guides/besu-setup-metamask.md)
+- Open MetaMask and **add the custom QBFT Education Network** (details in the guides section [connect metamask](https://github.com/DimiKog/proof-of-escape/blob/main/guides/besu-setup-metamask.md) )
 - Optionally, get test ESCAPE tokens from the in-app [faucet](https://github.com/DimiKog/proof-of-escape/blob/main/guides/info-for-besu-faucet.md)
 - On the page, click **“Connect Wallet”**
 - Once connected, click **“Register”** to begin
 
----
-
-### 4. 📄 Read the Quiz Instructions
+### 3. 📄 Read the Quiz Instructions
 
 - Navigate to the **questions/ folder** in the repository
 - Open any quiz file (e.g., quiz1.md)
 - Read the instructions carefully to understand where you should search to find the answer and what format it should be in (e.g., keccak256 hash)
 
----
-
-### 5. 🧪 Try the Hash Tool (Optional)
+### 4. 🧪 Try the Hash Tool (Optional)
 
 If the quiz requires a keccak256 hash, you can:
 - 🧪 Use the built-in hash tester at the bottom of the homepage
 - 💻 Or generate the hash using Remix or any Solidity-based hashing tool
 
----
-
-### 6. ✅ Submit Your Answer
+### 5. ✅ Submit Your Answer
 
 Use the on-page form to submit your response:
 1. Enter the quiz ID and your keccak256 hash of the answer
