@@ -42,15 +42,9 @@ cd proof-of-escape
 
 ---
 
-### 2. 🖥️ Launch the Frontend Locally
+### 2. 🌐 Launch the App via GitHub Pages
 
-From the frontend/ folder, start a local web server:
-
-```bash
-cd frontend
-python3 -m http.server 8000
-```
-Then visit http://localhost:8000 in your browser.
+Visit the live version of the app here: [https://dimikog.github.io/proof-of-escape/](https://dimikog.github.io/proof-of-escape/)
 
 ---
 
@@ -131,19 +125,22 @@ Access to these stats will be provided through the front-end (feature under deve
 
 The repository’s structure is as follows:
 
-```text
+```
 proof-of-escape/
 ├── contracts/         # Solidity contracts (ProofOfEscape, EscapeToken)
 ├── frontend/          # Local HTML/JS frontend interface
 ├── guides/            # MetaMask, faucet, and Besu setup instructions
 ├── questions/         # Markdown files with quiz instructions
 ├── contract-info/     # ABI, deployed addresses
+├── meta/              # Metadata files (e.g. remappings, addresses)
+├── legacy/            # Older versions and unused files
 ├── README.md          # This file
 ├── LICENSE            # MIT License
 ```
 
 
 ⚠️ Note: Do not commit node_modules/ or other auto-generated files to the repository. Use .gitignore to exclude them.
+Project-related .txt files are now located in the `meta/` folder. All other .txt files are ignored via .gitignore.
 
 ---
 
