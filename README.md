@@ -120,8 +120,8 @@ proof-of-escape/
 ```
 
 
-⚠️ Note: Do not commit node_modules/ or other auto-generated files to the repository. Use .gitignore to exclude them.
-Project-related .txt files are now located in the `meta/` folder. All other .txt files are ignored via .gitignore.
+⚠️ **Note:** Do not commit `node_modules/` or other auto-generated files — they are excluded via `.gitignore`.  
+Project-related `.txt` files are now located in the `meta/` folder; all others are ignored.
 
 ---
 
