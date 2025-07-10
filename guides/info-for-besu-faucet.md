@@ -39,4 +39,4 @@ You should see a confirmation message. Your wallet will soon receive a small amo
 
 ---
 
-Happy building on Besu EduNet! 🚀
+Happy building on QBFT_Besu_EduNet! 🚀
