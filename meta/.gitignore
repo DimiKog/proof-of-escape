@@ -37,3 +37,6 @@ node_modules/
 
 # Ignore old JS scripts
 testToken.js
+
+#Ignore of txt files
+*.txt
