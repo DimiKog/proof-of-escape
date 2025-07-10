@@ -19,9 +19,26 @@
         "id": 3,
         "title": "The First NFT",
         "description": "Explore one of the earliest and most iconic NFT projects on Ethereum. Use a blockchain explorer to find out what name it used for its token.",
-        "details": "CryptoKitties was among the first widely adopted NFT projects. It launched in late 2017 and used a custom ERC-721 smart contract. This quiz tests your ability to locate basic metadata from an existing deployed smart contract.",
         "hashHint": "Use Etherscan and go to contract address 0x06012c8cf97BEaD5deAe237070F9587f8E7A266d. Look for the name of the token (not the symbol).",
+        "details": "CryptoKitties was among the first widely adopted NFT projects. It launched in late 2017 and used a custom ERC-721 smart contract. This quiz tests your ability to locate basic metadata from an existing deployed smart contract.",
         "reward": 20
+    },
+    {
+        "id": 4,
+        "title": "Multisig Wallets in Practice",
+        "description": "What is the minimum number of signatures required to execute a transaction in the ENS DAO Gnosis Safe at 0x0da0c3e52c977ed3cbc641ff02dd271c3ed55afe on Ethereum mainnet?",
+        "hashHint": "Submit the number only hashed using keccak256, prefixed with 0x.",
+        "details": "Go to the Contract tab on Etherscan, then select the 'Read as Proxy' tab. Find and call the function named `getThreshold`.",
+        "reward": 25
+    },
+    {
+        "id": 5,
+        "title": "The DAO Hack",
+        "description": "In 2016, the infamous DAO smart contract became the target of a major exploit. This contract still exists on the Ethereum blockchain and offers a glimpse into the early history of decentralized governance.",
+        "question": "What is the `rewardAccount` address listed in the DAO contract at `0xbb9bc244d798123fde783fcc1c72d3bb8c189413`?",
+        "hint": "On the Contract menu of Etherscan, use the Read Contract tab to find the `rewardAccount` function. We expect the address to be in the format of 0x....",
+        "reward": 60,
+        "details": "Explore the DAO contract on Etherscan to learn how historical smart contracts are structured. This exercise helps you become comfortable with reading on-chain data using the public interface."
     },
     {
         "id": 4,
