@@ -1,11 +1,18 @@
 [
     {
         "id": 1,
-        "title": "Blockchain Fundamentals",
+        "title": "One Word to Rule Them All",
         "description": "What is the core technology you are learning in this course? Submit the keccak256 hash of the correct one-word answer.",
         "hashHint": "The answer is one word, all lowercase, no punctuation or spaces. Hash it using keccak256 and submit the result starting with 0x.",
         "details": "Blockchain technology enables secure, decentralized, and transparent data storage across a network of nodes. It is the foundation of cryptocurrencies and other distributed ledger technologies. Your task is to identify the term that refers to this core innovation.",
-        "reward": 10
+        "reward": 10,
+        "theme": "Foundations",
+        "tags": [
+            "blockchain",
+            "basics",
+            "hashing"
+        ],
+        "estimatedTime": "5 minutes"
     },
     {
         "id": 2,
@@ -13,40 +20,143 @@
         "description": "Find the political title hidden in the Genesis Block coinbase transaction input. It’s one word and not 'prime'.",
         "hashHint": "Format your answer to lowercase, no spaces, then hash it using keccak256. Submit the resulting 0x-prefixed hash.",
         "details": "The Genesis Block of Bitcoin contains a message that alludes to a newspaper headline. Within the coinbase input field, this message includes a political role relevant to the UK at the time. Decode the hex-encoded input and identify this title — remember, it is a role, not a person’s name.",
-        "reward": 10
+        "reward": 10,
+        "theme": "Blockchain History",
+        "tags": [
+            "bitcoin",
+            "genesis block",
+            "coinbase",
+            "hex"
+        ],
+        "estimatedTime": "8 minutes"
     },
     {
         "id": 3,
+        "title": "Understanding Ethereum Transactions",
+        "description": "Every action on the Ethereum blockchain, from sending Ether to calling a smart contract function, is a transaction. Transactions consume 'gas'. Besides the `from` and `to` addresses, what is the third crucial component that determines the cost of an Ethereum transaction?",
+        "hashHint": "Submit the single-word answer, all lowercase. Hash using keccak256, prefixed with 0x.",
+        "details": "This quiz introduces the concept of gas fees, which is fundamental to interacting with Ethereum. It's the 'fuel' for every operation on the Ethereum Virtual Machine.",
+        "reward": 20,
+        "theme": "Ethereum Basics",
+        "tags": [
+            "ethereum",
+            "transactions",
+            "gas",
+            "fees"
+        ],
+        "estimatedTime": "6 minutes"
+    },
+    {
+        "id": 4,
+        "title": "The Ethereum Virtual Machine (EVM)",
+        "description": "At the heart of Ethereum is a powerful, decentralized runtime environment. This global computer executes smart contract code and manages the state of the blockchain. What is the full name of the virtual machine that processes smart contracts and transactions on the Ethereum network?",
+        "hashHint": "Submit the full phrase, capitalized as a proper noun. Hash using keccak256, prefixed with 0x.",
+        "details": "Understanding the EVM is a core concept for grasping how smart contracts execute code and manage state on the blockchain.",
+        "reward": 20,
+        "theme": "Ethereum Basics",
+        "tags": [
+            "EVM",
+            "ethereum",
+            "smart contracts",
+            "runtime"
+        ],
+        "estimatedTime": "7 minutes"
+    },
+    {
+        "id": 5,
+        "title": "Smart Contract Immutability",
+        "description": "Once a smart contract is deployed to the Ethereum blockchain, its code typically cannot be changed. This characteristic is a cornerstone of trustlessness, but it also has implications. If a bug is discovered in a deployed smart contract, can the contract's code be directly modified on the blockchain? Answer 'yes' or 'no'.",
+        "hashHint": "Submit the single-word answer, all lowercase. Hash using keccak256, prefixed with 0x.",
+        "details": "This quiz addresses a critical aspect of smart contracts: their immutability after deployment. This design choice contributes to security but also means bugs are permanent.",
+        "reward": 20,
+        "theme": "Smart Contracts",
+        "tags": [
+            "immutability",
+            "smart contracts",
+            "security"
+        ],
+        "estimatedTime": "6 minutes"
+    },
+    {
+        "id": 6,
         "title": "The First NFT",
         "description": "Explore one of the earliest and most iconic NFT projects on Ethereum. Use a blockchain explorer to find out what name it used for its token.",
         "hashHint": "Use Etherscan and go to contract address 0x06012c8cf97BEaD5deAe237070F9587f8E7A266d. Look for the name of the token (not the symbol).",
         "details": "CryptoKitties was among the first widely adopted NFT projects. It launched in late 2017 and used a custom ERC-721 smart contract. This quiz tests your ability to locate basic metadata from an existing deployed smart contract.",
-        "reward": 20
+        "reward": 20,
+        "theme": "NFTs",
+        "tags": [
+            "erc-721",
+            "cryptokitties",
+            "smart contracts",
+            "security"
+        ],
+        "estimatedTime": "7 minutes"
     },
     {
-        "id": 4,
+        "id": 7,
         "title": "Multisig Wallets in Practice",
         "description": "What is the minimum number of signatures required to execute a transaction in the ENS DAO Gnosis Safe at 0x0da0c3e52c977ed3cbc641ff02dd271c3ed55afe on Ethereum mainnet?",
         "hashHint": "Submit the number only hashed using keccak256, prefixed with 0x.",
-        "details": "Go to the Contract tab on Etherscan, then select the 'Read as Proxy' tab. Find and call the function named `getThreshold`.",
-        "reward": 25
+        "details": "Multisig wallets enhance security by requiring multiple approvals before executing transactions. This prevents unauthorized access or single-point failure. Go to the Contract tab on Etherscan, then select the 'Read as Proxy' tab. Find and call the function named `getThreshold`.",
+        "reward": 30,
+        "theme": "Ethereum Security",
+        "tags": [
+            "multisig",
+            "gnosis safe",
+            "dao",
+            "etherscan"
+        ],
+        "estimatedTime": "8 minutes"
     },
     {
-        "id": 5,
+        "id": 8,
+        "title": "ERC-20 Token Symbol Lookup",
+        "description": "ERC-20 tokens are the most common fungible tokens on Ethereum. Use Etherscan to look up the contract at `0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48` (USDC). What is the symbol of this token?",
+        "hashHint": "Format your answer in lowercase, no spaces. Hash it using keccak256 and submit the 0x-prefixed result.",
+        "details": "This quiz teaches you to find and interpret basic token metadata using a blockchain explorer. ERC-20 tokens have standard functions to retrieve their name, symbol, and total supply.",
+        "reward": 30,
+        "theme": "Token Standards",
+        "tags": [
+            "erc-20",
+            "tokens",
+            "usdc",
+            "symbol",
+            "etherscan"
+        ],
+        "estimatedTime": "7 minutes"
+    },
+    {
+        "id": 9,
+        "title": "Smart Contract Event Discovery: ERC-20 Transfer",
+        "description": "ERC-20 contracts emit events when tokens are transferred. Use Etherscan to review the contract at `0x6b175474e89094c44da98b954eedeac495271d0f` (DAI). What is the name of the event emitted when a transfer occurs?",
+        "hashHint": "Submit the event name as a single word, all lowercase, no spaces. Hash it using keccak256 and prefix the result with 0x.",
+        "details": "This quiz introduces you to reading and understanding contract events/logs, a key part of blockchain transparency. Events are crucial for off-chain applications to track activities on the blockchain without having to read the entire transaction data.",
+        "reward": 40,
+        "theme": "Smart Contracts",
+        "tags": [
+            "erc-20",
+            "events",
+            "logs",
+            "transparency",
+            "dai"
+        ],
+        "estimatedTime": "10 minutes"
+    },
+    {
+        "id": 10,
         "title": "The DAO Hack",
-        "description": "In 2016, the infamous DAO smart contract became the target of a major exploit. This contract still exists on the Ethereum blockchain and offers a glimpse into the early history of decentralized governance.",
-        "question": "What is the `rewardAccount` address listed in the DAO contract at `0xbb9bc244d798123fde783fcc1c72d3bb8c189413`?",
-        "hint": "On the Contract menu of Etherscan, use the Read Contract tab to find the `rewardAccount` function. We expect the address to be in the format of 0x....",
+        "description": "What is the `rewardAccount` address listed in the DAO contract at `0xbb9bc244d798123fde783fcc1c72d3bb8c189413`?",
+        "hashHint": "On the Contract menu of Etherscan, use the Read Contract tab to find the `rewardAccount` function. We expect the address to be in the format of 0x....",
+        "details": "This hack ultimately led to Ethereum and Ethereum Classic splitting. Explore the DAO contract on Etherscan to learn how historical smart contracts are structured. This exercise helps you become comfortable with reading on-chain data using the public interface.",
         "reward": 60,
-        "details": "Explore the DAO contract on Etherscan to learn how historical smart contracts are structured. This exercise helps you become comfortable with reading on-chain data using the public interface."
-    },
-    {
-        "id": 4,
-        "title": "Reading the Chain",
-        "description": "In 2016, the infamous DAO smart contract became the target of a major exploit. This contract still exists on the Ethereum blockchain and offers a glimpse into the early history of decentralized governance.",
-        "question": "What is the `rewardAccount` address listed in the DAO contract at `0xbb9bc244d798123fde783fcc1c72d3bb8c189413`?",
-        "hint": "On the Contract menu of Etherscan, use the Read Contract tab to find the `rewardAccount` function. We expect the address to be in the format of 0x....",
-        "reward": 60,
-        "details": "Explore the DAO contract on Etherscan to learn how historical smart contracts are structured. This exercise helps you become comfortable with reading on-chain data using the public interface."
+        "theme": "Blockchain History",
+        "tags": [
+            "the dao",
+            "hack",
+            "fork",
+            "ethereum classic"
+        ],
+        "estimatedTime": "12 minutes"
     }
 ]
