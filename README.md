@@ -69,7 +69,6 @@ Use the on-page form to submit your response:
 - Call the smart contract’s checkQuizAnswer(...) function with your hash
 3. If your answer is correct:
 - ✅ You’ll see a success message
-- 🎁 You’ll automatically receive 10 ESCAPE tokens
 - 📌 Your completion will be recorded on-chain
 
 ⚠️ You can only complete each quiz once per wallet.
@@ -85,8 +84,6 @@ Each time you successfully complete a quiz:
 ---
 
 ### 👛 How to View ESCAPE Tokens in MetaMask
-
-After answering a quiz correctly, you’ll automatically receive 10 ESCAPE tokens to your wallet.
 
 To see your tokens in MetaMask:
 1. Open MetaMask and switch to the QBFT Education Network.
