@@ -9,6 +9,8 @@ broadcast/
 lib/
 remappings.txt
 escape-token/broadcast/
+escape-token/out/
+escape-token/cache/
 
 # Ignore legacy folder EXCEPT include it again
 legacy/*
@@ -22,6 +24,8 @@ legacy/*
 # 🧪 Test coverage or logs (if you add later)
 coverage/
 logs/
+*.log
+*.env
 
 # ⛓️ VSCode
 .vscode/escape-token/broadcast/
