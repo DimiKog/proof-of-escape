@@ -52,11 +52,10 @@ You can:
 - Follow the on-screen hints to understand where to look (e.g., block data, Ethereum history) and how to format your answer for submission.
 - You must answer each quiz in order — you cannot move to the next quiz until you have correctly solved the previous one.
 
-### 4. 🧪 Try the Hash Tool (Optional)
+### 4. 🔍 Use the Built-in Hash Tool
 
-If the quiz requires a keccak256 hash, you can:
-- 🧪 Use the built-in hash tester at the bottom of the homepage
-- 💻 Or generate the hash using Remix or any Solidity-based hashing tool
+- 🧪 Use the built-in hash tester located at the bottom of the homepage to compute your keccak256 hash.
+- This tool is required for formatting and hashing your answer correctly before submitting it on-chain.
 
 ### 5. ✅ Submit Your Answer
 
