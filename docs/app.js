@@ -295,7 +295,7 @@ function createNetworkInstructionsToggle() {
         <h3>🌐 Add Besu Network to MetaMask</h3>
         <table class="network-instructions">
             <tr><td><b>Network Name</b></td><td>QBFT_Besu_EduNet</td></tr>
-            <tr><td><b>New RPC URL</b></td><td><code>http://195.251.92.200</code></td></tr>
+            <tr><td><b>New RPC URL</b></td><td><code>http://195.251.92.200/rpc/</code></td></tr>
             <tr><td><b>Chain ID</b></td><td>424242</td></tr>
             <tr><td><b>Currency Symbol</b></td><td>EDU-D</td></tr>
             <tr><td><b>Block Explorer URL</b></td><td><code>http://83.212.76.39</code></td></tr>
