@@ -9,6 +9,12 @@ fetch("abi/ProofOfEscape.json")
     .then(loadedAbi => {
         abi = loadedAbi;
         initialize();
+
+        if (window.ethereum) {
+            window.ethereum.on("accountsChanged", () => {
+                window.location.reload(); // Force re-init everything on account switch
+            });
+        }
     });
 
 let quizzes = [];
@@ -68,6 +74,13 @@ async function initialize() {
 
     await loadQuizzes(); // load quizzes after contract is ready
     renderQuizzes();
+
+    // Clear quiz display on load
+    document.getElementById("quizDescription").textContent = "";
+    document.getElementById("quizHint").innerHTML = "";
+    document.getElementById("quizReward").innerHTML = "";
+    document.getElementById("quizDetails").style.display = "none";
+    document.getElementById("quizIdDisplay").textContent = "";
 }
 
 document.getElementById("quizDropdown").addEventListener("change", event => {
@@ -203,13 +216,14 @@ async function initAdminPanel() {
                     const tx = await contract.setQuizHash(quizId, hash);
                     await tx.wait();
                     uploadStatus.textContent = `✅ Uploaded hash for Quiz ${quizId}: ${hash}`;
+                    document.getElementById("adminPlainAnswer").value = ""; // Clear the plain answer for security
                 } catch (err) {
                     console.error(err);
                     uploadStatus.textContent = `❌ Error uploading hash: ${err.message}`;
                 }
             };
         } else {
-            console.log("Not admin – admin panel hidden.");
+            adminSection.style.display = "none"; // ensure it is hidden
         }
     } catch (err) {
         console.error("Error checking admin:", err);
