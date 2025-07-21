@@ -33,8 +33,8 @@
     {
         "id": 3,
         "title": "Understanding Ethereum Transactions",
-        "description": "Every action on the Ethereum blockchain, from sending Ether to calling a smart contract function, is a transaction. Transactions consume 'gas'. Besides the `from` and `to` addresses, what is the third crucial component that determines the cost of an Ethereum transaction?",
-        "hashHint": "Submit the single-word answer, all lowercase. Hash using keccak256, prefixed with 0x.",
+        "description": "Every action on the Ethereum blockchain, from sending Ether to calling a smart contract function, is a transaction. Transactions consume 'gas'. Besides the `from` and `to` addresses, what is the third crucial component that determines the cost of an Ethereum transaction? (Hint: the answer is a single word formed by merging two related terms.)",
+        "hashHint": "Submit the single-word answer, all lowercase. It's formed by merging two common words (related to gas and cost). Hash using keccak256, prefixed with 0x.",
         "details": "This quiz introduces the concept of gas fees, which is fundamental to interacting with Ethereum. It's the 'fuel' for every operation on the Ethereum Virtual Machine.",
         "reward": 20,
         "theme": "Ethereum Basics",
