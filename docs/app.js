@@ -81,6 +81,8 @@ async function initialize() {
     document.getElementById("quizReward").innerHTML = "";
     document.getElementById("quizDetails").style.display = "none";
     document.getElementById("quizIdDisplay").textContent = "";
+
+    createNetworkInstructionsToggle();
 }
 
 document.getElementById("quizDropdown").addEventListener("change", event => {
@@ -154,6 +156,7 @@ async function connectWallet() {
 
     provider = new ethers.BrowserProvider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
+    await checkNetworkMismatch();
     signer = await provider.getSigner();
 
     const address = await signer.getAddress();
@@ -162,6 +165,13 @@ async function connectWallet() {
     contract = new ethers.Contract(contractAddress, abi, signer);
 
     await initAdminPanel();
+}
+
+async function checkNetworkMismatch() {
+    const chainId = await window.ethereum.request({ method: "eth_chainId" });
+    if (chainId !== "0x67932") {
+        alert("⚠️ You are connected to the wrong network. Please switch to QBFT_Besu_EduNet.");
+    }
 }
 
 async function register() {
@@ -182,13 +192,24 @@ async function register() {
 }
 
 async function submitAnswer() {
-    if (!contract) return alert("Connect wallet first");
+    const submitBtn = document.getElementById("submitAnswer");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting...";
+
+    if (!contract) {
+        alert("Connect wallet first");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit";
+        return;
+    }
 
     const quizId = document.getElementById("quizId").value.trim();
     const userHash = document.getElementById("answer").value.trim().toLowerCase();
 
     if (!/^0x[0-9a-f]{64}$/.test(userHash)) {
         alert("❌ Invalid hash format.");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit";
         return;
     }
 
@@ -202,12 +223,18 @@ async function submitAnswer() {
             document.getElementById("result").textContent = "✅ Correct hash submitted! Token reward sent!";
             markQuizCompleted(parseInt(quizId));
             renderQuizzes();
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Submit";
         } else {
             document.getElementById("result").textContent = "❌ Hash submitted but was incorrect.";
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Submit";
         }
     } catch (err) {
         console.error(err);
         document.getElementById("result").textContent = "⚠️ " + (err?.reason || err?.message);
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Submit";
     }
 }
 
@@ -252,4 +279,39 @@ async function initAdminPanel() {
     } catch (err) {
         console.error("Error checking admin:", err);
     }
+}
+
+function createNetworkInstructionsToggle() {
+    const container = document.getElementById("networkInstructionsContainer");
+    if (!container) return;
+
+    const toggleBtn = document.createElement("button");
+    toggleBtn.textContent = "ℹ️ Show Network Instructions";
+    toggleBtn.className = "toggle-instructions-btn";
+
+    const instructionsDiv = document.createElement("div");
+    instructionsDiv.style.display = "none";
+    instructionsDiv.innerHTML = `
+        <h3>🌐 Add Besu Network to MetaMask</h3>
+        <table class="network-instructions">
+            <tr><td><b>Network Name</b></td><td>QBFT_Besu_EduNet</td></tr>
+            <tr><td><b>New RPC URL</b></td><td><code>http://195.251.92.200</code></td></tr>
+            <tr><td><b>Chain ID</b></td><td>424242</td></tr>
+            <tr><td><b>Currency Symbol</b></td><td>EDU-D</td></tr>
+            <tr><td><b>Block Explorer URL</b></td><td><code>http://83.212.76.39</code></td></tr>
+        </table>
+    `;
+
+    toggleBtn.onclick = () => {
+        if (instructionsDiv.style.display === "none") {
+            instructionsDiv.style.display = "block";
+            toggleBtn.textContent = "❌ Hide Network Instructions";
+        } else {
+            instructionsDiv.style.display = "none";
+            toggleBtn.textContent = "ℹ️ Show Network Instructions";
+        }
+    };
+
+    container.appendChild(toggleBtn);
+    container.appendChild(instructionsDiv);
 }
