@@ -25,7 +25,7 @@ Use the following settings:
 | Field                     | Value                                       |
 |--------------------------|----------------------------------------------|
 | **Network Name**         | QBFT_Besu_EduNet                             |
-| **New RPC URL**          | `http://195.251.92.200`                      |
+| **New RPC URL**          | `http://195.251.92.200/rpc/`                      |
 | **Chain ID**             | `424242`                                     |
 | **Currency Symbol**      | `EDU-D`                                      |
 | **Block Explorer URL**   | `http://83.212.76.39`                        |
