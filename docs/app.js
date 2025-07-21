@@ -128,6 +128,30 @@ function copyHashToClipboard() {
 async function connectWallet() {
     if (!window.ethereum) return alert("Please install MetaMask.");
 
+    // Prompt MetaMask to add or switch to QBFT Besu EduNet
+    const besuNetwork = {
+        chainId: "0x67932", // 424242 in hex
+        chainName: "QBFT_Besu_EduNet",
+        rpcUrls: ["http://195.251.92.200"],
+        nativeCurrency: {
+            name: "EDU-D",
+            symbol: "EDU-D",
+            decimals: 18
+        },
+        blockExplorerUrls: ["http://83.212.76.39"]
+    };
+
+    try {
+        await window.ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [besuNetwork]
+        });
+    } catch (addError) {
+        console.error("Failed to add or switch network:", addError);
+        alert("⚠️ Failed to switch to QBFT_Besu_EduNet. Please add it manually in MetaMask.");
+        return;
+    }
+
     provider = new ethers.BrowserProvider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
     signer = await provider.getSigner();
