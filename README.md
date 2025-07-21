@@ -13,7 +13,7 @@ Welcome to the **Proof of Escape** repository! This project is designed to help 
 - Submit their answers on-chain 🔗
 - Earn **ESCAPE tokens** as proof of completion 🎁
 
-You do **not** need to deploy any smart contracts yourself — the game is pre-deployed on a custon QBFT Education Network based on **Hyperledger Besu**, and ready to use!
+You do **not** need to deploy any smart contracts yourself — the game is pre-deployed on a custom QBFT Education Network based on **Hyperledger Besu**, and ready to use!
 
 ---
 
@@ -66,7 +66,7 @@ Use the on-page form to submit your response:
 - Make sure you’ve followed the quiz instructions to format your input correctly before hashing.
 2. The app will:
 - Validate the hash format
-- Call the smart contract’s checkQuizAnswer(...) function with your hash
+- Call the smart contract’s `checkQuizAnswer(...)` function with your hash
 3. If your answer is correct:
 - ✅ You’ll see a success message
 - 📌 Your completion will be recorded on-chain
@@ -93,7 +93,7 @@ To see your tokens in MetaMask:
 
 ✅ You will now see your ESCAPE balance in MetaMask.
 
-🔎 If you ever forget the token address, you can also find it in contract-info/contract-address.txt.
+🔎 If you ever forget the token address, it is displayed on the frontend after registration or can be found in the `meta/` folder if you're running locally.
 
 ### 📊 Quiz Completion Tracking
 
@@ -108,14 +108,14 @@ The repository’s structure is as follows:
 
 ```
 proof-of-escape/
-├── contracts/         # Solidity contracts (ProofOfEscape, EscapeToken)
-├── guides/            # MetaMask, faucet, and Besu setup instructions
-├── questions/         # Markdown files with quiz instructions
-├── contract-info/     # ABI, deployed addresses
-├── meta/              # Metadata files (e.g. remappings, addresses)
-├── legacy/            # Older versions and unused files
-├── README.md          # This file
-├── LICENSE            # MIT License
+├── docs/              # Frontend code served via GitHub Pages
+├── escape-token/      # Solidity contracts: ProofOfEscape, EscapeToken
+├── guides/            # Setup guides (MetaMask, faucet, Besu, etc.)
+├── legacy/lib/        # Deprecated libraries or early versions
+├── meta/              # Project metadata (remappings, .txt info, etc.)
+├── node_modules/      # Local development dependencies (gitignored)
+├── .gitignore         # Ignores build, cache, node_modules, etc.
+├── README.md          # Project overview and usage instructions
 ```
 
 
