@@ -19,7 +19,7 @@
         "title": "A Message in the Genesis",
         "description": "Find the political title hidden in the Genesis Block coinbase transaction input. It’s one word and not 'prime'.",
         "hashHint": "Format your answer to lowercase, no spaces, then hash it using keccak256. Submit the resulting 0x-prefixed hash.",
-        "details": "The Genesis Block of Bitcoin contains a message that alludes to a newspaper headline. Within the coinbase input field, this message includes a political role relevant to the UK at the time. Decode the hex-encoded input and identify this title — remember, it is a role, not a person’s name.",
+        "details": "The Genesis Block of Bitcoin contains a message that alludes to a newspaper headline. Within the coinbase input field, this message includes a political role relevant to the UK at the time. You can view the Bitcoin Genesis Block on blockchain.com by visiting https://www.blockchain.com/explorer/blocks/btc/0. In the coinbase transaction, look for the `sigscript` field — this is where the message is stored in hex. Decode the hex string manually (e.g., using an online hex-to-text converter) to read the embedded text. Identify the political role mentioned — it is one word, lowercase, and not a person's name.",
         "reward": 10,
         "theme": "Blockchain History",
         "tags": [
