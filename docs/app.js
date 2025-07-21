@@ -73,6 +73,12 @@ async function initialize() {
     document.getElementById("copyHashButton").onclick = copyHashToClipboard;
 
     await loadQuizzes(); // load quizzes after contract is ready
+
+    provider = new ethers.BrowserProvider(window.ethereum);
+    signer = await provider.getSigner();
+    contract = new ethers.Contract(contractAddress, abi, signer);
+    await initAdminPanel();
+
     renderQuizzes();
 
     // Clear quiz display on load
