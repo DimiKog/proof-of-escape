@@ -109,9 +109,9 @@ The repository’s structure is as follows:
 ```
 proof-of-escape/
 ├── docs/              # Frontend code served via GitHub Pages
-├── escape-token/      # Solidity contracts: ProofOfEscape, EscapeToken
+├── contracts/         # Solidity contracts: ProofOfEscape, EscapeToken
 ├── guides/            # Setup guides (MetaMask, faucet, Besu, etc.)
-├── legacy/lib/        # Deprecated libraries or early versions
+├── .archive/lib/      # Deprecated libraries or early versions
 ├── meta/              # Project metadata (remappings, .txt info, etc.)
 ├── node_modules/      # Local development dependencies (gitignored)
 ├── .gitignore         # Ignores build, cache, node_modules, etc.
