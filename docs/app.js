@@ -3,6 +3,19 @@ const contractAddress = CONFIG.CONTRACT_ADDRESS;
 let provider, signer, contract;
 let abi;
 
+function setUIEnabled(enabled) {
+    document.getElementById("registerButton").disabled = !enabled;
+    document.getElementById("submitAnswer").disabled = !enabled;
+    document.getElementById("quizDropdown").disabled = !enabled;
+    document.getElementById("startQuizBtn").disabled = !enabled;
+}
+
+window.addEventListener("load", () => {
+    if (localStorage.getItem("walletConnected") === "true") {
+        connectWallet();
+    }
+});
+
 // Load ABI
 fetch("abi/ProofOfEscape.json")
     .then(res => res.json())
@@ -76,6 +89,20 @@ async function initialize() {
 
     provider = new ethers.BrowserProvider(window.ethereum);
     signer = await provider.getSigner();
+
+    const network = await provider.getNetwork();
+    const networkName = 'QBFT_Besu_EduNet';
+    const expectedChainId = 424242;
+
+    if (network.chainId !== expectedChainId) {
+        document.getElementById('networkStatus').textContent =
+            `⚠️ Not connected to ${networkName}. Please switch networks in MetaMask.`;
+        return;
+    } else {
+        document.getElementById('networkStatus').textContent =
+            `✅ Connected to ${networkName}`;
+    }
+
     contract = new ethers.Contract(contractAddress, abi, signer);
     await initAdminPanel();
 
@@ -150,6 +177,16 @@ async function connectWallet() {
                     method: 'wallet_switchEthereumChain',
                     params: [{ chainId: targetChainId }]
                 });
+                setUIEnabled(true);
+                const statusBox = document.createElement("div");
+                statusBox.textContent = "✅ Switched to QBFT_Besu_EduNet";
+                statusBox.style.background = "#d4edda";
+                statusBox.style.color = "#155724";
+                statusBox.style.padding = "10px";
+                statusBox.style.marginTop = "10px";
+                statusBox.style.borderRadius = "5px";
+                document.body.insertBefore(statusBox, document.body.firstChild);
+                setTimeout(() => statusBox.remove(), 4000);
             } catch (switchError) {
                 if (switchError.code === 4902) {
                     try {
@@ -167,6 +204,16 @@ async function connectWallet() {
                                 blockExplorerUrls: ['http://83.212.76.39']
                             }]
                         });
+                        setUIEnabled(true);
+                        const statusBox = document.createElement("div");
+                        statusBox.textContent = "✅ Switched to QBFT_Besu_EduNet";
+                        statusBox.style.background = "#d4edda";
+                        statusBox.style.color = "#155724";
+                        statusBox.style.padding = "10px";
+                        statusBox.style.marginTop = "10px";
+                        statusBox.style.borderRadius = "5px";
+                        document.body.insertBefore(statusBox, document.body.firstChild);
+                        setTimeout(() => statusBox.remove(), 4000);
                     } catch (addError) {
                         console.error("Failed to add network", addError);
                         alert("⚠️ Failed to add QBFT_Besu_EduNet. Please add it manually in MetaMask.");
@@ -178,10 +225,13 @@ async function connectWallet() {
                     return;
                 }
             }
+        } else {
+            setUIEnabled(true);
         }
 
         const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
         document.getElementById('walletAddress').textContent = accounts[0];
+        localStorage.setItem("walletConnected", "true");
     } catch (error) {
         console.error("Error during wallet connection", error);
         alert("⚠️ Could not connect wallet. Check console for details.");
@@ -190,8 +240,11 @@ async function connectWallet() {
 
 async function checkNetworkMismatch() {
     const chainId = await window.ethereum.request({ method: "eth_chainId" });
-    if (chainId !== "0x67932") {
+    if (chainId !== targetChainId) {
+        setUIEnabled(false);
         alert("⚠️ You are connected to the wrong network. Please switch to QBFT_Besu_EduNet.");
+    } else {
+        setUIEnabled(true);
     }
 }
 
