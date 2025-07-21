@@ -68,6 +68,20 @@
         <p><strong>Selected Quiz ID:</strong> <span id="quizIdDisplay">None</span></p>
     </section>
 
+    <section id="adminSection" style="display:none; margin-top: 2rem;">
+        <h2>🛠️ Admin: Upload Answer Hash</h2>
+        <div>
+            <label for="adminQuizId">Quiz ID:</label>
+            <input type="number" id="adminQuizId" placeholder="e.g., 3" />
+        </div>
+        <div>
+            <label for="adminPlainAnswer">Correct Answer (plain text):</label>
+            <input type="text" id="adminPlainAnswer" placeholder="e.g., the moon" />
+        </div>
+        <button id="uploadHashButton">📤 Upload Hash</button>
+        <p id="uploadStatus"></p>
+    </section>
+
     <script src="config.js"></script>
     <script src="app.js" type="module"></script>
 </body>

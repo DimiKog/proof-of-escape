@@ -123,6 +123,8 @@ async function connectWallet() {
     document.getElementById("walletAddress").textContent = address;
 
     contract = new ethers.Contract(contractAddress, abi, signer);
+
+    await initAdminPanel();
 }
 
 async function register() {
@@ -169,5 +171,47 @@ async function submitAnswer() {
     } catch (err) {
         console.error(err);
         document.getElementById("result").textContent = "⚠️ " + (err?.reason || err?.message);
+    }
+}
+
+async function initAdminPanel() {
+    const adminSection = document.getElementById("adminSection");
+    const uploadButton = document.getElementById("uploadHashButton");
+    const uploadStatus = document.getElementById("uploadStatus");
+
+    if (!signer || !contract) return;
+
+    try {
+        const currentUser = await signer.getAddress();
+        const owner = await contract.owner();
+
+        if (currentUser.toLowerCase() === owner.toLowerCase()) {
+            adminSection.style.display = "block";
+            console.log("🛡️ Admin wallet connected.");
+
+            uploadButton.onclick = async () => {
+                const quizId = parseInt(document.getElementById("adminQuizId").value.trim());
+                const plainAnswer = document.getElementById("adminPlainAnswer").value.trim().toLowerCase();
+
+                if (!quizId || !plainAnswer) {
+                    uploadStatus.textContent = "❌ Please fill in both fields.";
+                    return;
+                }
+
+                try {
+                    const hash = ethers.keccak256(ethers.toUtf8Bytes(plainAnswer));
+                    const tx = await contract.setQuizHash(quizId, hash);
+                    await tx.wait();
+                    uploadStatus.textContent = `✅ Uploaded hash for Quiz ${quizId}: ${hash}`;
+                } catch (err) {
+                    console.error(err);
+                    uploadStatus.textContent = `❌ Error uploading hash: ${err.message}`;
+                }
+            };
+        } else {
+            console.log("Not admin – admin panel hidden.");
+        }
+    } catch (err) {
+        console.error("Error checking admin:", err);
     }
 }
