@@ -26,6 +26,10 @@ export async function connectWallet() {
     try {
         provider = new ethers.BrowserProvider(window.ethereum);
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        if (!accounts || accounts.length === 0) {
+            alert('No accounts found in MetaMask.');
+            return;
+        }
         signer = await provider.getSigner();
         userAddress = accounts[0];
         const el = document.getElementById('walletAddress');
@@ -35,6 +39,7 @@ export async function connectWallet() {
             await switchToBesuNetwork();
         }
         showTempMessage('walletStatus', '✅ Wallet connected!', 3000);
+        addDisconnectButton();
     } catch (err) {
         console.error('Wallet connection failed:', err);
     }
@@ -92,4 +97,25 @@ export function addDisconnectButton() {
     button.style.cursor = 'pointer';
 
     walletContainer.insertAdjacentElement('afterend', button);
+}
+// Register wallet function to interact with the smart contract
+export async function registerWallet(contractInstance) {
+    try {
+        const address = getUserAddress();
+        if (!address) throw new Error('Wallet not connected');
+
+        const isRegistered = await contractInstance.registeredUsers(address);
+        if (isRegistered) {
+            console.log('User already registered');
+            return;
+        }
+
+        const tx = await contractInstance.connect(getSigner()).register();
+        await tx.wait();
+        console.log('Registration successful');
+        showTempMessage('walletStatus', '✅ Registration successful!', 3000);
+    } catch (err) {
+        console.error('Failed to register wallet:', err);
+        showTempMessage('walletStatus', '⚠️ Registration failed. Check console.', 3000);
+    }
 }

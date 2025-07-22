@@ -2,7 +2,7 @@
 
 import { getSigner } from './wallet.js';
 import { keccak256, toUtf8Bytes } from 'ethers';
-import contractABI from './contractABI.js';
+import ProofOfEscape from '../abi/ProofOfEscape.json' assert { type: 'json' };
 import { showTempMessage } from './utils.js';
 
 const contractAddress = '0x874205E778d2b3E5F2B8c1eDfBFa619e6fF0c9aF';
@@ -21,7 +21,7 @@ export async function handleAdminUpload() {
 
     const hash = keccak256(toUtf8Bytes(plainAnswer));
     const signer = getSigner();
-    const contract = new ethers.Contract(contractAddress, contractABI, signer);
+    const contract = new ethers.Contract(contractAddress, ProofOfEscape.abi, signer);
 
     try {
         if (button) {

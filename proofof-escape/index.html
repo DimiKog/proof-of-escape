@@ -25,7 +25,7 @@
             QBFT_Besu_EduNet network in MetaMask.</p>
         <button id="connectButton">Connect Wallet</button>
         <button id="disconnectButton" style="display:none;">Disconnect Wallet</button>
-        <button id="registerButton">Register</button>
+        <button id="registerButton" style="display: none;">Register</button>
         <details id="networkInstructionsToggle" style="margin-top: 1rem;">
             <summary><strong>🛠️ QBFT_Besu_EduNet Setup Instructions</strong></summary>
             <ul style="font-size: 0.95rem; margin-top: 0.5rem;">
@@ -101,8 +101,9 @@
         <p id="uploadStatus" aria-live="polite"></p>
     </section>
 
-    <script src="config.js"></script>
-    <script src="app.js" type="module"></script>
+    <script type="module" src="/js/config.js"></script>
+    <script type="module" src="/main.js"></script>
+    <script type="module" src="/js/wallet.js"></script>
 </body>
 
 </html>

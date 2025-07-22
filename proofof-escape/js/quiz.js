@@ -1,6 +1,8 @@
 // quiz.js
 
-import { getQuizById, loadQuizList } from './quizData.js';
+import { ethers } from "ethers";
+import ProofOfEscape from '../abi/ProofOfEscape.json' assert { type: "json" };
+const ProofOfEscapeAddress = "0x874205E778d2b3E5F2B8c1eDfBFa619e6fF0c9aF"; // Adjust if different
 
 const quizDropdown = document.getElementById('quizDropdown');
 const quizDescription = document.getElementById('quizDescription');
@@ -11,7 +13,36 @@ const quizReward = document.getElementById('quizReward');
 const startQuizBtn = document.getElementById('startQuizBtn');
 const quizIdDisplay = document.getElementById('quizIdDisplay');
 
+async function loadQuizList() {
+    const response = await fetch('/proof-of-escape/quizzes.json');
+    return await response.json();
+}
+
+async function isUserRegistered() {
+    if (!window.ethereum) return false;
+
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const userAddress = await signer.getAddress();
+
+    const contract = new ethers.Contract(
+        ProofOfEscapeAddress,
+        ProofOfEscape,
+        signer
+    );
+
+    return await contract.registeredUsers(userAddress);
+}
+
 export async function initializeQuizDropdown() {
+    const registered = await isUserRegistered();
+    if (!registered) {
+        quizDropdown.disabled = true;
+        quizDescription.textContent = '⚠️ Please register your wallet first.';
+        quizIdDisplay.textContent = 'None';
+        return;
+    }
+
     const quizzes = await loadQuizList();
     quizzes.forEach(quiz => {
         const option = document.createElement('option');
