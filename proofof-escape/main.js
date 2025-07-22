@@ -37,7 +37,10 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     await controlVisibility();
 
-    document.getElementById('connectButton')?.addEventListener('click', () => connectWallet());
+    document.getElementById('connectButton')?.addEventListener('click', async () => {
+        contract = await connectWallet();
+        await controlVisibility();
+    });
     document.getElementById('registerButton')?.addEventListener('click', () => registerWallet(contract));
 
     document.getElementById('generateHashButton')?.addEventListener('click', generateHash);
