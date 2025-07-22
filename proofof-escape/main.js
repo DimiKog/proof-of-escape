@@ -5,7 +5,7 @@ import { initializeQuizDropdown } from './js/quiz.js';
 import { generateHash, copyHash } from './js/hash.js';
 import { submitAnswer } from './js/submit.js';
 import { handleAdminUpload } from './js/admin.js';
-import { contract } from './js/contractInstance.js';
+const contract = window.contract;
 
 async function controlVisibility() {
     const accounts = await window.ethereum.request({ method: 'eth_accounts' });
@@ -18,9 +18,11 @@ async function controlVisibility() {
     if (!isRegistered) {
         document.getElementById('quizSection').style.display = 'none';
         document.getElementById('registerPrompt').style.display = 'block';
+        document.getElementById('registerButton').style.display = 'inline-block'; // Show register button
     } else {
         document.getElementById('quizSection').style.display = 'block';
         document.getElementById('registerPrompt').style.display = 'none';
+        document.getElementById('registerButton').style.display = 'none'; // Hide register button
     }
 
     if (userAddress.toLowerCase() === owner.toLowerCase()) {
