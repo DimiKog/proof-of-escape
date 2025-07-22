@@ -4,6 +4,7 @@ import { showTempMessage } from './utils.js';
 let provider;
 let signer;
 let userAddress;
+const ADMIN_ADDRESS = '0x5E3a74f09D490F854e12A293E1d6abCBbEad6B60'; // Update if needed
 
 const networkParams = {
     chainId: '0x67932A', // 424242 in hex
@@ -39,7 +40,46 @@ export async function connectWallet() {
             await switchToBesuNetwork();
         }
         showTempMessage('walletStatus', '✅ Wallet connected!', 3000);
+        if (typeof registerWallet === 'function' && typeof contractInstance !== 'undefined') {
+            await registerWallet(contractInstance);
+        }
+
+        const registerBtn = document.getElementById('registerButton');
+        if (registerBtn) {
+            const isRegistered = await contractInstance.registeredUsers(userAddress);
+            if (!isRegistered) {
+                registerBtn.style.display = 'block';
+                registerBtn.onclick = async () => {
+                    await registerWallet(contractInstance);
+                    registerBtn.style.display = 'none';
+                };
+            } else {
+                registerBtn.style.display = 'none';
+            }
+        }
+
         addDisconnectButton();
+
+        // Disable quiz selector for unregistered users
+        const quizSelect = document.getElementById('quizSelect');
+        if (quizSelect) {
+            const isRegistered = await contractInstance.registeredUsers(userAddress);
+            quizSelect.disabled = !isRegistered;
+            // Optionally, add a tooltip if disabled
+            if (!isRegistered) {
+                quizSelect.title = 'You must register before selecting a quiz.';
+            } else {
+                quizSelect.title = '';
+            }
+            const registrationNotice = document.getElementById('registrationNotice');
+            if (registrationNotice) {
+                registrationNotice.style.display = isRegistered ? 'none' : 'block';
+            }
+            const adminSection = document.getElementById('adminSection');
+            if (adminSection && isAdmin()) {
+                adminSection.style.display = 'block';
+            }
+        }
     } catch (err) {
         console.error('Wallet connection failed:', err);
     }
@@ -97,6 +137,9 @@ export function addDisconnectButton() {
     button.style.cursor = 'pointer';
 
     walletContainer.insertAdjacentElement('afterend', button);
+}
+export function isAdmin() {
+    return userAddress?.toLowerCase() === ADMIN_ADDRESS.toLowerCase();
 }
 // Register wallet function to interact with the smart contract
 export async function registerWallet(contractInstance) {
