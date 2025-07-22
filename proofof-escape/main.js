@@ -5,7 +5,7 @@ import { initializeQuizDropdown } from './js/quiz.js';
 import { generateHash, copyHash } from './js/hash.js';
 import { submitAnswer } from './js/submit.js';
 import { handleAdminUpload } from './js/admin.js';
-const contract = contractInstance;
+let contract;
 
 async function controlVisibility() {
     const accounts = await window.ethereum.request({ method: 'eth_accounts' });
@@ -32,13 +32,12 @@ async function controlVisibility() {
     }
 }
 
-// Setup DOM event bindings after DOM is loaded
-window.addEventListener('DOMContentLoaded', () => {
-    connectWallet(contract);
+window.addEventListener('DOMContentLoaded', async () => {
+    contract = await connectWallet();
 
-    controlVisibility();
+    await controlVisibility();
 
-    document.getElementById('connectButton')?.addEventListener('click', () => connectWallet(contract));
+    document.getElementById('connectButton')?.addEventListener('click', () => connectWallet());
     document.getElementById('registerButton')?.addEventListener('click', () => registerWallet(contract));
 
     document.getElementById('generateHashButton')?.addEventListener('click', generateHash);

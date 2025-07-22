@@ -40,9 +40,6 @@ export async function connectWallet() {
             await switchToBesuNetwork();
         }
         showTempMessage('walletStatus', '✅ Wallet connected!', 3000);
-        if (typeof registerWallet === 'function' && typeof contractInstance !== 'undefined') {
-            await registerWallet(contractInstance);
-        }
 
         const registerBtn = document.getElementById('registerButton');
         if (registerBtn) {
@@ -79,6 +76,16 @@ export async function connectWallet() {
             if (adminSection && isAdmin()) {
                 adminSection.style.display = 'block';
             }
+        }
+        // You can now use the contract instance elsewhere
+        try {
+            const contractAddress = '0x874205E778d2b3E5F2B8c1eDfBFa619e6fF0c9aF';
+            const contractABI = await (await fetch('./contract/ProofOfEscape.json')).json();
+            const contractInstance = new ethers.Contract(contractAddress, contractABI, signer);
+            return contractInstance;
+        } catch (abiErr) {
+            console.error('Failed to load contract ABI or instantiate contract:', abiErr);
+            return null;
         }
     } catch (err) {
         console.error('Wallet connection failed:', err);
