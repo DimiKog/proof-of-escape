@@ -7,7 +7,7 @@
     <title>Proof of Escape</title>
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
-  <script type="module" crossorigin src="/proof-of-escape/assets/index-D3oH5Lyn.js"></script>
+  <script type="module" crossorigin src="/proof-of-escape/assets/index-B17zmgk5.js"></script>
   <link rel="stylesheet" crossorigin href="/proof-of-escape/assets/index-D88fXwhs.css">
 </head>
 
@@ -42,24 +42,29 @@
         </details>
     </section>
 
-    <section id="quizSelector">
-        <h2>🧠 Choose a Quiz</h2>
-        <label for="quizDropdown">Select unlocked quiz:</label>
-        <select id="quizDropdown">
-            <option value="">-- Select Quiz --</option>
-        </select>
+    <div id="quizSection" style="display:none;">
+        <section id="quizSelector">
+            <h2>🧠 Choose a Quiz</h2>
+            <label for="quizDropdown">Select unlocked quiz:</label>
+            <select id="quizDropdown">
+                <option value="">-- Select Quiz --</option>
+            </select>
 
-        <div id="quizInfo" style="margin-top: 1rem;">
-            <p id="quizDescription"></p>
-            <details id="quizDetails" style="display: none;">
-                <summary>More Info</summary>
-                <p id="quizDetailsContent"></p>
-            </details>
-            <p id="quizHint"></p>
-            <p id="quizReward"></p>
-            <button id="startQuizBtn" style="margin-top: 1rem;">Start Quiz</button>
-        </div>
-    </section>
+            <div id="quizInfo" style="margin-top: 1rem;">
+                <p id="quizDescription"></p>
+                <details id="quizDetails" style="display: none;">
+                    <summary>More Info</summary>
+                    <p id="quizDetailsContent"></p>
+                </details>
+                <p id="quizHint"></p>
+                <p id="quizReward"></p>
+                <button id="startQuizBtn" style="margin-top: 1rem;">Start Quiz</button>
+            </div>
+            <div id="registrationNotice" style="margin-top: 1rem; color: red; font-weight: bold; display: none;">
+                🛑 You must register before accessing quizzes.
+            </div>
+        </section>
+    </div>
 
     <section>
         <h2>🧪 Hash Generator</h2>
