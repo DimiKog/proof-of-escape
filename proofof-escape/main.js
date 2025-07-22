@@ -1,11 +1,12 @@
 // main.js (Vite entry point)
 
+import contractInstance from './js/contractInstance.js';
 import { connectWallet, registerWallet } from './js/wallet.js';
 import { initializeQuizDropdown } from './js/quiz.js';
 import { generateHash, copyHash } from './js/hash.js';
 import { submitAnswer } from './js/submit.js';
 import { handleAdminUpload } from './js/admin.js';
-const contract = window.contract;
+const contract = contractInstance;
 
 async function controlVisibility() {
     const accounts = await window.ethereum.request({ method: 'eth_accounts' });
@@ -34,11 +35,12 @@ async function controlVisibility() {
 
 // Setup DOM event bindings after DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
-    connectWallet(); // ← automatically connects wallet and shows register button if needed
+    connectWallet(contract);
+
     controlVisibility();
 
-    document.getElementById('connectButton')?.addEventListener('click', connectWallet);
-    document.getElementById('registerButton')?.addEventListener('click', registerWallet);
+    document.getElementById('connectButton')?.addEventListener('click', () => connectWallet(contract));
+    document.getElementById('registerButton')?.addEventListener('click', () => registerWallet(contract));
 
     document.getElementById('generateHashButton')?.addEventListener('click', generateHash);
     document.getElementById('copyHashButton')?.addEventListener('click', copyHash);
