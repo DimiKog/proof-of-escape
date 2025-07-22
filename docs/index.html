@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Proof of Escape</title>
-    <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -24,6 +24,7 @@
         <p id="networkWarning" style="display: none; color: red; font-weight: bold;">⚠️ Please switch to the
             QBFT_Besu_EduNet network in MetaMask.</p>
         <button id="connectButton">Connect Wallet</button>
+        <button id="disconnectButton" style="display:none;">Disconnect Wallet</button>
         <button id="registerButton">Register</button>
         <details id="networkInstructionsToggle" style="margin-top: 1rem;">
             <summary><strong>🛠️ QBFT_Besu_EduNet Setup Instructions</strong></summary>
@@ -62,6 +63,7 @@
     <section>
         <h2>🧪 Hash Generator</h2>
         <p>Type your answer exactly as you would submit it (lowercase, no punctuation).</p>
+        <label for="hashTestInput">Answer (for hashing):</label>
         <input id="hashTestInput" type="text" placeholder="Type your answer..." />
         <button id="generateHashButton">Generate Hash</button>
         <p><strong>Hash Output:</strong></p>
@@ -81,7 +83,7 @@
         </div>
 
         <button id="submitAnswer">Submit Answer</button>
-        <p id="result"></p>
+        <p id="result" aria-live="polite"></p>
         <p><strong>Selected Quiz ID:</strong> <span id="quizIdDisplay">None</span></p>
     </section>
 
@@ -96,7 +98,7 @@
             <input type="text" id="adminPlainAnswer" placeholder="e.g., the moon" />
         </div>
         <button id="uploadHashButton">📤 Upload Hash</button>
-        <p id="uploadStatus"></p>
+        <p id="uploadStatus" aria-live="polite"></p>
     </section>
 
     <script src="config.js"></script>
