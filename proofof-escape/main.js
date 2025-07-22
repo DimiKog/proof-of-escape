@@ -1,6 +1,5 @@
 // main.js (Vite entry point)
 
-import contractInstance from './js/contractInstance.js';
 import { connectWallet, registerWallet } from './js/wallet.js';
 import { initializeQuizDropdown } from './js/quiz.js';
 import { generateHash, copyHash } from './js/hash.js';
