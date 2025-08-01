@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Proof of Escape</title>
+    <link rel="icon" href="data:,">
     <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -108,14 +109,18 @@
     <!-- Load ethers globally -->
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
 
-    <!-- Your app logic (no module type) -->
+    <!-- First load configs -->
     <script src="js/config.js"></script>
-    <script src="js/main.js"></script>
+
+    <!-- Then load helper logic -->
     <script src="js/wallet.js"></script>
     <script src="js/quiz.js"></script>
     <script src="js/submit.js"></script>
     <script src="js/hash.js"></script>
     <script src="js/admin.js"></script>
+
+    <!-- Then finally main logic -->
+    <script src="js/main.js"></script>
 </body>
 
 </html>
