@@ -1,10 +1,5 @@
 // main.js (Vite entry point)
 
-const { connectWallet, registerWallet } = window;
-const { initializeQuizDropdown } = window;
-const { generateHash, copyHash } = window;
-const { submitAnswer } = window;
-const { handleAdminUpload } = window;
 let contract;
 
 async function controlVisibility() {
@@ -33,21 +28,21 @@ async function controlVisibility() {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
-    contract = await connectWallet();
+    contract = await window.connectWallet();
 
     await controlVisibility();
 
     document.getElementById('connectButton')?.addEventListener('click', async () => {
-        contract = await connectWallet();
+        contract = await window.connectWallet();
         await controlVisibility();
     });
-    document.getElementById('registerButton')?.addEventListener('click', () => registerWallet(contract));
+    document.getElementById('registerButton')?.addEventListener('click', () => window.registerWallet(contract));
 
-    document.getElementById('generateHashButton')?.addEventListener('click', generateHash);
-    document.getElementById('copyHashButton')?.addEventListener('click', copyHash);
+    document.getElementById('generateHashButton')?.addEventListener('click', window.generateHash);
+    document.getElementById('copyHashButton')?.addEventListener('click', window.copyHash);
 
-    document.getElementById('submitAnswer')?.addEventListener('click', submitAnswer);
-    document.getElementById('uploadHashButton')?.addEventListener('click', handleAdminUpload);
+    document.getElementById('submitAnswer')?.addEventListener('click', window.submitAnswer);
+    document.getElementById('uploadHashButton')?.addEventListener('click', window.handleAdminUpload);
 
-    initializeQuizDropdown(contract); // Populate quiz list with access control
+    window.initializeQuizDropdown(contract); // Populate quiz list with access control
 });
