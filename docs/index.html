@@ -23,9 +23,10 @@
         </p>
         <p id="networkWarning" style="display: none; color: red; font-weight: bold;">⚠️ Please switch to the
             QBFT_Besu_EduNet network in MetaMask.</p>
+
+        <p id="walletStatus" aria-live="polite" style="margin-top: 0.5rem;"></p>
+
         <button id="connectButton">Connect Wallet</button>
-        <button id="disconnectButton" style="display:none;">Disconnect Wallet</button>
-        <button id="registerButton" style="display: none;">Register</button>
         <details id="networkInstructionsToggle" style="margin-top: 1rem;">
             <summary><strong>🛠️ QBFT_Besu_EduNet Setup Instructions</strong></summary>
             <ul style="font-size: 0.95rem; margin-top: 0.5rem;">
@@ -39,6 +40,12 @@
                 <strong>Save</strong> and return to this page.
             </p>
         </details>
+
+        <div id="registerPrompt" style="margin-top: 1rem;">
+            <p>You must register your wallet to access quizzes.</p>
+            <button id="registerButton">Register</button>
+        </div>
+
     </section>
 
     <div id="quizSection" style="display:none;">
@@ -106,20 +113,15 @@
         <p id="uploadStatus" aria-live="polite"></p>
     </section>
 
-    <!-- Load ethers globally -->
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
 
-    <!-- First load configs -->
-    <script src="js/config.js"></script>
-
-    <!-- Then load helper logic -->
+    <script src="js/utils.js"></script>
     <script src="js/wallet.js"></script>
     <script src="js/quiz.js"></script>
     <script src="js/submit.js"></script>
     <script src="js/hash.js"></script>
     <script src="js/admin.js"></script>
 
-    <!-- Then finally main logic -->
     <script src="js/main.js"></script>
 </body>
 

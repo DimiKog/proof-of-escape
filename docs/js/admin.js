@@ -1,21 +1,33 @@
 // admin.js
 
 (function () {
-    async function handleAdminUpload() {
+    /**
+     * Handles the process of an admin uploading a new quiz answer hash.
+     * @param {object} contractInstance The ethers.js Contract instance.
+     */
+    async function handleAdminUpload(contractInstance) {
+        // Ensure a valid contract instance is provided
+        if (!contractInstance) {
+            console.error('❌ Contract not connected. Cannot upload hash.');
+            window.showTempMessage('uploadStatus', '❌ Wallet not connected or on the wrong network.', 5000, true);
+            return;
+        }
+
         const quizId = Number(document.getElementById('adminQuizId').value);
+        // Use a more robust regex to handle various non-alphanumeric characters.
         const plainAnswer = document.getElementById('adminPlainAnswer')
-            .value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+            .value.trim().toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ');
         const uploadStatusId = 'uploadStatus';
         const button = document.getElementById('uploadHashButton');
 
         if (!Number.isInteger(quizId) || quizId <= 0 || !plainAnswer) {
-            window.showTempMessage('Please enter a valid Quiz ID and Answer.', uploadStatusId, 'error');
+            // Corrected showTempMessage call
+            window.showTempMessage(uploadStatusId, 'Please enter a valid Quiz ID and Answer.', 3000, true);
             return;
         }
 
+        // Calculate the hash using the standard keccak256 function
         const hash = ethers.keccak256(ethers.toUtf8Bytes(plainAnswer));
-        const signer = window.getSigner();
-        const contract = new ethers.Contract('0x874205E778d2b3E5F2B8c1eDfBFa619e6fF0c9aF', window.contractABI, signer);
 
         try {
             if (button) {
@@ -23,13 +35,17 @@
                 button.textContent = 'Uploading...';
             }
 
-            const tx = await contract.uploadAnswer(quizId, hash);
+            // Use the provided contract instance.
+            // Connect to the signer to send the transaction.
+            const tx = await contractInstance.connect(window.getSigner()).uploadAnswer(quizId, hash);
             await tx.wait();
 
-            window.showTempMessage('✅ Hash uploaded successfully!', uploadStatusId, 'success');
+            // Corrected showTempMessage call
+            window.showTempMessage(uploadStatusId, '✅ Hash uploaded successfully!', 3000, false);
         } catch (error) {
             console.error('❌ Failed to upload hash:', error);
-            window.showTempMessage('❌ Failed to upload hash.', uploadStatusId, 'error');
+            // Corrected showTempMessage call
+            window.showTempMessage(uploadStatusId, '❌ Failed to upload hash. Check console for details.', 5000, true);
         } finally {
             if (button) {
                 button.disabled = false;
@@ -38,5 +54,6 @@
         }
     }
 
+    // Expose the function globally, but with a parameter for the contract instance.
     window.handleAdminUpload = handleAdminUpload;
 })();

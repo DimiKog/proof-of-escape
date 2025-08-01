@@ -23,12 +23,14 @@ section {
 }
 
 input,
-button {
+button,
+select {
   padding: 10px;
   margin: 8px 0;
   width: 100%;
   max-width: 400px;
   font-size: 16px;
+  box-sizing: border-box; /* Ensures padding doesn't affect total width */
 }
 
 button {
@@ -37,31 +39,46 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 button:hover {
   background-color: #3182ce;
 }
 
-.quiz-hint {
-  font-weight: bold;
-  text-decoration: underline;
+button:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+}
+
+/* Specific styling for utility messages */
+#walletStatus, #result, #uploadStatus {
   margin-top: 10px;
-}
-
-.quiz-reward {
   font-weight: bold;
-  color: #e53e3e; /* red tone */
-  margin-top: 8px;
 }
 
-/* Enhancements */
-
-#registerButton {
-  margin-top: 16px;
+.message-success {
+  color: green;
 }
 
-#adminPanel {
+.message-error {
+  color: red;
+}
+
+/* Additional styling for elements */
+
+#registerPrompt {
+  margin-top: 20px;
+}
+
+#registrationNotice {
+  color: red;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+/* Corrected admin panel selector */
+#adminSection {
   margin-top: 20px;
   background: #edf2f7;
   border: 1px solid #ccc;
@@ -75,7 +92,8 @@ button:hover {
     padding: 15px;
   }
   input,
-  button {
+  button,
+  select {
     font-size: 14px;
   }
 }

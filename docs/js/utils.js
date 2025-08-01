@@ -8,18 +8,23 @@
  * @param {boolean} isError - Whether it's an error message.
  * @param {string} [cssClass] - Optional CSS class to apply.
  */
-export function showTempMessage(elementId, message, duration = 3000, isError = false, cssClass = '') {
+function showTempMessage(elementId, message, duration = 3000, isError = false, cssClass = '') {
     const el = document.getElementById(elementId);
-    if (!el) return;
+    if (!el) {
+        console.warn(`Element with ID "${elementId}" not found for showTempMessage.`);
+        return;
+    }
 
     el.textContent = message;
     el.style.color = isError ? 'red' : 'green';
     if (cssClass) el.classList.add(cssClass);
+    el.style.display = 'block'; // Ensure it's visible
 
     setTimeout(() => {
         el.textContent = '';
         el.style.color = '';
         if (cssClass) el.classList.remove(cssClass);
+        el.style.display = 'none'; // Hide it again
     }, duration);
 }
 
@@ -28,7 +33,7 @@ export function showTempMessage(elementId, message, duration = 3000, isError = f
  * @param {string} address 
  * @returns {string}
  */
-export function shortenAddress(address) {
+function shortenAddress(address) {
     if (!address) return '';
     return address.slice(0, 6) + '...' + address.slice(-4);
 }
@@ -38,9 +43,9 @@ export function shortenAddress(address) {
  * @param {string} text 
  * @param {string} feedbackElementId 
  */
-export function copyToClipboard(text, feedbackElementId) {
+function copyToClipboard(text, feedbackElementId) {
     navigator.clipboard.writeText(text).then(() => {
-        showTempMessage(feedbackElementId, 'Copied to clipboard ✅', 2000);
+        showTempMessage(feedbackElementId, 'Copied to clipboard ✅', 2000, false);
     }).catch(() => {
         showTempMessage(feedbackElementId, 'Failed to copy ❌', 2000, true);
     });
@@ -51,7 +56,7 @@ export function copyToClipboard(text, feedbackElementId) {
  * @param {number} timestamp - Unix timestamp in seconds or milliseconds.
  * @returns {string}
  */
-export function formatTimestamp(timestamp) {
+function formatTimestamp(timestamp) {
     const ts = String(timestamp).length === 10 ? timestamp * 1000 : timestamp;
     const date = new Date(ts);
     return date.toLocaleString();
@@ -62,7 +67,7 @@ export function formatTimestamp(timestamp) {
  * @param {string} address
  * @returns {boolean}
  */
-export function isValidAddress(address) {
+function isValidAddress(address) {
     return /^0x[a-fA-F0-9]{40}$/.test(address);
 }
 
@@ -71,8 +76,16 @@ export function isValidAddress(address) {
  * @param {string} str
  * @returns {string}
  */
-export function toTitleCase(str) {
+function toTitleCase(str) {
     return str.replace(/\w\S*/g, txt =>
         txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase()
     );
 }
+
+// Expose functions to the global scope for other scripts to use
+window.showTempMessage = showTempMessage;
+window.shortenAddress = shortenAddress;
+window.copyToClipboard = copyToClipboard;
+window.formatTimestamp = formatTimestamp;
+window.isValidAddress = isValidAddress;
+window.toTitleCase = toTitleCase;
