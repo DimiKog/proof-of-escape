@@ -24,7 +24,7 @@ const networkParams = {
         symbol: 'EDU-D',
         decimals: 18
     },
-    rpcUrls: ['https://195.251.92.200/rpc/'],
+    rpcUrls: ['http://195.251.92.200/rpc/'],
     blockExplorerUrls: ['http://83.212.76.39']
 };
 
