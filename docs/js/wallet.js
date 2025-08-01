@@ -24,7 +24,7 @@ const networkParams = {
         symbol: 'EDU-D',
         decimals: 18
     },
-    rpcUrls: ['http://195.251.92.200/rpc/'],
+    rpcUrls: ['https://195.251.92.200/rpc/'],
     blockExplorerUrls: ['http://83.212.76.39']
 };
 
@@ -51,8 +51,13 @@ async function connectWallet() {
         const el = document.getElementById('walletAddress');
         if (el) el.textContent = truncateAddress(userAddress);
         const network = await provider.getNetwork();
-        if (network.chainId !== parseInt(networkParams.chainId, 16)) {
-            await switchToBesuNetwork();
+        const expectedChainId = parseInt(networkParams.chainId, 16);
+        if (network.chainId !== expectedChainId) {
+            try {
+                await switchToBesuNetwork();
+            } catch (err) {
+                console.warn("⚠️ Failed to switch to QBFT_Besu_EduNet:", err);
+            }
         }
         showTempMessage('walletStatus', '✅ Wallet connected!', 3000);
 
