@@ -49,5 +49,5 @@ window.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('submitAnswer')?.addEventListener('click', submitAnswer);
     document.getElementById('uploadHashButton')?.addEventListener('click', handleAdminUpload);
 
-    initializeQuizDropdown(); // Populate quiz list on load
+    initializeQuizDropdown(contract); // Populate quiz list with access control
 });

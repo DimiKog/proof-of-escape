@@ -33,6 +33,11 @@ export async function connectWallet() {
         }
         signer = await provider.getSigner();
         userAddress = accounts[0];
+
+        const contractAddress = '0x874205E778d2b3E5F2B8c1eDfBFa619e6fF0c9aF';
+        const contractABI = await (await fetch('./contract/ProofOfEscape.json')).json();
+        const contractInstance = new ethers.Contract(contractAddress, contractABI, signer);
+
         const el = document.getElementById('walletAddress');
         if (el) el.textContent = truncateAddress(userAddress);
         const network = await provider.getNetwork();
@@ -78,15 +83,7 @@ export async function connectWallet() {
             }
         }
         // You can now use the contract instance elsewhere
-        try {
-            const contractAddress = '0x874205E778d2b3E5F2B8c1eDfBFa619e6fF0c9aF';
-            const contractABI = await (await fetch('./contract/ProofOfEscape.json')).json();
-            const contractInstance = new ethers.Contract(contractAddress, contractABI, signer);
-            return contractInstance;
-        } catch (abiErr) {
-            console.error('Failed to load contract ABI or instantiate contract:', abiErr);
-            return null;
-        }
+        return contractInstance;
     } catch (err) {
         console.error('Wallet connection failed:', err);
     }
