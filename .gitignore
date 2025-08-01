@@ -12,11 +12,6 @@ escape-token/broadcast/
 escape-token/out/
 escape-token/cache/
 
-# Ignore legacy folder
-legacy/
-
-# Ignore frontend folder
-frontend/
 
 # 🔐 Secrets
 .env

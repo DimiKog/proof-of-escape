@@ -54,3 +54,28 @@ button:hover {
   color: #e53e3e; /* red tone */
   margin-top: 8px;
 }
+
+/* Enhancements */
+
+#registerButton {
+  margin-top: 16px;
+}
+
+#adminPanel {
+  margin-top: 20px;
+  background: #edf2f7;
+  border: 1px solid #ccc;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+@media (max-width: 480px) {
+  section {
+    margin: 15px;
+    padding: 15px;
+  }
+  input,
+  button {
+    font-size: 14px;
+  }
+}
