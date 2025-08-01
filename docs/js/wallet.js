@@ -35,14 +35,22 @@ async function connectWallet() {
     }
 
     try {
-        provider = new ethers.BrowserProvider(window.ethereum);
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        if (!accounts || accounts.length === 0) {
-            alert('No accounts found in MetaMask.');
-            return;
+        // Check if MetaMask is already connected
+        const existingAccounts = await window.ethereum.request({ method: 'eth_accounts' });
+        if (existingAccounts.length > 0) {
+            provider = new ethers.BrowserProvider(window.ethereum);
+            signer = await provider.getSigner();
+            userAddress = existingAccounts[0];
+        } else {
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            if (!accounts || accounts.length === 0) {
+                alert('No accounts found in MetaMask.');
+                return;
+            }
+            provider = new ethers.BrowserProvider(window.ethereum);
+            signer = await provider.getSigner();
+            userAddress = accounts[0];
         }
-        signer = await provider.getSigner();
-        userAddress = accounts[0];
 
         const contractAddress = '0x874205E778d2b3E5F2B8c1eDfBFa619e6fF0c9aF';
         const contractABI = await (await fetch('./abi/ProofOfEscape.json')).json();
