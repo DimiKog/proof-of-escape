@@ -6,7 +6,7 @@ let userAddress;
 const ADMIN_ADDRESS = '0x5E3a74f09D490F854e12A293E1d6abCBbEad6B60';
 
 const networkParams = {
-    chainId: '0x67676', // 424242 in hex
+    chainId: '0x67A46', // 424242 in hex
     chainName: 'QBFT_Besu_EduNet',
     nativeCurrency: {
         name: 'EDU-D',
