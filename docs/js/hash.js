@@ -5,7 +5,7 @@
  * @param {string} answer - The answer to hash.
  * @returns {string} The keccak256 hash.
  */
-export function generateHash(answer) {
+function generateHash(answer) {
     if (!answer) return '';
     try {
         return window.ethers.keccak256(window.ethers.toUtf8Bytes(answer));
@@ -18,7 +18,7 @@ export function generateHash(answer) {
 /**
  * Handles hash generation from input field and sets up copy logic.
  */
-export function handleHashGeneration() {
+function handleHashGeneration() {
     const input = document.getElementById('hashTestInput').value.trim();
     const resultElement = document.getElementById('hashResult');
     const copyButton = document.getElementById('copyHashButton');
@@ -38,7 +38,7 @@ export function handleHashGeneration() {
 /**
  * Copies a hash string to clipboard and gives UI feedback.
  */
-export async function copyHash(hash, button) {
+async function copyHash(hash, button) {
     if (!navigator.clipboard) {
         console.warn('Clipboard API not available');
         return;
@@ -62,3 +62,7 @@ export async function copyHash(hash, button) {
         }, 1500);
     }
 }
+
+window.generateHash = generateHash;
+window.handleHashGeneration = handleHashGeneration;
+window.copyHash = copyHash;

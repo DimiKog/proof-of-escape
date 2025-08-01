@@ -1,8 +1,6 @@
 // submit.js
 
-import { getUserAddress, getSigner } from './wallet.js';
-
-export async function submitAnswer() {
+async function submitAnswer() {
     const quizId = document.getElementById('quizId').value;
     const answer = document.getElementById('answer').value;
     const resultElem = document.getElementById('result');
@@ -38,9 +36,12 @@ export async function submitAnswer() {
     }
 }
 
-export function initSubmitHandlers() {
+function initSubmitHandlers() {
     document.getElementById('submitAnswer').addEventListener('click', submitAnswer);
     document.getElementById('quizId').addEventListener('input', function () {
         document.getElementById('quizIdDisplay').textContent = this.value || 'None';
     });
-} 
+}
+
+// Make sure this function is globally accessible
+window.initSubmitHandlers = initSubmitHandlers;

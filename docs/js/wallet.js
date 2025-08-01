@@ -1,5 +1,15 @@
-import { showTempMessage } from './utils.js';
 // wallet.js
+
+function showTempMessage(id, message, duration = 3000, isError = false) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = message;
+    el.style.color = isError ? 'red' : 'green';
+    el.style.display = 'block';
+    setTimeout(() => {
+        el.style.display = 'none';
+    }, duration);
+}
 
 let provider;
 let signer;
@@ -18,7 +28,7 @@ const networkParams = {
     blockExplorerUrls: ['http://83.212.76.39']
 };
 
-export async function connectWallet() {
+async function connectWallet() {
     if (typeof window.ethereum === 'undefined') {
         alert('MetaMask is not installed!');
         return;
@@ -89,7 +99,7 @@ export async function connectWallet() {
     }
 }
 
-export async function switchToBesuNetwork() {
+async function switchToBesuNetwork() {
     try {
         await window.ethereum.request({
             method: 'wallet_addEthereumChain',
@@ -101,26 +111,26 @@ export async function switchToBesuNetwork() {
     }
 }
 
-export function truncateAddress(address) {
+function truncateAddress(address) {
     if (!address) return 'Not connected';
     return address.substring(0, 6) + '...' + address.slice(-4);
 }
 
-export function getProvider() {
+function getProvider() {
     if (!provider) throw new Error('Wallet not connected');
     return provider;
 }
 
-export function getSigner() {
+function getSigner() {
     if (!signer) throw new Error('Wallet not connected');
     return signer;
 }
 
-export function getUserAddress() {
+function getUserAddress() {
     return userAddress;
 }
 
-export function disconnectWallet() {
+function disconnectWallet() {
     provider = null;
     signer = null;
     userAddress = null;
@@ -128,7 +138,7 @@ export function disconnectWallet() {
     if (el) el.textContent = 'Not connected';
 }
 
-export function addDisconnectButton() {
+function addDisconnectButton() {
     const walletContainer = document.getElementById('walletAddress');
     if (!walletContainer || document.getElementById('disconnectButton')) return;
 
@@ -142,11 +152,11 @@ export function addDisconnectButton() {
 
     walletContainer.insertAdjacentElement('afterend', button);
 }
-export function isAdmin() {
+function isAdmin() {
     return userAddress?.toLowerCase() === ADMIN_ADDRESS.toLowerCase();
 }
 // Register wallet function to interact with the smart contract
-export async function registerWallet(contractInstance) {
+async function registerWallet(contractInstance) {
     try {
         const address = getUserAddress();
         if (!address) throw new Error('Wallet not connected');
@@ -166,3 +176,14 @@ export async function registerWallet(contractInstance) {
         showTempMessage('walletStatus', '⚠️ Registration failed. Check console.', 3000);
     }
 }
+
+window.connectWallet = connectWallet;
+window.switchToBesuNetwork = switchToBesuNetwork;
+window.truncateAddress = truncateAddress;
+window.getProvider = getProvider;
+window.getSigner = getSigner;
+window.getUserAddress = getUserAddress;
+window.disconnectWallet = disconnectWallet;
+window.addDisconnectButton = addDisconnectButton;
+window.isAdmin = isAdmin;
+window.registerWallet = registerWallet;

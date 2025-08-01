@@ -2,7 +2,7 @@
 
 const ethers = window.ethers;
 let ProofOfEscape;
-fetch('/proof-of-escape/abi/ProofOfEscape.json')
+fetch('./abi/ProofOfEscape.json')
     .then(response => response.json())
     .then(data => {
         ProofOfEscape = data;
@@ -19,7 +19,7 @@ const startQuizBtn = document.getElementById('startQuizBtn');
 const quizIdDisplay = document.getElementById('quizIdDisplay');
 
 async function loadQuizList() {
-    const response = await fetch('/proof-of-escape/quizzes.json');
+    const response = await fetch('./data/quizzes.json');
     return await response.json();
 }
 
@@ -39,7 +39,7 @@ async function isUserRegistered() {
     return await contract.registeredUsers(userAddress);
 }
 
-export async function initializeQuizDropdown() {
+async function initializeQuizDropdown() {
     const registered = await isUserRegistered();
     if (!registered) {
         quizDropdown.disabled = true;
@@ -101,3 +101,5 @@ startQuizBtn.addEventListener('click', () => {
     document.getElementById('quizId').value = selectedId;
     quizIdDisplay.textContent = selectedId;
 });
+
+window.initializeQuizDropdown = initializeQuizDropdown;
