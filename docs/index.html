@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proof of Escape</title>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>🔐 Proof of Escape</h1>
+        <p>Answer quizzes. Prove it. Earn tokens.</p>
+    </header>
+
+    <section>
+        <h2>🦊 Wallet</h2>
+        <p><strong>Connected Wallet:</strong> <span id="walletAddress">Not connected</span></p>
+        <p id="networkStatus" style="display: none; color: green; font-weight: bold;">✅ Connected to QBFT_Besu_EduNet
+        </p>
+        <p id="networkWarning" style="display: none; color: red; font-weight: bold;">⚠️ Please switch to the
+            QBFT_Besu_EduNet network in MetaMask.</p>
+        <button id="connectButton">Connect Wallet</button>
+        <button id="disconnectButton" style="display:none;">Disconnect Wallet</button>
+        <button id="registerButton" style="display: none;">Register</button>
+        <details id="networkInstructionsToggle" style="margin-top: 1rem;">
+            <summary><strong>🛠️ QBFT_Besu_EduNet Setup Instructions</strong></summary>
+            <ul style="font-size: 0.95rem; margin-top: 0.5rem;">
+                <li><strong>Network Name:</strong> QBFT_Besu_EduNet</li>
+                <li><strong>New RPC URL:</strong> <code>http://195.251.92.200/rpc/</code></li>
+                <li><strong>Chain ID:</strong> <code>424242</code></li>
+                <li><strong>Currency Symbol:</strong> <code>EDU-D</code></li>
+                <li><strong>Block Explorer URL:</strong> <code>http://83.212.76.39</code></li>
+            </ul>
+            <p>Click <em>MetaMask ➝ Settings ➝ Networks ➝ Add Network</em> and fill in the above details. Then click
+                <strong>Save</strong> and return to this page.
+            </p>
+        </details>
+    </section>
+
+    <div id="quizSection" style="display:none;">
+        <section id="quizSelector">
+            <h2>🧠 Choose a Quiz</h2>
+            <label for="quizDropdown">Select unlocked quiz:</label>
+            <select id="quizDropdown">
+                <option value="">-- Select Quiz --</option>
+            </select>
+
+            <div id="quizInfo" style="margin-top: 1rem;">
+                <p id="quizDescription"></p>
+                <details id="quizDetails" style="display: none;">
+                    <summary>More Info</summary>
+                    <p id="quizDetailsContent"></p>
+                </details>
+                <p id="quizHint"></p>
+                <p id="quizReward"></p>
+                <button id="startQuizBtn" style="margin-top: 1rem;">Start Quiz</button>
+            </div>
+            <div id="registrationNotice" style="margin-top: 1rem; color: red; font-weight: bold; display: none;">
+                🛑 You must register before accessing quizzes.
+            </div>
+        </section>
+    </div>
+
+    <section>
+        <h2>🧪 Hash Generator</h2>
+        <p>Type your answer exactly as you would submit it (lowercase, no punctuation).</p>
+        <label for="hashTestInput">Answer (for hashing):</label>
+        <input id="hashTestInput" type="text" placeholder="Type your answer..." />
+        <button id="generateHashButton">Generate Hash</button>
+        <p><strong>Hash Output:</strong></p>
+        <pre id="hashResult"></pre>
+        <button id="copyHashButton">📋 Copy & Paste Hash</button>
+    </section>
+
+    <section id="answerSection">
+        <h2>📩 Submit a Quiz Answer</h2>
+        <div>
+            <label for="quizId">Quiz ID:</label>
+            <input type="number" id="quizId" placeholder="e.g., 1" />
+        </div>
+        <div>
+            <label for="answer">Your keccak256 Hash (starts with 0x):</label>
+            <input type="text" id="answer" placeholder="0x..." />
+        </div>
+
+        <button id="submitAnswer">Submit Answer</button>
+        <p id="result" aria-live="polite"></p>
+        <p><strong>Selected Quiz ID:</strong> <span id="quizIdDisplay">None</span></p>
+    </section>
+
+    <section id="adminSection" style="display:none; margin-top: 2rem;">
+        <h2>🛠️ Admin: Upload Answer Hash</h2>
+        <div>
+            <label for="adminQuizId">Quiz ID:</label>
+            <input type="number" id="adminQuizId" placeholder="e.g., 3" />
+        </div>
+        <div>
+            <label for="adminPlainAnswer">Correct Answer (plain text):</label>
+            <input type="text" id="adminPlainAnswer" placeholder="e.g., the moon" />
+        </div>
+        <button id="uploadHashButton">📤 Upload Hash</button>
+        <p id="uploadStatus" aria-live="polite"></p>
+    </section>
+
+    <script type="module" src="./js/config.js"></script>
+    <script type="module" src="./js/main.js"></script>
+    <script type="module" src="./js/wallet.js"></script>
+</body>
+
+</html>
