@@ -113,6 +113,18 @@ async function connectWallet() {
 }
 
 async function switchToBesuNetwork() {
+    const expectedChainId = networkParams.chainId;
+
+    const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+    if (currentChainId === expectedChainId) return;
+
+    // Check if using HTTPS — skip automatic add if not
+    const isHttps = networkParams.rpcUrls.some(url => url.startsWith('https://'));
+    if (!isHttps) {
+        showTempMessage('walletStatus', '⚠️ Please manually switch to QBFT_Besu_EduNet in MetaMask.', 4000, true);
+        return;
+    }
+
     try {
         await window.ethereum.request({
             method: 'wallet_addEthereumChain',
@@ -120,7 +132,7 @@ async function switchToBesuNetwork() {
         });
     } catch (error) {
         console.error('⚠️ Failed to switch to QBFT_Besu_EduNet:', error);
-        showTempMessage('walletStatus', '⚠️ Failed to switch to QBFT_Besu_EduNet. Please add it manually in MetaMask.', 4000, true);
+        showTempMessage('walletStatus', '⚠️ Failed to switch network. Please switch manually.', 4000, true);
     }
 }
 
