@@ -1,10 +1,10 @@
 // main.js (Vite entry point)
 
-import { connectWallet, registerWallet } from './js/wallet.js';
-import { initializeQuizDropdown } from './js/quiz.js';
-import { generateHash, copyHash } from './js/hash.js';
-import { submitAnswer } from './js/submit.js';
-import { handleAdminUpload } from './js/admin.js';
+import { connectWallet, registerWallet } from './wallet.js';
+import { initializeQuizDropdown } from './quiz.js';
+import { generateHash, copyHash } from './hash.js';
+import { submitAnswer } from './submit.js';
+import { handleAdminUpload } from './admin.js';
 let contract;
 
 async function controlVisibility() {

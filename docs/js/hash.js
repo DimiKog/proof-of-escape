@@ -1,7 +1,5 @@
 // hash.js
 
-import { keccak256, toUtf8Bytes } from 'ethers';
-
 /**
  * Generates the keccak256 hash from a UTF-8 string input.
  * @param {string} answer - The answer to hash.
@@ -10,7 +8,7 @@ import { keccak256, toUtf8Bytes } from 'ethers';
 export function generateHash(answer) {
     if (!answer) return '';
     try {
-        return keccak256(toUtf8Bytes(answer));
+        return window.ethers.keccak256(window.ethers.toUtf8Bytes(answer));
     } catch (error) {
         console.error('Error generating hash:', error);
         return '';
@@ -19,7 +17,6 @@ export function generateHash(answer) {
 
 /**
  * Handles hash generation from input field and sets up copy logic.
- * Called typically on a button click for UI hash generation.
  */
 export function handleHashGeneration() {
     const input = document.getElementById('hashTestInput').value.trim();
@@ -39,9 +36,7 @@ export function handleHashGeneration() {
 }
 
 /**
- * Copies a hash string to clipboard and gives UI feedback on the button.
- * @param {string} hash - The hash string to copy.
- * @param {HTMLElement} button - The button that triggered the copy.
+ * Copies a hash string to clipboard and gives UI feedback.
  */
 export async function copyHash(hash, button) {
     if (!navigator.clipboard) {

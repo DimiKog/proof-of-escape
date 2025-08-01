@@ -1,7 +1,12 @@
 // quiz.js
 
-import { ethers } from "ethers";
-import ProofOfEscape from '../abi/ProofOfEscape.json' assert { type: "json" };
+const ethers = window.ethers;
+let ProofOfEscape;
+fetch('/proof-of-escape/abi/ProofOfEscape.json')
+    .then(response => response.json())
+    .then(data => {
+        ProofOfEscape = data;
+    });
 const ProofOfEscapeAddress = "0x874205E778d2b3E5F2B8c1eDfBFa619e6fF0c9aF"; // Adjust if different
 
 const quizDropdown = document.getElementById('quizDropdown');

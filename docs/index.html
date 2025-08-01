@@ -5,7 +5,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Proof of Escape</title>
-    <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -106,13 +105,17 @@
         <p id="uploadStatus" aria-live="polite"></p>
     </section>
 
-    <script type="module" src="js/config.js"></script>
-    <script type="module" src="js/main.js"></script>
-    <script type="module" src="js/wallet.js"></script>
-    <script type="module" src="js/quiz.js"></script>
-    <script type="module" src="js/submit.js"></script>
-    <script type="module" src="js/hash.js"></script>
-    <script type="module" src="js/admin.js"></script>
+    <!-- Load ethers globally -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
+
+    <!-- Your app logic (no module type) -->
+    <script src="js/config.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/wallet.js"></script>
+    <script src="js/quiz.js"></script>
+    <script src="js/submit.js"></script>
+    <script src="js/hash.js"></script>
+    <script src="js/admin.js"></script>
 </body>
 
 </html>
