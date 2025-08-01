@@ -44,11 +44,12 @@ async function connectWallet() {
 
         // Check if the user is on the correct network
         const network = await provider.getNetwork();
-        const expectedChainId = parseInt(networkParams.chainId, 16);
+        const expectedChainId = BigInt(424242); // Compare with a BigInt
 
         console.log('Dapp Detected Chain ID:', network.chainId);
         console.log('Expected Chain ID:', expectedChainId);
 
+        // The comparison is now BigInt to BigInt
         if (network.chainId !== expectedChainId) {
             document.getElementById('networkWarning').style.display = 'block';
             document.getElementById('networkStatus').style.display = 'none';
