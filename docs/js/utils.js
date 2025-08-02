@@ -111,12 +111,8 @@ function handleHashGeneration() {
     // Place the hash into the submission field ready for submission
     submissionField.value = hash;
 
-    // --- NEW DEBUGGING LINE ---
-    console.log("Submission field value set to:", submissionField.value);
-
-
-    // Also copy the hash to the clipboard for convenience
-    window.copyToClipboard(hash, 'copyHashButton');
+    // A final log to confirm the value was set.
+    console.log("Hash set in submission field:", submissionField.value);
 
     window.showTempMessage('walletStatus', 'Hash generated and placed in submission field.', 3000, false);
 }

@@ -14,7 +14,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Initial check on page load
-    await handleConnectionAndInitialization();
+    //await handleConnectionAndInitialization();
 
     // Event listener for the "Connect Wallet" button
     connectButton?.addEventListener('click', handleConnectionAndInitialization);
