@@ -82,6 +82,38 @@ function toTitleCase(str) {
     );
 }
 
+/**
+ * Handles the generation of a keccak256 hash from a string input.
+ * It reads the user's answer and copies the hash to the solution field.
+ */
+function handleHashGeneration() {
+    const answerInput = document.getElementById('userAnswer');
+    const solutionField = document.getElementById('solutionField');
+
+    if (!answerInput || !solutionField) {
+        console.error('Required elements (userAnswer or solutionField) not found.');
+        return;
+    }
+
+    const answer = answerInput.value;
+    if (answer.trim() === '') {
+        window.showTempMessage('walletStatus', 'Please enter an answer to generate the hash.', 3000, true);
+        return;
+    }
+
+    // Convert the answer to bytes and then compute the keccak256 hash
+    const hash = ethers.keccak256(ethers.toUtf8Bytes(answer));
+
+    // Place the hash into the solution field
+    solutionField.value = hash;
+
+    // Optional: Also copy the hash to the clipboard
+    window.copyToClipboard(hash, 'copyHashButton');
+
+    window.showTempMessage('walletStatus', 'Hash generated and placed in solution field.', 3000, false);
+}
+
+
 // Expose functions to the global scope for other scripts to use
 window.showTempMessage = showTempMessage;
 window.shortenAddress = shortenAddress;
@@ -89,3 +121,4 @@ window.copyToClipboard = copyToClipboard;
 window.formatTimestamp = formatTimestamp;
 window.isValidAddress = isValidAddress;
 window.toTitleCase = toTitleCase;
+window.handleHashGeneration = handleHashGeneration;
