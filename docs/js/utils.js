@@ -84,14 +84,15 @@ function toTitleCase(str) {
 
 /**
  * Handles the generation of a keccak256 hash from a string input.
- * It reads the user's answer and copies the hash to the solution field.
+ * It reads the user's answer and pastes the hash into the submission field.
  */
 function handleHashGeneration() {
-    const answerInput = document.getElementById('userAnswer');
-    const solutionField = document.getElementById('solutionField');
+    const answerInput = document.getElementById('hashTestInput');
+    const hashResultDisplay = document.getElementById('hashResult');
+    const submissionField = document.getElementById('answer');
 
-    if (!answerInput || !solutionField) {
-        console.error('Required elements (userAnswer or solutionField) not found.');
+    if (!answerInput || !hashResultDisplay || !submissionField) {
+        console.error('Required elements not found for hash generation.');
         return;
     }
 
@@ -104,15 +105,17 @@ function handleHashGeneration() {
     // Convert the answer to bytes and then compute the keccak256 hash
     const hash = ethers.keccak256(ethers.toUtf8Bytes(answer));
 
-    // Place the hash into the solution field
-    solutionField.value = hash;
+    // Display the hash in the dedicated <pre> tag for the user to see
+    hashResultDisplay.textContent = hash;
 
-    // Optional: Also copy the hash to the clipboard
+    // Place the hash into the submission field ready for submission
+    submissionField.value = hash;
+
+    // Also copy the hash to the clipboard for convenience
     window.copyToClipboard(hash, 'copyHashButton');
 
-    window.showTempMessage('walletStatus', 'Hash generated and placed in solution field.', 3000, false);
+    window.showTempMessage('walletStatus', 'Hash generated and placed in submission field.', 3000, false);
 }
-
 
 // Expose functions to the global scope for other scripts to use
 window.showTempMessage = showTempMessage;
