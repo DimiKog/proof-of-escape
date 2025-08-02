@@ -141,27 +141,32 @@ function isAdmin() {
 }
 
 /**
- * Registers the user's wallet with the smart contract.
- * @param {ethers.Contract} contractInstance The contract instance.
+ * Registers the current user's wallet address.
+ * @param {ethers.Contract} contract The contract instance.
  */
-async function registerWallet(contractInstance) {
-    try {
-        const address = getUserAddress();
-        if (!address) throw new Error('Wallet not connected');
+async function registerWallet(contract) {
+    if (!contract) {
+        showTempMessage('walletStatus', 'Wallet not connected.', 3000, true);
+        return;
+    }
 
-        const isRegistered = await contractInstance.registeredUsers(address);
-        if (isRegistered) {
-            console.log('User already registered');
-            return;
+    try {
+        const tx = await contract.register();
+        await tx.wait(); // Wait for the transaction to be mined
+        showTempMessage('walletStatus', 'Registration successful', 3000, false);
+    } catch (error) {
+        console.error("Failed to register wallet:", error);
+
+        let errorMessage = 'Failed to register. Please check console.';
+
+        // Check for the specific "Already registered" revert message
+        if (error.reason && error.reason.includes("Already registered")) {
+            errorMessage = 'You are already registered! No need to register again.';
+        } else if (error.code === 'ACTION_REJECTED') {
+            errorMessage = 'Registration request was rejected.';
         }
 
-        const tx = await contractInstance.connect(getSigner()).register();
-        await tx.wait();
-        console.log('Registration successful');
-        window.showTempMessage('walletStatus', '✅ Registration successful!', 3000);
-    } catch (err) {
-        console.error('Failed to register wallet:', err);
-        window.showTempMessage('walletStatus', '⚠️ Registration failed. Check console.', 3000, true);
+        showTempMessage('walletStatus', `⚠️ ${errorMessage}`, 5000, true);
     }
 }
 

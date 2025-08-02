@@ -111,6 +111,10 @@ function handleHashGeneration() {
     // Place the hash into the submission field ready for submission
     submissionField.value = hash;
 
+    // --- NEW DEBUGGING LINE ---
+    console.log("Submission field value set to:", submissionField.value);
+
+
     // Also copy the hash to the clipboard for convenience
     window.copyToClipboard(hash, 'copyHashButton');
 
