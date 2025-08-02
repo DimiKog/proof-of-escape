@@ -1,68 +1,40 @@
 // hash.js
 
 /**
- * Generates the keccak256 hash from a UTF-8 string input.
- * @param {string} answer - The answer to hash.
- * @returns {string} The keccak256 hash.
- */
-function generateHash(answer) {
-    if (!answer) return '';
-    try {
-        return window.ethers.keccak256(window.ethers.toUtf8Bytes(answer));
-    } catch (error) {
-        console.error('Error generating hash:', error);
-        return '';
-    }
-}
-
-/**
- * Handles hash generation from input field and sets up copy logic.
+ * Handles the generation of a keccak256 hash from a string input.
+ * It reads the user's answer and pastes the hash into the submission field.
  */
 function handleHashGeneration() {
-    const input = document.getElementById('hashTestInput').value.trim();
-    const resultElement = document.getElementById('hashResult');
-    const copyButton = document.getElementById('copyHashButton');
+    const answerInput = document.getElementById('hashTestInput');
+    const hashResultDisplay = document.getElementById('hashResult');
+    const submissionField = document.getElementById('answer');
 
-    if (!input) {
-        resultElement.textContent = '⚠️ Please enter an answer to hash.';
+    if (!answerInput || !hashResultDisplay || !submissionField) {
+        console.error('Required elements not found for hash generation.');
         return;
     }
 
-    const hash = generateHash(input);
-    resultElement.textContent = hash;
-
-    // Attach the copy function
-    copyButton.onclick = () => copyHash(hash, copyButton);
-}
-
-/**
- * Copies a hash string to clipboard and gives UI feedback.
- */
-async function copyHash(hash, button) {
-    if (!navigator.clipboard) {
-        console.warn('Clipboard API not available');
+    const answer = answerInput.value;
+    if (answer.trim() === '') {
+        window.showTempMessage('walletStatus', 'Please enter an answer to generate the hash.', 3000, true);
         return;
     }
 
-    try {
-        button.disabled = true;
-        button.textContent = 'Copying...';
-        await navigator.clipboard.writeText(hash);
-        button.textContent = '✅ Copied!';
-        setTimeout(() => {
-            button.textContent = '📋 Copy & Paste Hash';
-            button.disabled = false;
-        }, 1500);
-    } catch (err) {
-        console.error('Copy failed:', err);
-        button.textContent = '❌ Copy failed';
-        setTimeout(() => {
-            button.textContent = '📋 Copy & Paste Hash';
-            button.disabled = false;
-        }, 1500);
-    }
+    // Convert the answer to bytes and then compute the keccak256 hash
+    const hash = ethers.keccak256(ethers.toUtf8Bytes(answer));
+
+    // Display the hash in the dedicated <pre> tag for the user to see
+    hashResultDisplay.textContent = hash;
+
+    // Place the hash into the submission field ready for submission
+    submissionField.value = hash;
+
+    // Also copy the hash to the clipboard for convenience
+    // This uses the copyToClipboard function from utils.js
+    window.copyToClipboard(hash, 'copyHashButton');
+
+    window.showTempMessage('walletStatus', 'Hash generated and placed in submission field.', 3000, false);
 }
 
-window.generateHash = generateHash;
+// Expose function to the global scope
 window.handleHashGeneration = handleHashGeneration;
-window.copyHash = copyHash;
