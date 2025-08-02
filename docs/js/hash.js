@@ -30,8 +30,8 @@ function handleHashGeneration() {
     submissionField.value = hash;
 
     // Also copy the hash to the clipboard for convenience
-    // This uses the copyToClipboard function from utils.js
-    window.copyToClipboard(hash, 'copyHashButton');
+    // This will now show the message in the walletStatus area instead of a missing button
+    window.copyToClipboard(hash, 'walletStatus');
 
     window.showTempMessage('walletStatus', 'Hash generated and placed in submission field.', 3000, false);
 }

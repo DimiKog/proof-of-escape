@@ -1,69 +1,58 @@
 // submit.js
 
+const submitButton = document.getElementById('submitAnswer');
+const quizIdInput = document.getElementById('quizId');
+const answerInput = document.getElementById('answer');
+const resultMessage = document.getElementById('result');
+
 /**
- * Handles the submission of a quiz answer to the smart contract.
- * @param {ethers.Contract} contractInstance The connected ethers.js Contract instance.
+ * Submits a quiz answer to the smart contract.
+ * @param {ethers.Contract} contract The contract instance.
  */
-async function submitAnswer(contractInstance) {
-    const quizId = document.getElementById('quizId').value;
-    const answer = document.getElementById('answer').value;
-    const resultElem = document.getElementById('result');
-    const submitButton = document.getElementById('submitAnswer');
-
-    // Clear previous feedback
-    resultElem.textContent = '';
-    resultElem.style.color = 'black'; // Reset color
-
-    if (!contractInstance) {
-        resultElem.textContent = '❌ Wallet not connected or contract not loaded.';
-        resultElem.style.color = 'red';
+async function submitAnswer(contract) {
+    if (!contract) {
+        window.showTempMessage('walletStatus', 'Wallet not connected.', 3000, true);
         return;
     }
 
-    if (!quizId || !answer) {
-        resultElem.textContent = 'Please fill in both the Quiz ID and the Answer fields.';
-        resultElem.style.color = 'red';
+    const quizId = parseInt(quizIdInput.value);
+    const answerHash = answerInput.value;
+
+    if (isNaN(quizId) || quizId <= 0) {
+        window.showTempMessage('walletStatus', 'Please select a valid Quiz ID.', 3000, true);
         return;
     }
 
-    // A simple validation for a keccak256 hash.
-    // The length should be 66 characters (0x + 64 hex chars).
-    if (!answer.startsWith('0x') || answer.length !== 66) {
-        resultElem.textContent = 'Answer must be a valid keccak256 hash (e.g., 0x...).';
-        resultElem.style.color = 'red';
+    if (!answerHash || answerHash.length !== 66) { // Check for a valid keccak256 hash length (0x + 64 chars)
+        window.showTempMessage('walletStatus', 'Please provide a valid keccak256 hash.', 3000, true);
         return;
     }
 
     try {
-        if (submitButton) {
-            submitButton.disabled = true;
-            submitButton.textContent = 'Submitting... ⏳';
-        }
+        resultMessage.textContent = 'Submitting answer... Please wait for confirmation.';
+        resultMessage.style.color = 'orange';
 
-        // Use the connected contract instance directly.
-        // It's already associated with the signer.
-        const tx = await contractInstance.submitAnswer(quizId, answer);
+        // Correct function name: checkQuizAnswer
+        const tx = await contract.checkQuizAnswer(quizId, answerHash);
         await tx.wait();
 
-        resultElem.textContent = `✅ Answer submitted successfully! Transaction hash: ${tx.hash}`;
-        resultElem.style.color = 'green';
+        resultMessage.textContent = '✅ Answer submitted successfully! Checking for rewards...';
+        resultMessage.style.color = 'green';
+        window.showTempMessage('walletStatus', 'Answer submitted successfully!', 3000, false);
+
     } catch (error) {
-        console.error('❌ Failed to submit answer:', error);
-        resultElem.textContent = `❌ Failed to submit answer: ${error.message}`;
-        resultElem.style.color = 'red';
-    } finally {
-        if (submitButton) {
-            submitButton.disabled = false;
-            submitButton.textContent = 'Submit Answer';
+        console.error("❌ Failed to submit answer:", error);
+        let errorMessage = 'Failed to submit answer. Check the console for details.';
+
+        // Check for specific revert reasons
+        if (error.reason) {
+            errorMessage = `❌ Failed to submit answer: ${error.reason}`;
+        } else if (error.code === 'ACTION_REJECTED') {
+            errorMessage = 'Transaction was rejected by the user.';
         }
+
+        resultMessage.textContent = errorMessage;
+        resultMessage.style.color = 'red';
+        window.showTempMessage('walletStatus', errorMessage, 5000, true);
     }
 }
-
-// Event listener for updating the quiz ID display
-// This can be kept separate from the main submit logic.
-document.getElementById('quizId').addEventListener('input', function () {
-    document.getElementById('quizIdDisplay').textContent = this.value || 'None';
-});
-
-// Expose the function to the global scope
-window.submitAnswer = submitAnswer;
