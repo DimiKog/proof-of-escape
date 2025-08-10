@@ -1,97 +1,127 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./EscapeToken.sol";
 
 /// @title ProofOfEscape
-/// @notice Contract for tracking quiz completions and distributing rewards
-contract ProofOfEscape {
-    // Immutable owner address
-    address public immutable owner;
-
-    // ERC-20 reward token reference
-    EscapeToken public rewardToken;
+/// @notice Track quiz completions and distribute rewards
+/// This is hte 2nd version of the ProofOfEscape contract with improvements like Leaderboard support.
+contract ProofOfEscape is Ownable, ReentrancyGuard {
+    // ERC-20 reward token reference (must expose mint)
+    EscapeToken public immutable escapeToken;
 
     // Mapping to track if a user has completed a specific quiz
-    mapping(address => mapping(uint => bool)) public completedQuizzes;
+    mapping(address => mapping(uint256 => bool)) public completedQuizzes;
 
     // Mapping to store the correct hash for each quiz
-    mapping(uint => bytes32) private quizHashes;
+    mapping(uint256 => bytes32) private quizHashes;
 
     // Mapping to track registered users
-    mapping(address => bool) public registeredUsers;
+    mapping(address => bool) public isRegistered;
+
+    // Array to store all registered user addresses (for enumeration)
+    address[] private registeredUserAddresses;
 
     // Mapping to count total completions per quiz
-    mapping(uint => uint) public quizCompletions;
+    mapping(uint256 => uint256) public quizCompletions;
 
-    // Events to log important actions
+    // Reward per correct quiz (configurable)
+    uint256 public immutable rewardPerQuiz;
+
+    // Events
     event QuizCompleted(
         address indexed user,
-        uint indexed quizId,
+        uint256 indexed quizId,
         string message
     );
-    event QuizHashUpdated(uint indexed quizId, bytes32 newHash);
+    event QuizHashUpdated(uint256 indexed quizId, bytes32 newHash);
+    event UserRegistered(address indexed user);
 
-    // Constructor sets the owner and token reference
-    constructor(address tokenAddress) {
-        owner = msg.sender;
-        rewardToken = EscapeToken(tokenAddress);
+    constructor(address _escapeToken, uint256 _rewardPerQuiz) Ownable() {
+        require(_escapeToken != address(0), "token addr zero");
+        require(_rewardPerQuiz > 0, "reward zero");
+        escapeToken = EscapeToken(_escapeToken);
+        rewardPerQuiz = _rewardPerQuiz;
     }
 
-    // Modifier to restrict functions to the owner
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Not authorized");
-        _;
+    /// @notice Register a user (idempotent)
+    function register() external {
+        require(!isRegistered[msg.sender], "Already registered");
+        isRegistered[msg.sender] = true;
+        registeredUserAddresses.push(msg.sender);
+        emit UserRegistered(msg.sender);
     }
 
-    /// @notice Register a user
-    function register() public {
-        require(!registeredUsers[msg.sender], "Already registered");
-        registeredUsers[msg.sender] = true;
-    }
-
-    /// @notice Set the correct hash for a quiz (restricted to owner)
-    /// @param quizId The ID of the quiz
-    /// @param correctHash The correct hash for the quiz
-    function setQuizHash(uint quizId, bytes32 correctHash) public onlyOwner {
+    /// @notice Set the correct hash for a quiz (owner only)
+    function setQuizHash(
+        uint256 quizId,
+        bytes32 correctHash
+    ) external onlyOwner {
+        require(quizId != 0, "quizId zero");
         quizHashes[quizId] = correctHash;
         emit QuizHashUpdated(quizId, correctHash);
     }
 
-    /// @notice Get the hash for a quiz (only accessible by the owner)
-    function getQuizHash(uint quizId) public view onlyOwner returns (bytes32) {
+    /// @notice Get the hash for a quiz (owner only)
+    function getQuizHash(
+        uint256 quizId
+    ) external view onlyOwner returns (bytes32) {
         return quizHashes[quizId];
     }
 
     /// @notice Check if a submitted answer is correct and reward tokens
-    /// @param quizId The ID of the quiz
-    /// @param answerHash The keccak256 hash of the user's answer
     function checkQuizAnswer(
-        uint quizId,
+        uint256 quizId,
         bytes32 answerHash
-    ) public returns (bool success) {
-        require(registeredUsers[msg.sender], "You need to register first");
-        require(quizHashes[quizId] != bytes32(0), "This quiz does not exist.");
-        require(
-            !completedQuizzes[msg.sender][quizId],
-            "Quiz already completed"
-        );
+    ) external nonReentrant returns (bool success) {
+        require(isRegistered[msg.sender], "Register first");
+        require(quizHashes[quizId] != bytes32(0), "Quiz not set");
+        require(!completedQuizzes[msg.sender][quizId], "Already completed");
 
-        if (answerHash == quizHashes[quizId]) {
-            completedQuizzes[msg.sender][quizId] = true;
-            quizCompletions[quizId] += 1;
-
-            // Mint reward (10 ESCAPE tokens)
-            rewardToken.mint(msg.sender, 10 * (10 ** 18));
-
-            emit QuizCompleted(
-                msg.sender,
-                quizId,
-                "Congratulations! You answered correctly!"
-            );
-            return true;
+        if (answerHash != quizHashes[quizId]) {
+            return false;
         }
 
-        return false;
+        completedQuizzes[msg.sender][quizId] = true;
+        unchecked {
+            quizCompletions[quizId] += 1;
+        }
+
+        // Mint reward
+        escapeToken.mint(msg.sender, rewardPerQuiz);
+
+        emit QuizCompleted(
+            msg.sender,
+            quizId,
+            "Congratulations! You answered correctly!"
+        );
+        return true;
+    }
+
+    /// @notice Total number of registered users
+    function totalRegisteredUsers() external view returns (uint256) {
+        return registeredUserAddresses.length;
+    }
+
+    /// @notice Get a slice of registered users for pagination
+    /// @param start inclusive start index
+    /// @param count number of items to return
+    function getRegisteredUsersSlice(
+        uint256 start,
+        uint256 count
+    ) external view returns (address[] memory) {
+        uint256 len = registeredUserAddresses.length;
+        if (start >= len) return new address[](0); // No users to return;
+
+        uint256 end = start + count;
+        if (end > len) end = len;
+
+        address[] memory slice = new address[](end - start);
+        for (uint256 i = start; i < end; i++) {
+            slice[i - start] = registeredUserAddresses[i];
+        }
+        return slice;
     }
 }
