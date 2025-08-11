@@ -5,16 +5,21 @@ let signer;
 let userAddress;
 let isConnecting = false;
 
-const ADMIN_ADDRESS = '0x5E3a74f09D490F854e12A293E1d6abCBbEad6B60';
+const ADMIN_ADDRESS = window.CONFIG?.ADMIN_ADDRESS || '';
 
-// Not used for switching (MetaMask rejects http), but keep for reference
-const networkParams = {
-    chainId: '0x67932', // 424242
-    chainName: 'QBFT_Besu_EduNet',
-    nativeCurrency: { name: 'EDU-D', symbol: 'EDU-D', decimals: 18 },
-    rpcUrls: ['http://195.251.92.200/rpc/'],
-    blockExplorerUrls: ['http://83.212.76.39']
-};
+const CHAIN_ID_DEC = (window.CONFIG?.CHAIN_ID) ?? 424242;
+const CONTRACT_ADDRESS = (window.CONFIG?.CONTRACT_ADDRESS) || '';
+
+/**
+ * Normalize a loaded ABI artifact to just the ABI array.
+ */
+function toAbiArray(maybeArtifact) {
+    if (!maybeArtifact) return null;
+    // Hardhat/Foundry artifact: { abi: [...] }
+    if (Array.isArray(maybeArtifact)) return maybeArtifact;
+    if (Array.isArray(maybeArtifact.abi)) return maybeArtifact.abi;
+    return null;
+}
 
 /**
  * Connects wallet, checks network, builds/stashes contract, wires disconnect.
@@ -31,6 +36,7 @@ async function connectWallet() {
     }
 
     try {
+        // Request accounts
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         if (!accounts || !accounts.length) {
             window.showTempMessage?.('walletStatus', 'No accounts found in MetaMask.', 3000, true);
@@ -46,9 +52,9 @@ async function connectWallet() {
         const wa = document.getElementById('walletAddress');
         if (wa) wa.textContent = (window.shortenAddress?.(userAddress)) || userAddress;
 
-        // Network check (no switching here to avoid HTTPS requirement)
+        // Network check
         const net = await provider.getNetwork();
-        const onBesu = net?.chainId === BigInt(424242);
+        const onBesu = net?.chainId === BigInt(CHAIN_ID_DEC);
         const ns = document.getElementById('networkStatus');
         const nw = document.getElementById('networkWarning');
         if (ns) ns.style.display = onBesu ? 'block' : 'none';
@@ -60,25 +66,46 @@ async function connectWallet() {
             return null;
         }
 
-        // Build contract (prefer CONFIG from config.js if present)
-        const abi = await (await fetch('./abi/ProofOfEscape.json')).json();
-        const contractAddress =
-            (window.CONFIG && window.CONFIG.CONTRACT_ADDRESS) ||
-            '0x874205E778d2b3E5F2B8c1eDfBFa619e6fF0c9aF'; // fallback, but try to avoid hardcoding
+        // Load ABI (prefer preloaded from config.js)
+        try { await window.ABIS_READY; } catch {/* ignore */ }
+        let abi = window.POE_ABI || null;
+
+        if (!abi) {
+            // Fallback: fetch artifact and normalize
+            const artifact = await (await fetch('./abi/ProofOfEscape.json')).json();
+            abi = toAbiArray(artifact);
+        }
+
+        if (!abi || !Array.isArray(abi)) {
+            console.error('Failed to obtain ABI array. Got:', abi);
+            window.showTempMessage?.('walletStatus', '⚠️ ABI not loaded. See console.', 4000, true);
+            isConnecting = false;
+            return null;
+        }
+
+        // Contract address check
+        const contractAddress = CONTRACT_ADDRESS || '0x0000000000000000000000000000000000000000';
+        if (!CONTRACT_ADDRESS) {
+            console.warn('CONFIG.CONTRACT_ADDRESS is empty. Using 0x00… placeholder will fail calls.');
+        }
+
+        // Build contract
         const contract = new ethers.Contract(contractAddress, abi, signer);
 
         // Stash globally for other modules
         window.POE = { provider, signer, address: userAddress, contract };
 
-        // Wire (or create) disconnect button
+        // Wire disconnect button
         addDisconnectButton();
 
-        // Listen to account changes (refresh signer/contract and UI)
+        // Account change listener
         if (window.ethereum?.on) {
+            // Remove previous handler if any
             window.ethereum.removeAllListeners?.('accountsChanged');
             window.ethereum.on('accountsChanged', async (accts) => {
                 if (!accts || !accts.length) return;
                 userAddress = accts[0];
+
                 const wa2 = document.getElementById('walletAddress');
                 if (wa2) wa2.textContent = (window.shortenAddress?.(userAddress)) || userAddress;
 
@@ -90,9 +117,19 @@ async function connectWallet() {
                     contract: new ethers.Contract(contractAddress, abi, signer)
                 };
 
-                // Let other parts refresh (if they hooked into this)
                 window.dispatchEvent(new CustomEvent('poe:walletChanged', { detail: { address: userAddress } }));
             });
+        }
+
+        // Optional: show Register button if not registered yet
+        try {
+            const regBtn = document.getElementById('registerButton');
+            if (regBtn && contract?.registeredUsers) {
+                const isRegistered = await contract.registeredUsers(userAddress);
+                regBtn.style.display = isRegistered ? 'none' : 'inline-block';
+            }
+        } catch (e) {
+            console.warn('Could not check registeredUsers:', e);
         }
 
         window.showTempMessage?.('walletStatus', '✅ Wallet connected!', 2500);
@@ -128,11 +165,9 @@ function disconnectWallet() {
     window.POE = undefined;
     const wa = document.getElementById('walletAddress');
     if (wa) wa.textContent = 'Not connected';
-    // Don’t hard reload; let page stay. If you prefer reload: window.location.reload();
 }
 
 function addDisconnectButton() {
-    // If a static button exists, just wire it
     let btn = document.getElementById('disconnectButton');
     if (btn) {
         btn.style.display = 'inline-block';
@@ -142,8 +177,6 @@ function addDisconnectButton() {
         }
         return;
     }
-
-    // Otherwise, create one after the walletAddress span
     const walletSpan = document.getElementById('walletAddress');
     if (!walletSpan || document.getElementById('disconnectButton')) return;
 
@@ -172,6 +205,8 @@ async function registerWallet(contract) {
         await tx.wait();
         window.showTempMessage?.('walletStatus', '✅ Registration successful!', 3000);
         window.dispatchEvent(new CustomEvent('poe:registered', { detail: { address: userAddress } }));
+        const regBtn = document.getElementById('registerButton');
+        if (regBtn) regBtn.style.display = 'none';
     } catch (error) {
         console.error('Failed to register wallet:', error);
         let msg = 'Failed to register. Check console.';
@@ -181,7 +216,7 @@ async function registerWallet(contract) {
     }
 }
 
-// Expose to window (used by main.js and others)
+// Expose to window
 window.connectWallet = connectWallet;
 window.getProvider = getProvider;
 window.getSigner = getSigner;

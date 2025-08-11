@@ -12,7 +12,10 @@ window.CONFIG = {
     NETWORK_NAME: "QBFT_Besu_EduNet",
     CURRENCY_SYMBOL: "EDU-D",
     EXPLORER_URL: "http://83.212.76.39",
-    API_BASE: "https://poe-api.duckdns.org"
+    API_BASE: "https://poe-api.duckdns.org",
+
+    // New
+    ADMIN_ADDRESS: "0x5E3a74f09D490F854e12A293E1d6abCBbEad6B60"
 };
 
 // Load ABIs once and store the *array* on window.*

@@ -147,23 +147,34 @@
         <p id="uploadStatus" aria-live="polite"></p>
     </section>
 
-    <!-- 1) Library FIRST (ethers UMD exposes window.ethers) -->
-    <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js" defer></script>
+    <!-- 1) Ethers UMD first (no defer so it's ready immediately) -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
 
-    <!-- 2) Global configuration BEFORE anything that reads CONFIG/POE_API_BASE -->
-    <script src="./js/config.js" defer></script>
+    <!-- 2) Your config (defines window.CONFIG and window.loadABIs) -->
+    <script src="js/config.js"></script>
 
-    <!-- 3) App feature scripts (each exactly once) -->
-    <script src="./js/utils.js" defer></script>
-    <script src="./js/wallet.js" defer></script>
-    <script src="./js/hash.js" defer></script>
-    <script src="./js/quiz.js" defer></script>
-    <script src="./js/submit.js" defer></script>
-    <script src="./js/admin.js" defer></script>
-    <script src="./js/leaderboard.js" defer></script> <!-- only if you have the leaderboard section on the page -->
+    <!-- 3) Bridge values from CONFIG and kick off ABI loading early -->
+    <script>
+        // Make the API base visible to leaderboard.js
+        window.POE_API_BASE = window.CONFIG.API_BASE;
 
-    <!-- 4) Event wiring LAST (binds buttons, initializes UI, etc.) -->
-    <script src="./js/main.js" defer></script>
+        // Start loading ABIs ASAP; other scripts can await this if needed
+        window.ABIS_READY = window.loadABIs();
+    </script>
+
+    <!-- 4) App scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/wallet.js"></script>
+    <script src="js/quiz.js"></script>
+    <script src="js/hash.js"></script>
+    <script src="js/submit.js"></script>
+    <script src="js/admin.js"></script>
+
+    <!-- 5) Leaderboard last (it only needs POE_API_BASE) -->
+    <script src="js/leaderboard.js"></script>
+
+    <!-- 6) Your main wiring (listeners, optional init) -->
+    <script src="js/main.js"></script>
 </body>
 
 </html>
