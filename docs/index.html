@@ -19,33 +19,31 @@
     <section>
         <h2>🦊 Wallet</h2>
         <p><strong>Connected Wallet:</strong> <span id="walletAddress">Not connected</span></p>
-        <p id="networkStatus" style="display: none; color: green; font-weight: bold;">✅ Connected to QBFT_Besu_EduNet
-        </p>
-        <p id="networkWarning" style="display: none; color: red; font-weight: bold;">⚠️ Please switch to the
-            QBFT_Besu_EduNet network in MetaMask.</p>
+        <p id="networkStatus" style="display:none;color:green;font-weight:bold;">✅ Connected to QBFT_Besu_EduNet</p>
+        <p id="networkWarning" style="display:none;color:red;font-weight:bold;">⚠️ Please switch to the QBFT_Besu_EduNet
+            network in MetaMask.</p>
 
-        <p id="walletStatus" aria-live="polite" style="margin-top: 0.5rem;"></p>
+        <p id="walletStatus" aria-live="polite" style="margin-top:0.5rem;"></p>
 
         <button id="connectButton">Connect Wallet</button>
-        <details id="networkInstructionsToggle" style="margin-top: 1rem;">
+        <details id="networkInstructionsToggle" style="margin-top:1rem;">
             <summary><strong>🛠️ QBFT_Besu_EduNet Setup Instructions</strong></summary>
-            <ul style="font-size: 0.95rem; margin-top: 0.5rem;">
+            <ul style="font-size:.95rem;margin-top:.5rem;">
                 <li><strong>Network Name:</strong> QBFT_Besu_EduNet</li>
                 <li><strong>New RPC URL:</strong> <code>http://195.251.92.200/rpc/</code></li>
                 <li><strong>Chain ID:</strong> <code>424242</code></li>
                 <li><strong>Currency Symbol:</strong> <code>EDU-D</code></li>
                 <li><strong>Block Explorer URL:</strong> <code>http://83.212.76.39</code></li>
             </ul>
-            <p>Click <em>MetaMask ➝ Settings ➝ Networks ➝ Add Network</em> and fill in the above details. Then click
-                <strong>Save</strong> and return to this page.
+            <p>Click <em>MetaMask ➝ Settings ➝ Networks ➝ Add Network</em>, fill in the above, then
+                <strong>Save</strong>.
             </p>
         </details>
 
-        <div id="registerPrompt" style="margin-top: 1rem;">
+        <div id="registerPrompt" style="margin-top:1rem;">
             <p>You must register your wallet to access quizzes.</p>
             <button id="registerButton">Register</button>
         </div>
-
     </section>
 
     <div id="quizSection" style="display:none;">
@@ -56,17 +54,18 @@
                 <option value="">-- Select Quiz --</option>
             </select>
 
-            <div id="quizInfo" style="margin-top: 1rem;">
+            <div id="quizInfo" style="margin-top:1rem;">
                 <p id="quizDescription"></p>
-                <details id="quizDetails" style="display: none;">
+                <details id="quizDetails" style="display:none;">
                     <summary>More Info</summary>
                     <p id="quizDetailsContent"></p>
                 </details>
                 <p id="quizHint"></p>
                 <p id="quizReward"></p>
-                <button id="startQuizBtn" style="margin-top: 1rem;">Start Quiz</button>
+                <button id="startQuizBtn" style="margin-top:1rem;">Start Quiz</button>
             </div>
-            <div id="registrationNotice" style="margin-top: 1rem; color: red; font-weight: bold; display: none;">
+
+            <div id="registrationNotice" style="margin-top:1rem;color:red;font-weight:bold;display:none;">
                 🛑 You must register before accessing quizzes.
             </div>
         </section>
@@ -98,7 +97,43 @@
         <p><strong>Selected Quiz ID:</strong> <span id="quizIdDisplay">None</span></p>
     </section>
 
-    <section id="adminSection" style="display:none; margin-top: 2rem;">
+    <!-- 🏅 Leaderboard -->
+    <section id="leaderboardSection" style="margin-top:2rem;">
+        <h2>🏅 Leaderboard</h2>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px;">
+            <button id="refreshLeaderboardBtn">Refresh Leaderboard</button>
+            <button id="refreshRegisteredBtn">Refresh Registered Users</button>
+        </div>
+
+        <div id="leaderboardStatus" style="min-height:1.2em;margin:6px 0;color:#666;" aria-live="polite"></div>
+
+        <h3>Top Solvers</h3>
+        <table id="leaderboardTable" class="poe-table" style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th style="text-align:left;">#</th>
+                    <th style="text-align:left;">Address</th>
+                    <th style="text-align:right;">Solved</th>
+                    <th style="text-align:left;">Last Solved</th>
+                </tr>
+            </thead>
+            <tbody><!-- filled by JS --></tbody>
+        </table>
+
+        <h3 style="margin-top:1.5rem;">Registered Users</h3>
+        <table id="registeredTable" class="poe-table" style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th style="text-align:left;">Address</th>
+                    <th style="text-align:left;">Registered At</th>
+                </tr>
+            </thead>
+            <tbody><!-- filled by JS --></tbody>
+        </table>
+    </section>
+
+    <section id="adminSection" style="display:none;margin-top:2rem;">
         <h2>🛠️ Admin: Upload Answer Hash</h2>
         <div>
             <label for="adminQuizId">Quiz ID:</label>
@@ -112,16 +147,23 @@
         <p id="uploadStatus" aria-live="polite"></p>
     </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
+    <!-- 1) Library FIRST (ethers UMD exposes window.ethers) -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js" defer></script>
 
-    <script src="js/utils.js"></script>
-    <script src="js/wallet.js"></script>
-    <script src="js/quiz.js"></script>
-    <script src="js/submit.js"></script>
-    <script src="js/hash.js"></script>
-    <script src="js/admin.js"></script>
+    <!-- 2) Global configuration BEFORE anything that reads CONFIG/POE_API_BASE -->
+    <script src="./js/config.js" defer></script>
 
-    <script src="js/main.js"></script>
+    <!-- 3) App feature scripts (each exactly once) -->
+    <script src="./js/utils.js" defer></script>
+    <script src="./js/wallet.js" defer></script>
+    <script src="./js/hash.js" defer></script>
+    <script src="./js/quiz.js" defer></script>
+    <script src="./js/submit.js" defer></script>
+    <script src="./js/admin.js" defer></script>
+    <script src="./js/leaderboard.js" defer></script> <!-- only if you have the leaderboard section on the page -->
+
+    <!-- 4) Event wiring LAST (binds buttons, initializes UI, etc.) -->
+    <script src="./js/main.js" defer></script>
 </body>
 
 </html>

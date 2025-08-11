@@ -97,3 +97,46 @@ button:disabled {
     font-size: 14px;
   }
 }
+
+/* ===== Leaderboard Styles ===== */
+#leaderboardSection {
+  margin-top: 30px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+#leaderboardSection h2 {
+  margin-bottom: 15px;
+  color: #2d3748;
+}
+
+#leaderboardTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#leaderboardTable th,
+#leaderboardTable td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+#leaderboardTable th {
+  background-color: #edf2f7;
+  font-weight: bold;
+}
+
+#leaderboardTable tr:hover {
+  background-color: #f7fafc;
+}
+
+/* Responsive table */
+@media (max-width: 480px) {
+  #leaderboardTable th, #leaderboardTable td {
+    font-size: 14px;
+    padding: 8px;
+  }
+}
