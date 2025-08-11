@@ -3,34 +3,38 @@
 let provider;
 let signer;
 let userAddress;
+let isConnecting = false;
+
 const ADMIN_ADDRESS = '0x5E3a74f09D490F854e12A293E1d6abCBbEad6B60';
 
+// Not used for switching (MetaMask rejects http), but keep for reference
 const networkParams = {
-    chainId: '0x67932', // 424242 in hex
+    chainId: '0x67932', // 424242
     chainName: 'QBFT_Besu_EduNet',
-    nativeCurrency: {
-        name: 'EDU-D',
-        symbol: 'EDU-D',
-        decimals: 18
-    },
+    nativeCurrency: { name: 'EDU-D', symbol: 'EDU-D', decimals: 18 },
     rpcUrls: ['http://195.251.92.200/rpc/'],
     blockExplorerUrls: ['http://83.212.76.39']
 };
 
 /**
- * Connects the user's wallet and returns a contract instance.
- * @returns {Promise<ethers.Contract|null>} The contract instance on success, or null on failure.
+ * Connects wallet, checks network, builds/stashes contract, wires disconnect.
+ * Returns the contract instance (or null on failure).
  */
 async function connectWallet() {
-    if (typeof window.ethereum === 'undefined') {
+    if (isConnecting) return null;
+    isConnecting = true;
+
+    if (!window.ethereum) {
         alert('MetaMask is not installed!');
+        isConnecting = false;
         return null;
     }
 
     try {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        if (!accounts || accounts.length === 0) {
-            alert('No accounts found in MetaMask.');
+        if (!accounts || !accounts.length) {
+            window.showTempMessage?.('walletStatus', 'No accounts found in MetaMask.', 3000, true);
+            isConnecting = false;
             return null;
         }
 
@@ -38,139 +42,146 @@ async function connectWallet() {
         signer = await provider.getSigner();
         userAddress = accounts[0];
 
-        const el = document.getElementById('walletAddress');
-        // Use the shortenAddress utility function from utils.js
-        if (el) el.textContent = window.shortenAddress(userAddress);
+        // Show short address
+        const wa = document.getElementById('walletAddress');
+        if (wa) wa.textContent = (window.shortenAddress?.(userAddress)) || userAddress;
 
-        // Check if the user is on the correct network
-        const network = await provider.getNetwork();
-        const expectedChainId = BigInt(424242); // Compare with a BigInt
+        // Network check (no switching here to avoid HTTPS requirement)
+        const net = await provider.getNetwork();
+        const onBesu = net?.chainId === BigInt(424242);
+        const ns = document.getElementById('networkStatus');
+        const nw = document.getElementById('networkWarning');
+        if (ns) ns.style.display = onBesu ? 'block' : 'none';
+        if (nw) nw.style.display = onBesu ? 'none' : 'block';
 
-        console.log('Dapp Detected Chain ID:', network.chainId);
-        console.log('Expected Chain ID:', expectedChainId);
-
-        // The comparison is now BigInt to BigInt
-        if (network.chainId !== expectedChainId) {
-            document.getElementById('networkWarning').style.display = 'block';
-            document.getElementById('networkStatus').style.display = 'none';
-            // Use showTempMessage from utils.js with the correct signature
-            window.showTempMessage('walletStatus', '⚠️ Please manually switch to QBFT_Besu_EduNet.', 5000, true);
+        if (!onBesu) {
+            window.showTempMessage?.('walletStatus', '⚠️ Please switch MetaMask to QBFT_Besu_EduNet.', 5000, true);
+            isConnecting = false;
             return null;
         }
 
-        // If the network is correct, proceed
-        document.getElementById('networkWarning').style.display = 'none';
-        document.getElementById('networkStatus').style.display = 'block';
-        window.showTempMessage('walletStatus', '✅ Wallet connected!', 3000);
+        // Build contract (prefer CONFIG from config.js if present)
+        const abi = await (await fetch('./abi/ProofOfEscape.json')).json();
+        const contractAddress =
+            (window.CONFIG && window.CONFIG.CONTRACT_ADDRESS) ||
+            '0x874205E778d2b3E5F2B8c1eDfBFa619e6fF0c9aF'; // fallback, but try to avoid hardcoding
+        const contract = new ethers.Contract(contractAddress, abi, signer);
 
-        const contractAddress = '0x874205E778d2b3E5F2B8c1eDfBFa619e6fF0c9aF';
-        const contractABI = await (await fetch('./abi/ProofOfEscape.json')).json();
-        const contractInstance = new ethers.Contract(contractAddress, contractABI, signer);
+        // Stash globally for other modules
+        window.POE = { provider, signer, address: userAddress, contract };
 
+        // Wire (or create) disconnect button
         addDisconnectButton();
 
-        return contractInstance;
+        // Listen to account changes (refresh signer/contract and UI)
+        if (window.ethereum?.on) {
+            window.ethereum.removeAllListeners?.('accountsChanged');
+            window.ethereum.on('accountsChanged', async (accts) => {
+                if (!accts || !accts.length) return;
+                userAddress = accts[0];
+                const wa2 = document.getElementById('walletAddress');
+                if (wa2) wa2.textContent = (window.shortenAddress?.(userAddress)) || userAddress;
+
+                signer = await provider.getSigner();
+                window.POE = {
+                    provider,
+                    signer,
+                    address: userAddress,
+                    contract: new ethers.Contract(contractAddress, abi, signer)
+                };
+
+                // Let other parts refresh (if they hooked into this)
+                window.dispatchEvent(new CustomEvent('poe:walletChanged', { detail: { address: userAddress } }));
+            });
+        }
+
+        window.showTempMessage?.('walletStatus', '✅ Wallet connected!', 2500);
+        return contract;
+
     } catch (err) {
         console.error('Wallet connection failed:', err);
+        window.showTempMessage?.('walletStatus', '⚠️ Could not connect wallet. See console.', 4000, true);
         return null;
+    } finally {
+        isConnecting = false;
     }
 }
 
-/**
- * Gets the current provider instance.
- * @returns {ethers.Provider} The provider.
- */
 function getProvider() {
     if (!provider) throw new Error('Wallet not connected');
     return provider;
 }
 
-/**
- * Gets the current signer instance.
- * @returns {ethers.Signer} The signer.
- */
 function getSigner() {
     if (!signer) throw new Error('Wallet not connected');
     return signer;
 }
 
-/**
- * Gets the user's connected address.
- * @returns {string|null} The user's address or null if not connected.
- */
 function getUserAddress() {
-    return userAddress;
+    return userAddress || null;
 }
 
-/**
- * Disconnects the wallet and resets state.
- */
 function disconnectWallet() {
     provider = null;
     signer = null;
     userAddress = null;
-    const el = document.getElementById('walletAddress');
-    if (el) el.textContent = 'Not connected';
-    window.location.reload();
+    window.POE = undefined;
+    const wa = document.getElementById('walletAddress');
+    if (wa) wa.textContent = 'Not connected';
+    // Don’t hard reload; let page stay. If you prefer reload: window.location.reload();
 }
 
-/**
- * Adds a disconnect button to the page.
- */
 function addDisconnectButton() {
-    const walletContainer = document.getElementById('walletAddress');
-    if (!walletContainer || document.getElementById('disconnectButton')) return;
+    // If a static button exists, just wire it
+    let btn = document.getElementById('disconnectButton');
+    if (btn) {
+        btn.style.display = 'inline-block';
+        if (!btn._wired) {
+            btn.addEventListener('click', disconnectWallet);
+            btn._wired = true;
+        }
+        return;
+    }
 
-    const button = document.createElement('button');
-    button.id = 'disconnectButton';
-    button.textContent = 'Disconnect Wallet';
-    button.onclick = disconnectWallet;
-    button.style.marginLeft = '10px';
-    button.style.padding = '5px 10px';
-    button.style.cursor = 'pointer';
+    // Otherwise, create one after the walletAddress span
+    const walletSpan = document.getElementById('walletAddress');
+    if (!walletSpan || document.getElementById('disconnectButton')) return;
 
-    walletContainer.insertAdjacentElement('afterend', button);
+    btn = document.createElement('button');
+    btn.id = 'disconnectButton';
+    btn.textContent = 'Disconnect Wallet';
+    btn.addEventListener('click', disconnectWallet);
+    btn.style.marginLeft = '10px';
+    btn.style.padding = '5px 10px';
+    btn.style.cursor = 'pointer';
+    walletSpan.insertAdjacentElement('afterend', btn);
 }
 
-/**
- * Checks if the current user is the admin.
- * @returns {boolean} True if the user is the admin.
- */
 function isAdmin() {
     return userAddress?.toLowerCase() === ADMIN_ADDRESS.toLowerCase();
 }
 
-/**
- * Registers the current user's wallet address.
- * @param {ethers.Contract} contract The contract instance.
- */
 async function registerWallet(contract) {
+    if (!contract && window.POE?.contract) contract = window.POE.contract;
     if (!contract) {
-        showTempMessage('walletStatus', 'Wallet not connected.', 3000, true);
+        window.showTempMessage?.('walletStatus', 'Wallet not connected.', 3000, true);
         return;
     }
-
     try {
         const tx = await contract.register();
-        await tx.wait(); // Wait for the transaction to be mined
-        showTempMessage('walletStatus', 'Registration successful', 3000, false);
+        await tx.wait();
+        window.showTempMessage?.('walletStatus', '✅ Registration successful!', 3000);
+        window.dispatchEvent(new CustomEvent('poe:registered', { detail: { address: userAddress } }));
     } catch (error) {
-        console.error("Failed to register wallet:", error);
-
-        let errorMessage = 'Failed to register. Please check console.';
-
-        // Check for the specific "Already registered" revert message
-        if (error.reason && error.reason.includes("Already registered")) {
-            errorMessage = 'You are already registered! No need to register again.';
-        } else if (error.code === 'ACTION_REJECTED') {
-            errorMessage = 'Registration request was rejected.';
-        }
-
-        showTempMessage('walletStatus', `⚠️ ${errorMessage}`, 5000, true);
+        console.error('Failed to register wallet:', error);
+        let msg = 'Failed to register. Check console.';
+        if (error?.reason?.includes('Already registered')) msg = 'You are already registered.';
+        if (error?.code === 'ACTION_REJECTED') msg = 'Registration was rejected.';
+        window.showTempMessage?.('walletStatus', `⚠️ ${msg}`, 4500, true);
     }
 }
 
-// Expose functions to the global scope
+// Expose to window (used by main.js and others)
 window.connectWallet = connectWallet;
 window.getProvider = getProvider;
 window.getSigner = getSigner;
