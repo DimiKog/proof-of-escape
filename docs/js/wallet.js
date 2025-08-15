@@ -5,6 +5,12 @@ let signer;
 let userAddress;
 let isConnecting = false;
 
+// Local fallback if utils.js didn't define one
+function _short(addr) {
+    if (!addr) return 'Not connected';
+    return addr.slice(0, 6) + '...' + addr.slice(-4);
+}
+
 const ADMIN_ADDRESS = window.CONFIG?.ADMIN_ADDRESS || '';
 
 const CHAIN_ID_DEC = (window.CONFIG?.CHAIN_ID) ?? 424242;
@@ -19,6 +25,25 @@ function toAbiArray(maybeArtifact) {
     if (Array.isArray(maybeArtifact)) return maybeArtifact;
     if (Array.isArray(maybeArtifact.abi)) return maybeArtifact.abi;
     return null;
+}
+
+/**
+ * Backward/forward-compatible registration checker.
+ * Supports old `registeredUsers(address)` and new `isRegistered(address)`.
+ */
+async function checkRegistered(contract, addr) {
+    if (!contract || !addr) return false;
+    try {
+        if (typeof contract.isRegistered === 'function') {
+            return await contract.isRegistered(addr);
+        }
+        if (typeof contract.registeredUsers === 'function') {
+            return await contract.registeredUsers(addr);
+        }
+    } catch (e) {
+        console.warn('checkRegistered failed:', e);
+    }
+    return false;
 }
 
 /**
@@ -50,7 +75,7 @@ async function connectWallet() {
 
         // Show short address
         const wa = document.getElementById('walletAddress');
-        if (wa) wa.textContent = (window.shortenAddress?.(userAddress)) || userAddress;
+        if (wa) wa.textContent = (window.shortenAddress?.(userAddress)) || _short(userAddress);
 
         // Network check
         const net = await provider.getNetwork();
@@ -95,6 +120,16 @@ async function connectWallet() {
         // Stash globally for other modules
         window.POE = { provider, signer, address: userAddress, contract };
 
+        // Toggle Admin panel visibility if connected as admin
+        try {
+            const adminEl = document.getElementById('adminSection');
+            if (adminEl) {
+                adminEl.style.display = isAdmin() ? 'block' : 'none';
+            }
+        } catch (e) {
+            console.warn('Admin panel toggle failed:', e);
+        }
+
         // Wire disconnect button
         addDisconnectButton();
 
@@ -107,7 +142,7 @@ async function connectWallet() {
                 userAddress = accts[0];
 
                 const wa2 = document.getElementById('walletAddress');
-                if (wa2) wa2.textContent = (window.shortenAddress?.(userAddress)) || userAddress;
+                if (wa2) wa2.textContent = (window.shortenAddress?.(userAddress)) || _short(userAddress);
 
                 signer = await provider.getSigner();
                 window.POE = {
@@ -121,15 +156,19 @@ async function connectWallet() {
             });
         }
 
-        // Optional: show Register button if not registered yet
+        // Optional: show Register button if not registered yet (supports new/old ABI)
         try {
             const regBtn = document.getElementById('registerButton');
-            if (regBtn && contract?.registeredUsers) {
-                const isRegistered = await contract.registeredUsers(userAddress);
-                regBtn.style.display = isRegistered ? 'none' : 'inline-block';
+            if (regBtn) {
+                const isReg = await checkRegistered(contract, userAddress);
+                regBtn.style.display = isReg ? 'none' : 'inline-block';
+                const quizWrapper = document.getElementById('quizSection');
+                if (quizWrapper) {
+                    quizWrapper.style.display = isReg ? 'block' : 'none';
+                }
             }
         } catch (e) {
-            console.warn('Could not check registeredUsers:', e);
+            console.warn('Could not check registration status:', e);
         }
 
         window.showTempMessage?.('walletStatus', '✅ Wallet connected!', 2500);
@@ -207,6 +246,10 @@ async function registerWallet(contract) {
         window.dispatchEvent(new CustomEvent('poe:registered', { detail: { address: userAddress } }));
         const regBtn = document.getElementById('registerButton');
         if (regBtn) regBtn.style.display = 'none';
+        const quizWrapper2 = document.getElementById('quizSection');
+        if (quizWrapper2) quizWrapper2.style.display = 'block';
+        const adminEl2 = document.getElementById('adminSection');
+        if (adminEl2) adminEl2.style.display = isAdmin() ? 'block' : 'none';
     } catch (error) {
         console.error('Failed to register wallet:', error);
         let msg = 'Failed to register. Check console.';

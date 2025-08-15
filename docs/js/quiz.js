@@ -49,8 +49,22 @@ async function initializeQuizDropdown(contractInstance) {
     }
 
     try {
-        const userAddress = window.getUserAddress(); // Get the address from wallet.js
-        const registered = await contractInstance.registeredUsers(userAddress);
+        const userAddress = (typeof window.getUserAddress === 'function') ? window.getUserAddress() : null;
+        if (!userAddress) {
+            quizDropdown.disabled = true;
+            quizDescription.textContent = '⚠️ Please connect your wallet first.';
+            quizIdDisplay.textContent = 'None';
+            return;
+        }
+        // Support both ABIs: isRegistered(address) OR registeredUsers(address)
+        let registered;
+        if (typeof contractInstance.isRegistered === "function") {
+            registered = await contractInstance.isRegistered(userAddress);
+        } else if (typeof contractInstance.registeredUsers === "function") {
+            registered = await contractInstance.registeredUsers(userAddress);
+        } else {
+            throw new Error("No registration check method found on contract");
+        }
 
         if (!registered) {
             quizDropdown.disabled = true;

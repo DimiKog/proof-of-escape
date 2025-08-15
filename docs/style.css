@@ -112,6 +112,14 @@ button:disabled {
   color: #2d3748;
 }
 
+/* Center leaderboard buttons */
+#leaderboardSection button {
+  display: block;
+  margin: 0 auto 12px; /* centers buttons and adds spacing below each */
+  max-width: 360px;    /* optional: limit width */
+  width: 100%;         /* makes them full-width up to max-width */
+}
+
 #leaderboardTable {
   width: 100%;
   border-collapse: collapse;
