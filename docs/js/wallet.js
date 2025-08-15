@@ -47,6 +47,29 @@ async function checkRegistered(contract, addr) {
 }
 
 /**
+ * Refresh Register button, quiz visibility and admin panel, based on registration + admin.
+ */
+async function refreshRegistrationUI(contract = (window.POE?.contract), addr = userAddress) {
+    try {
+        const regBtn = document.getElementById('registerButton');
+        const quizWrapper = document.getElementById('quizSection');
+        const adminEl = document.getElementById('adminSection');
+
+        const isReg = await checkRegistered(contract, addr);
+        if (regBtn) regBtn.style.display = isReg ? 'none' : 'inline-block';
+        if (quizWrapper) quizWrapper.style.display = isReg ? 'block' : 'none';
+        if (adminEl) adminEl.style.display = isAdmin() ? 'block' : 'none';
+    } catch (e) {
+        console.warn('refreshRegistrationUI failed:', e);
+        // Fail-safe: show register, hide quiz
+        const regBtn = document.getElementById('registerButton');
+        const quizWrapper = document.getElementById('quizSection');
+        if (regBtn) regBtn.style.display = 'inline-block';
+        if (quizWrapper) quizWrapper.style.display = 'none';
+    }
+}
+
+/**
  * Connects wallet, checks network, builds/stashes contract, wires disconnect.
  * Returns the contract instance (or null on failure).
  */
@@ -79,7 +102,7 @@ async function connectWallet() {
 
         // Network check
         const net = await provider.getNetwork();
-        const onBesu = net?.chainId === BigInt(CHAIN_ID_DEC);
+        const onBesu = net?.chainId === BigInt(Number(CHAIN_ID_DEC));
         const ns = document.getElementById('networkStatus');
         const nw = document.getElementById('networkWarning');
         if (ns) ns.style.display = onBesu ? 'block' : 'none';
@@ -133,6 +156,36 @@ async function connectWallet() {
         // Wire disconnect button
         addDisconnectButton();
 
+        // Chain change listener
+        if (window.ethereum?.on) {
+            window.ethereum.removeAllListeners?.('chainChanged');
+            window.ethereum.on('chainChanged', async (cidHex) => {
+                const ns = document.getElementById('networkStatus');
+                const nw = document.getElementById('networkWarning');
+                const onBesuNow = (BigInt(cidHex) === BigInt(CHAIN_ID_DEC));
+                if (ns) ns.style.display = onBesuNow ? 'block' : 'none';
+                if (nw) nw.style.display = onBesuNow ? 'none' : 'block';
+
+                if (onBesuNow) {
+                    // Rebuild signer/contract and refresh UI
+                    signer = await provider.getSigner();
+                    window.POE = {
+                        provider,
+                        signer,
+                        address: userAddress,
+                        contract: new ethers.Contract(contractAddress, abi, signer)
+                    };
+                    await refreshRegistrationUI(window.POE.contract, userAddress);
+                } else {
+                    // Not on target chain: hide quiz and show register button
+                    const quizWrapper = document.getElementById('quizSection');
+                    if (quizWrapper) quizWrapper.style.display = 'none';
+                    const regBtn = document.getElementById('registerButton');
+                    if (regBtn) regBtn.style.display = 'inline-block';
+                }
+            });
+        }
+
         // Account change listener
         if (window.ethereum?.on) {
             // Remove previous handler if any
@@ -152,23 +205,10 @@ async function connectWallet() {
                     contract: new ethers.Contract(contractAddress, abi, signer)
                 };
 
+                await refreshRegistrationUI(window.POE.contract, userAddress);
+
                 window.dispatchEvent(new CustomEvent('poe:walletChanged', { detail: { address: userAddress } }));
             });
-        }
-
-        // Optional: show Register button if not registered yet (supports new/old ABI)
-        try {
-            const regBtn = document.getElementById('registerButton');
-            if (regBtn) {
-                const isReg = await checkRegistered(contract, userAddress);
-                regBtn.style.display = isReg ? 'none' : 'inline-block';
-                const quizWrapper = document.getElementById('quizSection');
-                if (quizWrapper) {
-                    quizWrapper.style.display = isReg ? 'block' : 'none';
-                }
-            }
-        } catch (e) {
-            console.warn('Could not check registration status:', e);
         }
 
         window.showTempMessage?.('walletStatus', '✅ Wallet connected!', 2500);
@@ -244,12 +284,7 @@ async function registerWallet(contract) {
         await tx.wait();
         window.showTempMessage?.('walletStatus', '✅ Registration successful!', 3000);
         window.dispatchEvent(new CustomEvent('poe:registered', { detail: { address: userAddress } }));
-        const regBtn = document.getElementById('registerButton');
-        if (regBtn) regBtn.style.display = 'none';
-        const quizWrapper2 = document.getElementById('quizSection');
-        if (quizWrapper2) quizWrapper2.style.display = 'block';
-        const adminEl2 = document.getElementById('adminSection');
-        if (adminEl2) adminEl2.style.display = isAdmin() ? 'block' : 'none';
+        await refreshRegistrationUI();
     } catch (error) {
         console.error('Failed to register wallet:', error);
         let msg = 'Failed to register. Check console.';

@@ -28,14 +28,19 @@ window.addEventListener('DOMContentLoaded', async () => {
                 const owner = await contract.owner();
                 const isAdmin = owner && userAddress.toLowerCase() === String(owner).toLowerCase();
 
+                // Always show the quiz section when a wallet is connected.
+                // Show/hide registration prompt based on registration status.
+                // Let quiz.js handle enabling/disabling the dropdown based on registration.
+                quizSection && (quizSection.style.display = 'block');
+
                 if (!isRegistered) {
-                    quizSection && (quizSection.style.display = 'none');
                     registerPrompt && (registerPrompt.style.display = 'block');
                 } else {
                     registerPrompt && (registerPrompt.style.display = 'none');
-                    quizSection && (quizSection.style.display = 'block');
-                    window.initializeQuizDropdown?.(contract);
                 }
+
+                // Reinitialize the quiz UI either way; quiz.js should no-op or disable when unregistered.
+                window.initializeQuizDropdown?.(contract);
 
                 adminSection && (adminSection.style.display = isAdmin ? 'block' : 'none');
             } else {
