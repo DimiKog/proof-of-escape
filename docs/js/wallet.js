@@ -65,11 +65,17 @@ async function loadPoEAbi() {
 async function checkRegistered(contract, addr) {
     if (!contract || !addr) return false;
     try {
+        console.log("Checking registration for", addr);
+        console.log("Contract methods:", Object.keys(contract));
         if (typeof contract.isRegistered === 'function') {
-            return await contract.isRegistered(addr);
+            const result = await contract.isRegistered(addr);
+            console.log("isRegistered result:", result);
+            return result;
         }
         if (typeof contract.registeredUsers === 'function') {
-            return await contract.registeredUsers(addr);
+            const result = await contract.registeredUsers(addr);
+            console.log("registeredUsers result:", result);
+            return result;
         }
     } catch (e) {
         console.warn('checkRegistered failed:', e);
