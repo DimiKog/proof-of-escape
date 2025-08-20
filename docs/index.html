@@ -115,6 +115,7 @@
         </div>
 
         <div id="leaderboardStatus" style="min-height:1.2em;margin:6px 0;color:#666;" aria-live="polite"></div>
+        <div id="leaderboardPageInfo" style="margin:0.5rem 0; font-weight:bold; text-align:center;"></div>
 
         <h3>Top Solvers</h3>
         <table id="leaderboardTable" class="poe-table" style="width:100%;border-collapse:collapse;">
@@ -127,7 +128,16 @@
                 </tr>
             </thead>
             <tbody><!-- filled by JS --></tbody>
+            <tr id="leaderboardEmptyRow" style="display:none;">
+                <td colspan="4" style="text-align:center;">No entries yet.</td>
+            </tr>
         </table>
+        <div class="pagination-controls" style="display:flex;justify-content:center;gap:1rem;margin-top:0.5rem;">
+            <button id="firstPageBtn">⏮️ First</button>
+            <button id="prevPageBtn" disabled style="opacity:0.5;cursor:not-allowed;">Previous</button>
+            <button id="nextPageBtn">Next</button>
+            <button id="lastPageBtn">Last ⏭️</button>
+        </div>
 
         <h3 style="margin-top:1.5rem;">Registered Users</h3>
         <table id="registeredTable" class="poe-table" style="width:100%;border-collapse:collapse;">

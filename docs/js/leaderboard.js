@@ -105,6 +105,15 @@
       setStatus('Leaderboard updated.');
       updatePaginationButtons(rows.length);
 
+      const infoDiv = document.getElementById('leaderboardPaginationInfo');
+      if (infoDiv) {
+        const start = lbOffset + 1;
+        const end = lbOffset + rows.length;
+        infoDiv.textContent = rows.length > 0
+          ? `Showing ${start}-${end}`
+          : 'No entries to display';
+      }
+
     } catch (err) {
       console.error('loadLeaderboard error', err);
       setStatus(`Failed to load leaderboard: ${err.message}`, true);
@@ -136,6 +145,9 @@
     // If pagination buttons don't exist, create them once.
     if (!els.lbPagination) {
       const paginationDivId = 'leaderboardPagination';
+      const paginationInfoId = 'leaderboardPaginationInfo';
+      const paginationInfoHTML = `<div id="${paginationInfoId}" style="margin-top:5px;text-align:right;font-size:0.9em;color:#555;"></div>`;
+      els.lbTbody.parentElement.insertAdjacentHTML('afterend', paginationInfoHTML);
       els.lbTbody.parentElement.insertAdjacentHTML('afterend', `
           <div id="${paginationDivId}" style="margin-top:10px; text-align:right;">
             <button id="prevLeaderboardPage" style="margin-right:5px;">Previous</button>
@@ -160,6 +172,15 @@
           loadLeaderboard();
         }
       });
+
+      const infoDiv = document.getElementById(paginationInfoId);
+      if (infoDiv) {
+        const start = lbOffset + 1;
+        const end = lbOffset + rowCount;
+        infoDiv.textContent = rowCount > 0
+          ? `Showing ${start}-${end}`
+          : 'No entries to display';
+      }
     }
 
     // Now, just update the disabled state.
