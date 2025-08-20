@@ -3,12 +3,16 @@
   // Read base URL from global variable set in index.html, trim trailing slash
   const API = (window.POE_API_BASE || '').replace(/\/$/, '');
 
+  let lbOffset = 0;
+  const lbLimit = 20;
+
   const els = {
     status: document.getElementById('leaderboardStatus'),
     refreshLeaderboardBtn: document.getElementById('refreshLeaderboardBtn'),
     refreshRegisteredBtn: document.getElementById('refreshRegisteredBtn'),
     lbTbody: document.querySelector('#leaderboardTable tbody'),
     regTbody: document.querySelector('#registeredTable tbody'),
+    lbPagination: null, // Will be created dynamically
   };
 
   function fmtDate(iso) {
@@ -30,51 +34,80 @@
     els.status.style.color = isError ? '#b00020' : '#666';
   }
 
+  // Enhanced fetch function with better error handling
   async function fetchJSON(path) {
     const url = API + path;
-    const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
-    if (!res.ok) throw new Error(`HTTP ${res.status} on ${path}`);
-    return res.json();
+    try {
+      const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      if (!res.ok) {
+        throw new Error(`HTTP Error: ${res.status} ${res.statusText} on ${path}`);
+      }
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        throw new Error(`JSON parsing failed for ${path}: ${err.message}`);
+      }
+      throw new Error(`Network or Fetch Error on ${path}: ${err.message}`);
+    }
+  }
+
+  // Helper function to create a table row for a user
+  function createTableRow(data, isLeaderboard = false, index = 0) {
+    const tr = document.createElement('tr');
+    const fullAddr = data.user || data.address || '';
+    tr.setAttribute('data-user', fullAddr);
+
+    if (isLeaderboard) {
+      const tdRank = document.createElement('td');
+      tdRank.textContent = String(lbOffset + index + 1);
+      tr.appendChild(tdRank);
+    }
+
+    const tdAddr = document.createElement('td');
+    tdAddr.textContent = fullAddr.replace(/^(.{6}).+(.{4})$/, '$1…$2');
+    tdAddr.title = fullAddr;
+    tdAddr.style.fontFamily = 'monospace';
+    tr.appendChild(tdAddr);
+
+    if (isLeaderboard) {
+      const tdSolved = document.createElement('td');
+      tdSolved.textContent = data.solved_count ?? data.solved ?? '';
+      tdSolved.style.textAlign = 'right';
+      tr.appendChild(tdSolved);
+
+      const tdLast = document.createElement('td');
+      tdLast.textContent = fmtDate(data.last_solved_at);
+      tr.appendChild(tdLast);
+    } else {
+      const tdWhen = document.createElement('td');
+      tdWhen.textContent = fmtDate(data.registered_at);
+      tr.appendChild(tdWhen);
+    }
+
+    return tr;
   }
 
   async function loadLeaderboard() {
     if (!els.lbTbody) return;
     setStatus('Loading leaderboard…');
     try {
-      const rows = await fetchJSON('/leaderboard');
+      const rows = await fetchJSON(`/leaderboard?limit=${lbLimit}&offset=${lbOffset}`);
       els.lbTbody.innerHTML = '';
 
       if (!rows || rows.length === 0) {
         els.lbTbody.innerHTML = '<tr><td colspan="4" style="padding:8px;color:#777;">No entries yet.</td></tr>';
       } else {
         rows.forEach((r, i) => {
-          const tr = document.createElement('tr');
-
-          const tdRank = document.createElement('td');
-          tdRank.textContent = String(i + 1);
-
-          const tdAddr = document.createElement('td');
-          tdAddr.textContent = r.user || '';
-          tdAddr.style.fontFamily = 'monospace';
-
-          const tdSolved = document.createElement('td');
-          tdSolved.textContent = r.solved_count ?? '';
-          tdSolved.style.textAlign = 'right';
-
-          const tdLast = document.createElement('td');
-          tdLast.textContent = fmtDate(r.last_solved_at);
-
-          tr.appendChild(tdRank);
-          tr.appendChild(tdAddr);
-          tr.appendChild(tdSolved);
-          tr.appendChild(tdLast);
-          els.lbTbody.appendChild(tr);
+          els.lbTbody.appendChild(createTableRow(r, true, i));
         });
       }
       setStatus('Leaderboard updated.');
+      updatePaginationButtons(rows.length);
+
     } catch (err) {
       console.error('loadLeaderboard error', err);
-      setStatus('Failed to load leaderboard.', true);
+      setStatus(`Failed to load leaderboard: ${err.message}`, true);
     }
   }
 
@@ -89,30 +122,59 @@
         els.regTbody.innerHTML = '<tr><td colspan="2" style="padding:8px;color:#777;">No registered users yet.</td></tr>';
       } else {
         rows.forEach((r) => {
-          const tr = document.createElement('tr');
-
-          const tdAddr = document.createElement('td');
-          tdAddr.textContent = r.user || '';
-          tdAddr.style.fontFamily = 'monospace';
-
-          const tdWhen = document.createElement('td');
-          tdWhen.textContent = fmtDate(r.registered_at);
-
-          tr.appendChild(tdAddr);
-          tr.appendChild(tdWhen);
-          els.regTbody.appendChild(tr);
+          els.regTbody.appendChild(createTableRow(r, false));
         });
       }
       setStatus('Registered users updated.');
     } catch (err) {
       console.error('loadRegistered error', err);
-      setStatus('Failed to load registered users.', true);
+      setStatus(`Failed to load registered users: ${err.message}`, true);
     }
+  }
+
+  function updatePaginationButtons(rowCount) {
+    // If pagination buttons don't exist, create them once.
+    if (!els.lbPagination) {
+      const paginationDivId = 'leaderboardPagination';
+      els.lbTbody.parentElement.insertAdjacentHTML('afterend', `
+          <div id="${paginationDivId}" style="margin-top:10px; text-align:right;">
+            <button id="prevLeaderboardPage" style="margin-right:5px;">Previous</button>
+            <button id="nextLeaderboardPage">Next</button>
+          </div>
+      `);
+      els.lbPagination = document.getElementById(paginationDivId);
+
+      // Wire up event listeners once.
+      const prevBtn = document.getElementById('prevLeaderboardPage');
+      const nextBtn = document.getElementById('nextLeaderboardPage');
+
+      prevBtn.addEventListener('click', () => {
+        if (lbOffset >= lbLimit) {
+          lbOffset -= lbLimit;
+          loadLeaderboard();
+        }
+      });
+      nextBtn.addEventListener('click', () => {
+        if (rowCount === lbLimit) {
+          lbOffset += lbLimit;
+          loadLeaderboard();
+        }
+      });
+    }
+
+    // Now, just update the disabled state.
+    const prevBtn = document.getElementById('prevLeaderboardPage');
+    const nextBtn = document.getElementById('nextLeaderboardPage');
+    if (prevBtn) prevBtn.disabled = lbOffset === 0;
+    if (nextBtn) nextBtn.disabled = rowCount < lbLimit;
   }
 
   // Button wiring
   if (els.refreshLeaderboardBtn) {
-    els.refreshLeaderboardBtn.addEventListener('click', loadLeaderboard);
+    els.refreshLeaderboardBtn.addEventListener('click', () => {
+      lbOffset = 0; // Reset offset on manual refresh
+      loadLeaderboard();
+    });
   }
   if (els.refreshRegisteredBtn) {
     els.refreshRegisteredBtn.addEventListener('click', loadRegistered);
