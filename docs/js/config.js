@@ -2,7 +2,7 @@
 
 // Expose config globally
 window.CONFIG = {
-    RPC_URL: "http://195.251.92.200/rpc/",
+    RPC_URL: "https://rpc.dimikog.org/rpc/",
     CONTRACT_ADDRESS: "0x5B4c07DeaA3967e806A0C97Adc9432AEBA40B845",
     TOKEN_ADDRESS: "0x540d398ab66EEB6AfcD4c8BECB75E1D25643A32B",
 

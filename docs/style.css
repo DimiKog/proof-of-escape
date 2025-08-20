@@ -98,6 +98,14 @@ button:disabled {
   }
 }
 
+.actions-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+  justify-content: center; /* centers the group */
+}
+
 /* ===== Leaderboard Styles ===== */
 #leaderboardSection {
   margin-top: 30px;

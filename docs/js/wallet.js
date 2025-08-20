@@ -28,6 +28,37 @@ function toAbiArray(maybeArtifact) {
 }
 
 /**
+ * Ensure the ProofOfEscape ABI is loaded into memory.
+ * Tries (1) window.POE_ABI if set by config.js, (2) waits for window.ABIS_READY,
+ * (3) falls back to fetching ./abi/ProofOfEscape.json and normalizing.
+ */
+async function loadPoEAbi() {
+    // Already present from config.js preloading?
+    if (window.POE_ABI && Array.isArray(window.POE_ABI)) return window.POE_ABI;
+
+    // If config.js exposed a promise, await it
+    try {
+        if (window.ABIS_READY) {
+            await window.ABIS_READY;
+            if (window.POE_ABI && Array.isArray(window.POE_ABI)) return window.POE_ABI;
+        }
+    } catch { /* ignore and fall through */ }
+
+    // Fallback: fetch artifact and normalize
+    try {
+        const artifact = await (await fetch('./abi/ProofOfEscape.json')).json();
+        const arr = toAbiArray(artifact);
+        if (arr && Array.isArray(arr)) {
+            window.POE_ABI = arr; // cache for future calls
+            return arr;
+        }
+    } catch (e) {
+        console.warn('Failed to fetch local ProofOfEscape ABI:', e);
+    }
+    return null;
+}
+
+/**
  * Backward/forward-compatible registration checker.
  * Supports old `registeredUsers(address)` and new `isRegistered(address)`.
  */
@@ -47,25 +78,46 @@ async function checkRegistered(contract, addr) {
 }
 
 /**
- * Refresh Register button, quiz visibility and admin panel, based on registration + admin.
+ * Refresh Register button, quiz gating, and admin panel.
+ * - Always show the quiz section.
+ * - If not registered => show Register button, disable dropdown, show hint.
+ * - If registered => hide Register button, enable dropdown, hide hint.
  */
 async function refreshRegistrationUI(contract = (window.POE?.contract), addr = userAddress) {
+    const regBtn = document.getElementById('registerButton');
+    const quizWrapper = document.getElementById('quizSection');
+    const quizSelect = document.getElementById('quizDropdown');
+    const gateMsg = document.getElementById('quizGateHint'); // optional <p id="quizGateHint">
+
     try {
-        const regBtn = document.getElementById('registerButton');
-        const quizWrapper = document.getElementById('quizSection');
-        const adminEl = document.getElementById('adminSection');
+        // Always show the section; we gate inside it.
+        if (quizWrapper) quizWrapper.style.display = 'block';
 
         const isReg = await checkRegistered(contract, addr);
+
+        // Register button
         if (regBtn) regBtn.style.display = isReg ? 'none' : 'inline-block';
-        if (quizWrapper) quizWrapper.style.display = isReg ? 'block' : 'none';
+
+        // Gate the quiz select
+        if (quizSelect) quizSelect.disabled = !isReg;
+
+        // Gate message
+        if (gateMsg) {
+            gateMsg.textContent = isReg ? '' : '🔒 Please register to view and attempt quizzes.';
+            gateMsg.style.display = isReg ? 'none' : 'block';
+        }
+
+        // Admin panel visibility
+        const adminEl = document.getElementById('adminSection');
         if (adminEl) adminEl.style.display = isAdmin() ? 'block' : 'none';
+
     } catch (e) {
         console.warn('refreshRegistrationUI failed:', e);
-        // Fail-safe: show register, hide quiz
-        const regBtn = document.getElementById('registerButton');
-        const quizWrapper = document.getElementById('quizSection');
+        // Fail-safe defaults
+        if (quizWrapper) quizWrapper.style.display = 'block';
         if (regBtn) regBtn.style.display = 'inline-block';
-        if (quizWrapper) quizWrapper.style.display = 'none';
+        if (quizSelect) quizSelect.disabled = true;
+        if (gateMsg) { gateMsg.textContent = '🔒 Please register to view and attempt quizzes.'; gateMsg.style.display = 'block'; }
     }
 }
 
@@ -110,19 +162,25 @@ async function connectWallet() {
 
         if (!onBesu) {
             window.showTempMessage?.('walletStatus', '⚠️ Please switch MetaMask to QBFT_Besu_EduNet.', 5000, true);
+
+            // Keep the section visible but locked
+            const quizWrapper = document.getElementById('quizSection');
+            const quizSelect = document.getElementById('quizDropdown');
+            const gateMsg = document.getElementById('quizGateHint');
+
+            if (quizWrapper) quizWrapper.style.display = 'block';
+            if (quizSelect) quizSelect.disabled = true;
+            if (gateMsg) {
+                gateMsg.textContent = '🌐 Switch to QBFT_Besu_EduNet to continue.';
+                gateMsg.style.display = 'block';
+            }
+
             isConnecting = false;
             return null;
         }
 
-        // Load ABI (prefer preloaded from config.js)
-        try { await window.ABIS_READY; } catch {/* ignore */ }
-        let abi = window.POE_ABI || null;
-
-        if (!abi) {
-            // Fallback: fetch artifact and normalize
-            const artifact = await (await fetch('./abi/ProofOfEscape.json')).json();
-            abi = toAbiArray(artifact);
-        }
+        // Load ABI using robust helper
+        const abi = await loadPoEAbi();
 
         if (!abi || !Array.isArray(abi)) {
             console.error('Failed to obtain ABI array. Got:', abi);
@@ -143,6 +201,10 @@ async function connectWallet() {
         // Stash globally for other modules
         window.POE = { provider, signer, address: userAddress, contract };
 
+
+        // 👉 ensure UI reflects registration state immediately
+        await refreshRegistrationUI(window.POE.contract, userAddress);
+
         // Toggle Admin panel visibility if connected as admin
         try {
             const adminEl = document.getElementById('adminSection');
@@ -162,7 +224,9 @@ async function connectWallet() {
             window.ethereum.on('chainChanged', async (cidHex) => {
                 const ns = document.getElementById('networkStatus');
                 const nw = document.getElementById('networkWarning');
-                const onBesuNow = (BigInt(cidHex) === BigInt(CHAIN_ID_DEC));
+                const toBigInt = (v) =>
+                    (typeof v === 'string' && v.startsWith('0x')) ? BigInt(v) : BigInt(Number(v));
+                const onBesuNow = (toBigInt(cidHex) === toBigInt(CHAIN_ID_DEC));
                 if (ns) ns.style.display = onBesuNow ? 'block' : 'none';
                 if (nw) nw.style.display = onBesuNow ? 'none' : 'block';
 

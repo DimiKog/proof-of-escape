@@ -16,6 +16,13 @@
         <p>Answer quizzes. Prove it. Earn tokens.</p>
     </header>
 
+    <!-- Optional: No-JS warning -->
+    <noscript>
+        <p style="color:#b00020;font-weight:bold">
+            ⚠️ This app requires JavaScript to run. Please enable it in your browser.
+        </p>
+    </noscript>
+
     <section>
         <h2>🦊 Wallet</h2>
         <p><strong>Connected Wallet:</strong> <span id="walletAddress">Not connected</span></p>
@@ -30,7 +37,7 @@
             <summary><strong>🛠️ QBFT_Besu_EduNet Setup Instructions</strong></summary>
             <ul style="font-size:.95rem;margin-top:.5rem;">
                 <li><strong>Network Name:</strong> QBFT_Besu_EduNet</li>
-                <li><strong>New RPC URL:</strong> <code>http://195.251.92.200/rpc/</code></li>
+                <li><strong>New RPC URL:</strong> <code>https://rpc.dimikog.org/rpc/</code></li>
                 <li><strong>Chain ID:</strong> <code>424242</code></li>
                 <li><strong>Currency Symbol:</strong> <code>EDU-D</code></li>
                 <li><strong>Block Explorer URL:</strong> <code>http://83.212.76.39</code></li>
@@ -40,7 +47,7 @@
             </p>
         </details>
 
-        <div id="registerPrompt" style="margin-top:1rem;">
+        <div id="registerPrompt" style="margin-top:1rem; display:none;">
             <p>You must register your wallet to access quizzes.</p>
             <button id="registerButton">Register</button>
         </div>
@@ -102,7 +109,7 @@
     <section id="leaderboardSection" style="margin-top:2rem;">
         <h2>🏅 Leaderboard</h2>
 
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px;">
+        <div class="actions-row">
             <button id="refreshLeaderboardBtn">Refresh Leaderboard</button>
             <button id="refreshRegisteredBtn">Refresh Registered Users</button>
         </div>
