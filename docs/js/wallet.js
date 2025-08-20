@@ -154,7 +154,7 @@ async function connectWallet() {
 
         // Network check
         const net = await provider.getNetwork();
-        const onBesu = net?.chainId === BigInt(Number(CHAIN_ID_DEC));
+        const onBesu = net && net.chainId && BigInt(net.chainId) === BigInt(CHAIN_ID_DEC);
         const ns = document.getElementById('networkStatus');
         const nw = document.getElementById('networkWarning');
         if (ns) ns.style.display = onBesu ? 'block' : 'none';
@@ -167,6 +167,7 @@ async function connectWallet() {
             const quizWrapper = document.getElementById('quizSection');
             const quizSelect = document.getElementById('quizDropdown');
             const gateMsg = document.getElementById('quizGateHint');
+            const regBtn = document.getElementById('registerButton');
 
             if (quizWrapper) quizWrapper.style.display = 'block';
             if (quizSelect) quizSelect.disabled = true;
@@ -174,6 +175,7 @@ async function connectWallet() {
                 gateMsg.textContent = '🌐 Switch to QBFT_Besu_EduNet to continue.';
                 gateMsg.style.display = 'block';
             }
+            if (regBtn) regBtn.style.display = 'inline-block';
 
             isConnecting = false;
             return null;
@@ -198,7 +200,7 @@ async function connectWallet() {
         // Build contract
         const contract = new ethers.Contract(contractAddress, abi, signer);
 
-        // Stash globally for other modules
+        // Stash globally for other modules BEFORE refreshRegistrationUI
         window.POE = { provider, signer, address: userAddress, contract };
 
 
@@ -239,7 +241,9 @@ async function connectWallet() {
                         address: userAddress,
                         contract: new ethers.Contract(contractAddress, abi, signer)
                     };
-                    await refreshRegistrationUI(window.POE.contract, userAddress);
+                    if (window.POE?.contract) {
+                        await refreshRegistrationUI(window.POE.contract, userAddress);
+                    }
                 } else {
                     // Not on target chain: hide quiz and show register button
                     const quizWrapper = document.getElementById('quizSection');
@@ -269,7 +273,9 @@ async function connectWallet() {
                     contract: new ethers.Contract(contractAddress, abi, signer)
                 };
 
-                await refreshRegistrationUI(window.POE.contract, userAddress);
+                if (window.POE?.contract) {
+                    await refreshRegistrationUI(window.POE.contract, userAddress);
+                }
 
                 window.dispatchEvent(new CustomEvent('poe:walletChanged', { detail: { address: userAddress } }));
             });
