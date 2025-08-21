@@ -162,52 +162,21 @@
   }
 
   function updatePaginationButtons(rowCount) {
-    // If pagination buttons don't exist, create them once.
-    if (!els.lbPagination) {
-      const paginationDivId = 'leaderboardPagination';
+    // If pagination info element doesn't exist, create it once.
+    if (!document.getElementById('leaderboardPaginationInfo')) {
       const paginationInfoId = 'leaderboardPaginationInfo';
       const paginationInfoHTML = `<div id="${paginationInfoId}" style="margin-top:5px;text-align:center;font-size:0.9em;color:#555;"></div>`;
       els.lbTbody.parentElement.insertAdjacentHTML('afterend', paginationInfoHTML);
-      els.lbTbody.parentElement.insertAdjacentHTML('afterend', `
-          <div id="${paginationDivId}" style="margin-top:10px; text-align:center;">
-            <button id="prevLeaderboardPage" style="margin-right:5px; font-family: monospace;">Previous</button>
-            <button id="nextLeaderboardPage" style="font-family: monospace;">Next</button>
-          </div>
-      `);
-      els.lbPagination = document.getElementById(paginationDivId);
-
-      // Wire up event listeners once.
-      const prevBtn = document.getElementById('prevLeaderboardPage');
-      const nextBtn = document.getElementById('nextLeaderboardPage');
-
-      prevBtn.addEventListener('click', () => {
-        if (lbOffset >= lbLimit) {
-          lbOffset -= lbLimit;
-          loadLeaderboard();
-        }
-      });
-      nextBtn.addEventListener('click', () => {
-        if (rowCount === lbLimit) {
-          lbOffset += lbLimit;
-          loadLeaderboard();
-        }
-      });
-
-      const infoDiv = document.getElementById(paginationInfoId);
-      if (infoDiv) {
-        const start = lbOffset + 1;
-        const end = lbOffset + rowCount;
-        infoDiv.textContent = rowCount > 0
-          ? `Showing ${start}-${end}`
-          : 'No entries to display';
-      }
     }
 
-    // Now, just update the disabled state.
-    const prevBtn = document.getElementById('prevLeaderboardPage');
-    const nextBtn = document.getElementById('nextLeaderboardPage');
-    if (prevBtn) prevBtn.disabled = lbOffset === 0;
-    if (nextBtn) nextBtn.disabled = rowCount < lbLimit;
+    const infoDiv = document.getElementById('leaderboardPaginationInfo');
+    if (infoDiv) {
+      const start = lbOffset + 1;
+      const end = lbOffset + rowCount;
+      infoDiv.textContent = rowCount > 0
+        ? `Showing ${start}-${end}`
+        : 'No entries to display';
+    }
   }
 
   // Button wiring
