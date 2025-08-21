@@ -163,3 +163,91 @@ button:disabled {
     padding: 8px;
   }
 }
+
+/* Ensure numeric columns are aligned right */
+#leaderboardTable td:nth-child(3),
+#leaderboardTable td:nth-child(5),
+#leaderboardTable td:nth-child(6) {
+  text-align: right;
+  font-family: monospace;
+}
+
+/* Ensure consistent address styling */
+#leaderboardTable td:nth-child(2) {
+  font-family: monospace;
+  word-break: break-all; /* allows long addresses to wrap nicely */
+}
+
+/* Center and style pagination buttons */
+#leaderboardPagination {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+#leaderboardPagination button {
+  background-color: #2d3748;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  font-family: monospace;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#leaderboardPagination button:hover:not(:disabled) {
+  background-color: #4a5568;
+}
+
+#leaderboardPagination button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Optional: center the leaderboard section on wider screens */
+#leaderboardSection {
+  max-width: 800px;
+  margin: 30px auto;
+}
+
+/* Additional Leaderboard Visual Enhancements */
+#leaderboardTable td {
+  vertical-align: middle;
+}
+
+#leaderboardTable td.rank-column {
+  font-weight: bold;
+  color: #2d3748;
+  text-align: center;
+}
+
+#leaderboardTable td.address-column {
+  font-family: monospace;
+  word-break: break-word;
+  color: #1a202c;
+}
+
+#leaderboardTable td.solved-column,
+#leaderboardTable td.tokens-column {
+  text-align: right;
+  font-family: monospace;
+  color: #2b6cb0;
+}
+
+/* Add subtle background color for odd rows for better contrast */
+#leaderboardTable tr:nth-child(odd) {
+  background-color: #f9fafb;
+}
+
+/* Highlight current user row */
+#leaderboardTable tr.current-user {
+  background-color: #e6fffa;
+  border-left: 4px solid #38b2ac;
+}
+
+/* Slight padding above the table for breathing room */
+#leaderboardTable {
+  margin-top: 12px;
+}

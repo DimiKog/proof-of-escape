@@ -60,34 +60,38 @@
 
     if (isLeaderboard) {
       const tdRank = document.createElement('td');
+      tdRank.className = 'rank-column';
       tdRank.textContent = String(lbOffset + index + 1);
       tr.appendChild(tdRank);
-    }
 
-    const tdAddr = document.createElement('td');
-    tdAddr.textContent = fullAddr.replace(/^(.{6}).+(.{4})$/, '$1…$2');
-    tdAddr.title = fullAddr;
-    tdAddr.style.fontFamily = 'monospace';
-    tr.appendChild(tdAddr);
+      const tdAddr = document.createElement('td');
+      tdAddr.className = 'address-column';
+      tdAddr.textContent = fullAddr.replace(/^(.{6}).+(.{4})$/, '$1…$2');
+      tdAddr.title = fullAddr;
+      tdAddr.style.fontFamily = 'monospace';
+      tr.appendChild(tdAddr);
 
-    if (isLeaderboard) {
       const tdSolved = document.createElement('td');
+      tdSolved.className = 'solved-column';
       tdSolved.textContent = data.solved_count ?? data.solved ?? '';
       tdSolved.style.textAlign = 'right';
       tdSolved.style.fontFamily = 'monospace';
       tr.appendChild(tdSolved);
 
       const tdLast = document.createElement('td');
+      tdLast.className = 'last-solved-column';
       tdLast.textContent = fmtDate(data.last_solved_at);
       tr.appendChild(tdLast);
 
       const tdTokens = document.createElement('td');
+      tdTokens.className = 'tokens-column';
       tdTokens.textContent = data.poe_tokens ?? '0';
       tdTokens.style.textAlign = 'right';
       tdTokens.style.fontFamily = 'monospace';
       tr.appendChild(tdTokens);
 
       const tdRate = document.createElement('td');
+      tdRate.className = 'rate-column';
       const completions = Number(data.solved_count ?? data.solved ?? 0);
       const tokens = Number(data.poe_tokens ?? 0);
       tdRate.textContent = tokens > 0 ? `${(completions / tokens).toFixed(2)}` : '–';
