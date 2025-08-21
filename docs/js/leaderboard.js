@@ -74,11 +74,27 @@
       const tdSolved = document.createElement('td');
       tdSolved.textContent = data.solved_count ?? data.solved ?? '';
       tdSolved.style.textAlign = 'right';
+      tdSolved.style.fontFamily = 'monospace';
       tr.appendChild(tdSolved);
 
       const tdLast = document.createElement('td');
       tdLast.textContent = fmtDate(data.last_solved_at);
       tr.appendChild(tdLast);
+
+      const tdTokens = document.createElement('td');
+      tdTokens.textContent = data.poe_tokens ?? '0';
+      tdTokens.style.textAlign = 'right';
+      tdTokens.style.fontFamily = 'monospace';
+      tr.appendChild(tdTokens);
+
+      const tdRate = document.createElement('td');
+      const completions = Number(data.solved_count ?? data.solved ?? 0);
+      const tokens = Number(data.poe_tokens ?? 0);
+      tdRate.textContent = tokens > 0 ? `${(completions / tokens).toFixed(2)}` : '–';
+      tdRate.style.textAlign = 'right';
+      tdRate.style.fontFamily = 'monospace';
+      tdRate.title = "Solved quizzes per PoE token";
+      tr.appendChild(tdRate);
     } else {
       const tdWhen = document.createElement('td');
       tdWhen.textContent = fmtDate(data.registered_at);
@@ -96,7 +112,7 @@
       els.lbTbody.innerHTML = '';
 
       if (!rows || rows.length === 0) {
-        els.lbTbody.innerHTML = '<tr><td colspan="4" style="padding:8px;color:#777;">No entries yet.</td></tr>';
+        els.lbTbody.innerHTML = '<tr><td colspan="6" style="padding:8px;color:#777;">No entries yet.</td></tr>';
       } else {
         rows.forEach((r, i) => {
           els.lbTbody.appendChild(createTableRow(r, true, i));
@@ -146,12 +162,12 @@
     if (!els.lbPagination) {
       const paginationDivId = 'leaderboardPagination';
       const paginationInfoId = 'leaderboardPaginationInfo';
-      const paginationInfoHTML = `<div id="${paginationInfoId}" style="margin-top:5px;text-align:right;font-size:0.9em;color:#555;"></div>`;
+      const paginationInfoHTML = `<div id="${paginationInfoId}" style="margin-top:5px;text-align:center;font-size:0.9em;color:#555;"></div>`;
       els.lbTbody.parentElement.insertAdjacentHTML('afterend', paginationInfoHTML);
       els.lbTbody.parentElement.insertAdjacentHTML('afterend', `
-          <div id="${paginationDivId}" style="margin-top:10px; text-align:right;">
-            <button id="prevLeaderboardPage" style="margin-right:5px;">Previous</button>
-            <button id="nextLeaderboardPage">Next</button>
+          <div id="${paginationDivId}" style="margin-top:10px; text-align:center;">
+            <button id="prevLeaderboardPage" style="margin-right:5px; font-family: monospace;">Previous</button>
+            <button id="nextLeaderboardPage" style="font-family: monospace;">Next</button>
           </div>
       `);
       els.lbPagination = document.getElementById(paginationDivId);
