@@ -68,8 +68,13 @@ window.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Try to connect
-        const c = await window.connectWallet();
-        contract = c || window.POE?.contract || null;
+        const signer = await window.getSigner(); // assuming this is defined in wallet.js
+        const poeContract = new ethers.Contract(window.POE_ADDRESS, window.POE_ABI, signer);
+        const nftContract = new ethers.Contract(window.NFT_ADDRESS, window.NFT_ABI, signer);
+        window.POE = { contract: poeContract };
+        window.NFT = { contract: nftContract };
+        contract = poeContract;
+
         await initializeDapp();
     }
 
@@ -102,8 +107,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
 
     document.getElementById('uploadHashButton')?.addEventListener('click', () => {
-        if (!contract) contract = window.POE?.contract || null;
-        if (contract) window.handleAdminUpload(contract);
+        const poe = window.POE?.contract;
+        if (poe) window.handleAdminUpload(poe);
     });
 
     if (typeof window.ethereum !== 'undefined') {
