@@ -68,7 +68,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Try to connect
-        const signer = await window.getSigner(); // assuming this is defined in wallet.js
+        const signer = await window.connectWallet(); // ensures wallet connection and signer retrieval
         const poeContract = new ethers.Contract(window.POE_ADDRESS, window.POE_ABI, signer);
         const nftContract = new ethers.Contract(window.NFT_ADDRESS, window.NFT_ABI, signer);
         window.POE = { contract: poeContract };
@@ -84,7 +84,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     // Buttons
     connectButton?.addEventListener('click', async () => {
         try {
-            const signer = await window.getSigner(); // trigger connection prompt
+            const signer = await window.connectWallet(); // ensures wallet connection and signer retrieval
             const poeContract = new ethers.Contract(window.POE_ADDRESS, window.POE_ABI, signer);
             const nftContract = new ethers.Contract(window.NFT_ADDRESS, window.NFT_ABI, signer);
             window.POE = { contract: poeContract };
