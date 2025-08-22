@@ -15,15 +15,22 @@ window.CONFIG = {
     API_BASE: "https://poe-api.duckdns.org",
 
     // New
-    ADMIN_ADDRESS: "0x5E3a74f09D490F854e12A293E1d6abCBbEad6B60"
+    ADMIN_ADDRESS: "0x5E3a74f09D490F854e12A293E1d6abCBbEad6B60",
+
+
+    // NEW: NFT reward contract
+    NFT_CONTRACT_ADDRESS: "0x095dbc84D218695B09Ab6Ac662C11C8312621ed5",
+    NFT_ABI_PATH: "./abi/PoEQuizRewardNFT.json"
 };
 
 // Load ABIs once and store the *array* on window.*
 window.loadABIs = async function loadABIs() {
     const poeJson = await fetch('./abi/ProofOfEscape.json').then(r => r.json());
     const tokenJson = await fetch('./abi/EscapeToken.json').then(r => r.json());
+    const nftJson = await fetch(window.CONFIG.NFT_ABI_PATH).then(r => r.json());
 
     // expose arrays (handle either {abi:[...]} or [...] shapes)
     window.POE_ABI = Array.isArray(poeJson) ? poeJson : poeJson.abi;
     window.TOKEN_ABI = Array.isArray(tokenJson) ? tokenJson : tokenJson.abi;
+    window.NFT_ABI = Array.isArray(nftJson) ? nftJson : nftJson.abi;
 };

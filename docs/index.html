@@ -153,6 +153,13 @@
         </table>
     </section>
 
+    <section id="nftClaimSection" style="display:none;margin-top:2rem;">
+        <h2>🎖️ Claim Your PoE NFT</h2>
+        <p>Congratulations on solving all 10 quizzes! Click the button below to claim your NFT reward.</p>
+        <button id="claimNFTButton">Claim NFT Reward</button>
+        <p id="mintStatus" aria-live="polite" style="margin-top:0.5rem;"></p>
+    </section>
+
     <section id="adminSection" style="display:none;margin-top:2rem;">
         <h2>🛠️ Admin: Upload Answer Hash</h2>
         <div>
@@ -195,6 +202,9 @@
 
     <!-- 6) Your main wiring (listeners, optional init) -->
     <script src="js/main.js"></script>
+
+    <!-- 7) Minting script -->
+    <script src="js/mint.js"></script>
 </body>
 
 </html>

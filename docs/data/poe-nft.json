@@ -1,0 +1,24 @@
+{
+    "name": "PoE Quiz Champion",
+    "description": "You successfully completed the Proof of Escape quiz. 🎉\n\nYour reward is a free copy of the first open-access book on blockchain in the Greek language. This NFT also grants you access to the next level of the game. Keep it safe!",
+    "image": "https://ipfs.io/ipfs/bafkreifpmbtdq4c6wo6j2s3kbzlqlpohleifdfiw2bfcsbtwfzcwrvfjym",
+    "external_url": "https://repository.kallipos.gr/bitstream/11419/9130/4/591-PATRIKAKIS-Blockchain.pdf",
+    "attributes": [
+        {
+            "trait_type": "Quiz",
+            "value": "PoE Level 1"
+        },
+        {
+            "trait_type": "Reward",
+            "value": "Blockchain eBook"
+        },
+        {
+            "trait_type": "Status",
+            "value": "Qualified for Next Round"
+        },
+        {
+            "trait_type": "Version",
+            "value": "1.0"
+        }
+    ]
+}
