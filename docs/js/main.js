@@ -24,6 +24,10 @@ window.addEventListener('DOMContentLoaded', async () => {
                     return;
                 }
 
+                console.log("Contract:", contract);
+                console.log("Available contract functions:", Object.keys(contract));
+                console.log("Contract.interface.fragments:", contract.interface.fragments.map(f => f.name));
+
                 const isRegistered = await contract.isRegistered(userAddress);
                 const owner = await contract.owner();
                 const isAdmin = owner && userAddress.toLowerCase() === String(owner).toLowerCase();
@@ -62,6 +66,10 @@ window.addEventListener('DOMContentLoaded', async () => {
         // ✅ Ensure ABIs are loaded BEFORE connecting / building contracts
         if (typeof window.loadABIs === 'function') {
             await window.loadABIs();
+            console.log("✅ ABIs loaded:", {
+                POE_ABI: window.POE_ABI,
+                NFT_ABI: window.NFT_ABI
+            });
             if (!Array.isArray(window.POE_ABI)) {
                 throw new Error('POE_ABI did not load as an array');
             }
@@ -71,9 +79,14 @@ window.addEventListener('DOMContentLoaded', async () => {
         const signer = await window.connectWallet(); // ensures wallet connection and signer retrieval
         const poeContract = new ethers.Contract(window.POE_ADDRESS, window.POE_ABI, signer);
         const nftContract = new ethers.Contract(window.NFT_ADDRESS, window.NFT_ABI, signer);
+        console.log("✅ Contracts created:", {
+            POE: poeContract,
+            NFT: nftContract
+        });
         window.POE = { contract: poeContract };
         window.NFT = { contract: nftContract };
         contract = poeContract;
+        console.log("✅ Contract set:", contract);
 
         await initializeDapp();
     }
