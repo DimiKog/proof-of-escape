@@ -79,14 +79,23 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Call once on load (safe-guarded)
-    try {
-        await handleConnectionAndInitialization();
-    } catch (err) {
-        console.error('Error during initial connection and initialization:', err);
-    }
+    // (Removed automatic connection attempt)
 
     // Buttons
-    connectButton?.addEventListener('click', handleConnectionAndInitialization);
+    connectButton?.addEventListener('click', async () => {
+        try {
+            const signer = await window.getSigner(); // trigger connection prompt
+            const poeContract = new ethers.Contract(window.POE_ADDRESS, window.POE_ABI, signer);
+            const nftContract = new ethers.Contract(window.NFT_ADDRESS, window.NFT_ABI, signer);
+            window.POE = { contract: poeContract };
+            window.NFT = { contract: nftContract };
+            contract = poeContract;
+
+            await initializeDapp();
+        } catch (err) {
+            console.error("Wallet connection failed:", err);
+        }
+    });
 
     document.getElementById('registerButton')?.addEventListener('click', async () => {
         if (!contract) contract = window.POE?.contract || null;
