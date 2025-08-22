@@ -35,9 +35,24 @@
                 button.textContent = 'Uploading...';
             }
 
+            if (typeof contractInstance.uploadAnswer !== 'function') {
+                console.error('❌ The connected contract does not have an uploadAnswer function.');
+                window.showTempMessage(uploadStatusId, '❌ Contract missing uploadAnswer function.', 5000, true);
+                return;
+            }
+
             // Use the provided contract instance.
             // Connect to the signer to send the transaction.
-            const tx = await contractInstance.connect(window.getSigner()).uploadAnswer(quizId, hash);
+            let signer;
+            try {
+                signer = await window.getSigner();
+            } catch (err) {
+                console.error('❌ Could not get signer:', err);
+                window.showTempMessage(uploadStatusId, '❌ Wallet not connected. Please connect first.', 5000, true);
+                return;
+            }
+
+            const tx = await contractInstance.connect(signer).uploadAnswer(quizId, hash);
             await tx.wait();
 
             // Corrected showTempMessage call
