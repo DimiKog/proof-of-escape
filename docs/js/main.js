@@ -127,4 +127,8 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     window.addEventListener('poe:registered', initializeDapp);
     window.addEventListener('poe:walletChanged', initializeDapp);
+    // Optional sanity check
+    if (!window.POE_ADDRESS || !window.NFT_ADDRESS) {
+        console.error("❌ Contract address missing in config.js!");
+    }
 });

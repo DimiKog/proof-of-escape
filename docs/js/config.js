@@ -34,3 +34,8 @@ window.loadABIs = async function loadABIs() {
     window.TOKEN_ABI = Array.isArray(tokenJson) ? tokenJson : tokenJson.abi;
     window.NFT_ABI = Array.isArray(nftJson) ? nftJson : nftJson.abi;
 };
+
+// Set global contract addresses
+window.POE_ADDRESS = window.CONFIG.CONTRACT_ADDRESS;
+window.TOKEN_ADDRESS = window.CONFIG.TOKEN_ADDRESS;
+window.NFT_ADDRESS = window.CONFIG.NFT_CONTRACT_ADDRESS;
