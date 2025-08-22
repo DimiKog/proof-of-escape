@@ -17,7 +17,7 @@ async function submitQuiz() {
         signer
     );
 
-    const alreadyMinted = await contract.balanceOf(address);
+    const alreadyMinted = (await contract.balanceOf(address)).toNumber();
     if (alreadyMinted > 0) {
         alert("You already own the NFT.");
         return;

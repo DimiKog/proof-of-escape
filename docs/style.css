@@ -251,3 +251,32 @@ button:disabled {
 #leaderboardTable {
   margin-top: 12px;
 }
+
+/*NFT Claim reward Section*/
+#nftClaimSection {
+  background-color: #fefcbf; /* light yellow */
+  border: 2px solid #ecc94b; /* gold border */
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+#nftClaimSection h2 {
+  color: #b7791f; /* strong gold tone */
+  margin-bottom: 10px;
+}
+
+#nftClaimSection button {
+  background-color: #38a169; /* green */
+}
+
+#nftClaimSection button:hover {
+  background-color: #2f855a;
+}
+
+#mintStatus {
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 14px;
+}
