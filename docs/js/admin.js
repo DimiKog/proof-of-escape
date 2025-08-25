@@ -35,12 +35,6 @@
                 button.textContent = 'Uploading...';
             }
 
-            if (typeof contractInstance.uploadAnswer !== 'function') {
-                console.error('❌ The connected contract does not have an uploadAnswer function.');
-                window.showTempMessage(uploadStatusId, '❌ Contract missing uploadAnswer function.', 5000, true);
-                return;
-            }
-
             // Use the provided contract instance.
             // Connect to the signer to send the transaction.
             let signer;
@@ -52,7 +46,7 @@
                 return;
             }
 
-            const tx = await contractInstance.connect(signer).uploadAnswer(quizId, hash);
+            const tx = await contractInstance.connect(signer).setQuizHash(quizId, hash);
             await tx.wait();
 
             // Corrected showTempMessage call
