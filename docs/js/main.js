@@ -63,47 +63,54 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function handleConnectionAndInitialization() {
-        // ✅ Ensure ABIs are loaded BEFORE connecting / building contracts
-        if (typeof window.loadABIs === 'function') {
-            await window.loadABIs();
-            console.log("✅ ABIs loaded:", {
-                POE_ABI: window.POE_ABI,
-                NFT_ABI: window.NFT_ABI
-            });
-            if (!Array.isArray(window.POE_ABI)) {
-                throw new Error('POE_ABI did not load as an array');
+        try {
+            // ✅ Ensure ABIs are loaded BEFORE connecting / building contracts
+            if (typeof window.loadABIs === 'function') {
+                await window.loadABIs();
+                console.log("✅ ABIs loaded:", {
+                    POE_ABI: window.POE_ABI,
+                    NFT_ABI: window.NFT_ABI
+                });
+                if (!Array.isArray(window.POE_ABI)) {
+                    throw new Error('POE_ABI did not load as an array');
+                }
             }
+
+            // Correct way to connect the wallet and get the global state
+            await window.connectWallet();
+            const poeContract = window.POE?.contract;
+            const nftContract = window.NFT?.contract;
+
+            if (!poeContract) {
+                throw new Error('POE contract not initialized');
+            }
+
+            contract = poeContract;
+            console.log("✅ Contract set:", contract);
+
+            await initializeDapp();
+
+        } catch (err) {
+            console.error("Wallet connection or contract initialization failed:", err);
+            connectButton && (connectButton.style.display = 'block');
+            registerPrompt && (registerPrompt.style.display = 'none');
+            quizSection && (quizSection.style.display = 'none');
+            adminSection && (adminSection.style.display = 'none');
         }
-
-        // Try to connect
-        const signer = await window.connectWallet(); // ensures wallet connection and signer retrieval
-        const poeContract = new ethers.Contract(window.POE_ADDRESS, window.POE_ABI, signer);
-        const nftContract = new ethers.Contract(window.NFT_ADDRESS, window.NFT_ABI, signer);
-        console.log("✅ Contracts created:", {
-            POE: poeContract,
-            NFT: nftContract
-        });
-        window.POE = { contract: poeContract };
-        window.NFT = { contract: nftContract };
-        contract = poeContract;
-        console.log("✅ Contract set:", contract);
-
-        await initializeDapp();
     }
-
-    // Call once on load (safe-guarded)
-    // (Removed automatic connection attempt)
 
     // Buttons
     connectButton?.addEventListener('click', async () => {
         try {
-            const signer = await window.connectWallet(); // ensures wallet connection and signer retrieval
-            const poeContract = new ethers.Contract(window.POE_ADDRESS, window.POE_ABI, signer);
-            const nftContract = new ethers.Contract(window.NFT_ADDRESS, window.NFT_ABI, signer);
-            window.POE = { contract: poeContract };
-            window.NFT = { contract: nftContract };
-            contract = poeContract;
+            await window.connectWallet();
+            const poeContract = window.POE?.contract;
+            const nftContract = window.NFT?.contract;
 
+            if (!poeContract) {
+                throw new Error('POE contract not initialized');
+            }
+
+            contract = poeContract;
             await initializeDapp();
         } catch (err) {
             console.error("Wallet connection failed:", err);
