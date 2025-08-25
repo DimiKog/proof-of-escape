@@ -23,28 +23,42 @@ async function submitAnswer(contract) {
         return;
     }
 
-    if (!answerHash || answerHash.length !== 66) { // Check for a valid keccak256 hash length (0x + 64 chars)
+    // A valid keccak256 hash is 0x followed by 64 hex characters.
+    if (!answerHash || !answerHash.startsWith('0x') || answerHash.length !== 66) {
         window.showTempMessage('walletStatus', 'Please provide a valid keccak256 hash.', 3000, true);
         return;
     }
 
     try {
-        resultMessage.textContent = 'Submitting answer... Please wait for confirmation.';
+        resultMessage.textContent = 'Submitting answer... Please confirm the transaction in your wallet.';
         resultMessage.style.color = 'orange';
 
-        // Correct function name: checkQuizAnswer
-        const tx = await contract.checkQuizAnswer(quizId, answerHash);
-        await tx.wait();
+        // Connect the contract to the signer to send a transaction
+        const signer = await window.getSigner();
+        const contractWithSigner = contract.connect(signer);
 
-        resultMessage.textContent = '✅ Answer submitted successfully! Checking for rewards...';
-        resultMessage.style.color = 'green';
-        window.showTempMessage('walletStatus', 'Answer submitted successfully!', 3000, false);
+        const tx = await contractWithSigner.checkQuizAnswer(quizId, answerHash);
+
+        // Wait for the transaction to be mined
+        const receipt = await tx.wait();
+
+        // Check for success or failure from the transaction receipt
+        if (receipt.status === 1) { // Transaction was successful
+            resultMessage.textContent = '✅ Answer submitted successfully! Checking for rewards...';
+            resultMessage.style.color = 'green';
+            window.showTempMessage('walletStatus', 'Answer submitted successfully!', 3000, false);
+        } else { // Transaction failed (e.g., reverted)
+            const errorMessage = '❌ Transaction failed. Please check the blockchain explorer.';
+            resultMessage.textContent = errorMessage;
+            resultMessage.style.color = 'red';
+            window.showTempMessage('walletStatus', errorMessage, 5000, true);
+        }
 
     } catch (error) {
         console.error("❌ Failed to submit answer:", error);
         let errorMessage = 'Failed to submit answer. Check the console for details.';
 
-        // Check for specific revert reasons
+        // Check for specific revert reasons from the error object
         if (error.reason) {
             errorMessage = `❌ Failed to submit answer: ${error.reason}`;
         } else if (error.code === 'ACTION_REJECTED') {
@@ -56,3 +70,6 @@ async function submitAnswer(contract) {
         window.showTempMessage('walletStatus', errorMessage, 5000, true);
     }
 }
+
+// Expose submitAnswer globally for main.js to call
+window.submitAnswer = submitAnswer;
