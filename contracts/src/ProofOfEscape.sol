@@ -5,8 +5,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./EscapeToken.sol";
 
-/// @title ProofOfEscape v3
-/// @notice Track quiz completions and distribute rewards with robust error feedback
+/// @title ProofOfEscape
+/// @notice Track quiz completions and distribute rewards
 contract ProofOfEscape is Ownable, ReentrancyGuard {
     // ERC-20 reward token reference (must expose mint)
     EscapeToken public immutable escapeToken;
@@ -88,17 +88,11 @@ contract ProofOfEscape is Ownable, ReentrancyGuard {
         uint256 quizId,
         bytes32 answerHash
     ) external nonReentrant returns (bool success) {
+        // Use require statements for clear error feedback
         require(isRegistered[msg.sender], "Register first");
         require(quizHashes[quizId] != bytes32(0), "Quiz not set");
         require(!completedQuizzes[msg.sender][quizId], "Already completed");
-        if (answerHash != quizHashes[quizId]) {
-            emit QuizFailed(
-                msg.sender,
-                quizId,
-                "Sorry! Your answer is incorrect."
-            );
-            return false;
-        }
+        require(answerHash == quizHashes[quizId], "Wrong answer");
 
         completedQuizzes[msg.sender][quizId] = true;
         unchecked {

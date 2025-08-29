@@ -45,8 +45,8 @@ async function submitAnswer(contract) {
 
         // Check for success or failure from the transaction receipt
         if (receipt.status === 1) { // Transaction was successful
-            resultMessage.textContent = '✅ Answer submitted successfully! Checking for rewards...';
-            resultMessage.textContent += `\n📦 Tx Hash: ${tx.hash}`;
+            const explorerLink = `https://explorer.dimikog.org/tx/${tx.hash}`;
+            resultMessage.innerHTML = `✅ Answer submitted successfully!<br>📦 <a href="${explorerLink}" target="_blank">View Transaction</a>`;
             resultMessage.style.color = 'green';
             window.showTempMessage('walletStatus', 'Answer submitted successfully!', 3000, false);
         } else { // Transaction failed (e.g., reverted)
