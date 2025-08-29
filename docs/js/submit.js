@@ -41,10 +41,12 @@ async function submitAnswer(contract) {
 
         // Wait for the transaction to be mined
         const receipt = await tx.wait();
+        console.log("📦 Transaction hash:", tx.hash);
 
         // Check for success or failure from the transaction receipt
         if (receipt.status === 1) { // Transaction was successful
             resultMessage.textContent = '✅ Answer submitted successfully! Checking for rewards...';
+            resultMessage.textContent += `\n📦 Tx Hash: ${tx.hash}`;
             resultMessage.style.color = 'green';
             window.showTempMessage('walletStatus', 'Answer submitted successfully!', 3000, false);
         } else { // Transaction failed (e.g., reverted)
