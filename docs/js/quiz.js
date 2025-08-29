@@ -42,7 +42,13 @@ async function initializeQuizDropdown(contractInstance) {
     try {
         // Clear and disable by default
         if (quizDropdown) {
-            quizDropdown.innerHTML = '<option value="">-- Select Quiz --</option>';
+            while (quizDropdown.firstChild) {
+                quizDropdown.removeChild(quizDropdown.firstChild);
+            }
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = '-- Select Quiz --';
+            quizDropdown.appendChild(defaultOption);
             quizDropdown.disabled = true;
         }
 
