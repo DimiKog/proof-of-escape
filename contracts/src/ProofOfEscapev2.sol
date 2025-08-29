@@ -5,8 +5,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./EscapeToken.sol";
 
-/// @title ProofOfEscape v3
-/// @notice Track quiz completions and distribute rewards with robust error feedback
+/// @title ProofOfEscape
+/// @notice Track quiz completions and distribute rewards
+/// This is hte 2nd version of the ProofOfEscape contract with improvements like Leaderboard support.
 contract ProofOfEscape is Ownable, ReentrancyGuard {
     // ERC-20 reward token reference (must expose mint)
     EscapeToken public immutable escapeToken;
@@ -27,7 +28,7 @@ contract ProofOfEscape is Ownable, ReentrancyGuard {
     mapping(uint256 => uint256) public quizCompletions;
 
     // Reward per correct quiz (configurable)
-    mapping(uint256 => uint256) public quizRewards;
+    uint256 public immutable rewardPerQuiz;
 
     // Events
     event QuizCompleted(
@@ -37,24 +38,12 @@ contract ProofOfEscape is Ownable, ReentrancyGuard {
     );
     event QuizHashUpdated(uint256 indexed quizId, bytes32 newHash);
     event UserRegistered(address indexed user);
-    event QuizFailed(
-        address indexed user,
-        uint256 indexed quizId,
-        string message
-    );
 
-    constructor(address _escapeToken) Ownable() {
+    constructor(address _escapeToken, uint256 _rewardPerQuiz) Ownable() {
         require(_escapeToken != address(0), "token addr zero");
+        require(_rewardPerQuiz > 0, "reward zero");
         escapeToken = EscapeToken(_escapeToken);
-    }
-
-    /// @notice Set the reward amount for a quiz (owner only)
-    function setQuizReward(
-        uint256 quizId,
-        uint256 rewardAmount
-    ) external onlyOwner {
-        require(rewardAmount > 0, "Reward must be > 0");
-        quizRewards[quizId] = rewardAmount;
+        rewardPerQuiz = _rewardPerQuiz;
     }
 
     /// @notice Register a user (idempotent)
@@ -83,7 +72,6 @@ contract ProofOfEscape is Ownable, ReentrancyGuard {
     }
 
     /// @notice Check if a submitted answer is correct and reward tokens
-    /// @dev Reverts with a specific error message if any check fails
     function checkQuizAnswer(
         uint256 quizId,
         bytes32 answerHash
@@ -91,12 +79,8 @@ contract ProofOfEscape is Ownable, ReentrancyGuard {
         require(isRegistered[msg.sender], "Register first");
         require(quizHashes[quizId] != bytes32(0), "Quiz not set");
         require(!completedQuizzes[msg.sender][quizId], "Already completed");
+
         if (answerHash != quizHashes[quizId]) {
-            emit QuizFailed(
-                msg.sender,
-                quizId,
-                "Sorry! Your answer is incorrect."
-            );
             return false;
         }
 
@@ -105,9 +89,8 @@ contract ProofOfEscape is Ownable, ReentrancyGuard {
             quizCompletions[quizId] += 1;
         }
 
-        uint256 reward = quizRewards[quizId];
-        require(reward > 0, "Reward not set");
-        escapeToken.mint(msg.sender, reward);
+        // Mint reward
+        escapeToken.mint(msg.sender, rewardPerQuiz);
 
         emit QuizCompleted(
             msg.sender,
@@ -130,7 +113,7 @@ contract ProofOfEscape is Ownable, ReentrancyGuard {
         uint256 count
     ) external view returns (address[] memory) {
         uint256 len = registeredUserAddresses.length;
-        if (start >= len) return new address[](0);
+        if (start >= len) return new address[](0); // No users to return;
 
         uint256 end = start + count;
         if (end > len) end = len;

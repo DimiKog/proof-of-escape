@@ -17,12 +17,13 @@
         // Use a more robust regex to handle various non-alphanumeric characters.
         const plainAnswer = document.getElementById('adminPlainAnswer')
             .value.trim().toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ');
+        const reward = Number(document.getElementById('adminQuizReward').value);
         const uploadStatusId = 'uploadStatus';
         const button = document.getElementById('uploadHashButton');
 
-        if (!Number.isInteger(quizId) || quizId <= 0 || !plainAnswer) {
+        if (!Number.isInteger(quizId) || quizId <= 0 || !plainAnswer || isNaN(reward) || reward <= 0) {
             // Corrected showTempMessage call
-            window.showTempMessage(uploadStatusId, 'Please enter a valid Quiz ID and Answer.', 3000, true);
+            window.showTempMessage(uploadStatusId, 'Please enter a valid Quiz ID, Answer, and Reward.', 3000, true);
             return;
         }
 
@@ -49,8 +50,11 @@
             const tx = await contractInstance.connect(signer).setQuizHash(quizId, hash);
             await tx.wait();
 
+            const rewardTx = await contractInstance.connect(signer).setQuizReward(quizId, ethers.parseUnits(reward.toString(), 18));
+            await rewardTx.wait();
+
             // Corrected showTempMessage call
-            window.showTempMessage(uploadStatusId, '✅ Hash uploaded successfully!', 3000, false);
+            window.showTempMessage(uploadStatusId, '✅ Hash and reward uploaded successfully!', 3000, false);
         } catch (error) {
             console.error('❌ Failed to upload hash:', error);
             // Corrected showTempMessage call
