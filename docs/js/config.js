@@ -3,15 +3,15 @@
 // Expose config globally
 window.CONFIG = {
     RPC_URL: "https://rpc.dimikog.org/rpc/",
-    CONTRACT_ADDRESS: "0x5B4c07DeaA3967e806A0C97Adc9432AEBA40B845",
-    TOKEN_ADDRESS: "0x540d398ab66EEB6AfcD4c8BECB75E1D25643A32B",
+    CONTRACT_ADDRESS: "0xBD42717b03Ab29ecCb67A953aaaB95b2fCa64f1A",
+    TOKEN_ADDRESS: "0x951b0eAEB6F46FA0B3cc97Fbbf0BE3947a6AfE3b",
 
     // helpful extras (used by wallet switching, etc.)
     CHAIN_ID: 424242,
     CHAIN_ID_HEX: "0x67932", // 424242 in hex (double-check this is the correct hex for your chain)
     NETWORK_NAME: "QBFT_Besu_EduNet",
     CURRENCY_SYMBOL: "EDU-D",
-    EXPLORER_URL: "http://83.212.76.39",
+    EXPLORER_URL: "https://blockexplorer.dimikog.org/",
     API_BASE: "https://poe-api.duckdns.org",
 
     // New
