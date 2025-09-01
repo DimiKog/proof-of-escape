@@ -37,6 +37,9 @@ window.addEventListener('DOMContentLoaded', async () => {
             const isAdmin = userAddress.toLowerCase() === String(owner).toLowerCase();
             adminSection.style.display = isAdmin ? 'block' : 'none';
 
+            console.log("✅ NFT Address:", window.CONFIG.POE_QUIZ_REWARD_NFT_ADDRESS);
+            console.log("✅ NFT ABI:", window.ABIS?.PoEQuizRewardNFT);
+
             // --- NFT Logic (Now integrated) ---
             const nftContractInstance = new ethers.Contract(
                 window.CONFIG.POE_QUIZ_REWARD_NFT_ADDRESS,
