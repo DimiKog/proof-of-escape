@@ -17,10 +17,12 @@ async function checkAndShowMintButton() {
         const nftContractInstance = new ethers.Contract(
             window.CONFIG.POE_QUIZ_REWARD_NFT_ADDRESS,
             window.ABIS.PoEQuizRewardNFT,
-            window.getProvider() // Use a provider for view-only calls
+            window.getProvider()
         );
-        const alreadyMinted = (await nftContractInstance.balanceOf(userAddress));
-        if (alreadyMinted > 0) {
+
+        // Correctly check the BigInt return value
+        const alreadyMinted = await nftContractInstance.balanceOf(userAddress);
+        if (alreadyMinted > 0n) { // Use BigInt literal for comparison
             document.getElementById("nftClaimSection").style.display = "block";
             document.getElementById("claimNFTButton").style.display = "none";
             document.getElementById("mintStatus").textContent = "You have already claimed your NFT reward.";
