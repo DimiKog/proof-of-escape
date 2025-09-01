@@ -227,6 +227,9 @@ async function connectWallet() {
             // IMPORTANT: Include the full event object
             const customEvent = new CustomEvent('poe:rewardMinted', { detail: { user, quizId, amount: formatted, event } });
             window.dispatchEvent(customEvent);
+            if (typeof window.loadLeaderboard === 'function') {
+                window.loadLeaderboard(); // auto-refresh leaderboard after reward
+            }
         });
 
         // 👉 ensure UI reflects registration state immediately
