@@ -2,7 +2,7 @@
 pragma solidity ^0.8.18;
 
 import "forge-std/Script.sol";
-import "../src/ProofOfEscape.sol";
+import "../src/ProofOfEscapev3.sol";
 
 contract DeployProofOfEscape is Script {
     function run() external {

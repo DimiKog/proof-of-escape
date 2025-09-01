@@ -206,9 +206,27 @@ async function connectWallet() {
         // Build contract
         const contract = new ethers.Contract(contractAddress, abi, signer);
 
-        // Stash globally for other modules BEFORE refreshRegistrationUI
+        // Stash globally for other modules
         window.POE = { provider, signer, address: userAddress, contract };
 
+        // Listen for on-chain events and dispatch custom events
+        // 👉 This is the main change
+        window.POE.contract.on("QuizCompleted", (user, quizId, message) => {
+            // Only handle events for the current user
+            if (user.toLowerCase() !== userAddress.toLowerCase()) return;
+            console.log("✅ QuizCompleted event received:", { quizId, message });
+            const event = new CustomEvent('poe:quizCompleted', { detail: { user, quizId, message } });
+            window.dispatchEvent(event);
+        });
+
+        window.POE.contract.on("RewardMinted", (user, quizId, amount) => {
+            // Only handle events for the current user
+            if (user.toLowerCase() !== userAddress.toLowerCase()) return;
+            const formatted = ethers.formatUnits(amount, 18);
+            console.log("🎉 RewardMinted event received:", { quizId, amount: formatted });
+            const event = new CustomEvent('poe:rewardMinted', { detail: { user, quizId, amount: formatted } });
+            window.dispatchEvent(event);
+        });
 
         // 👉 ensure UI reflects registration state immediately
         await refreshRegistrationUI(window.POE.contract, userAddress);
@@ -314,6 +332,10 @@ function getUserAddress() {
 }
 
 function disconnectWallet() {
+    if (window.POE?.contract?.off) {
+        window.POE.contract.off("QuizCompleted");
+        window.POE.contract.off("RewardMinted");
+    }
     provider = null;
     signer = null;
     userAddress = null;

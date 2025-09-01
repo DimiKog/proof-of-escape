@@ -3,8 +3,8 @@
 // Expose config globally
 window.CONFIG = {
     RPC_URL: "https://rpc.dimikog.org/rpc/",
-    CONTRACT_ADDRESS: "0xBD42717b03Ab29ecCb67A953aaaB95b2fCa64f1A",
-    TOKEN_ADDRESS: "0x951b0eAEB6F46FA0B3cc97Fbbf0BE3947a6AfE3b",
+    CONTRACT_ADDRESS: "0x4FBde5B19fE07dC913966Dd0D62838c04d3896C2",
+    TOKEN_ADDRESS: "0x352f1BBc9Ef3977A5F04A67EdeFE164627e7a6E2",
 
     // helpful extras (used by wallet switching, etc.)
     CHAIN_ID: 424242,
