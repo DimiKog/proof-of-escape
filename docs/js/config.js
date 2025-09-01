@@ -12,7 +12,7 @@ window.CONFIG = {
     NETWORK_NAME: "QBFT_Besu_EduNet",
     CURRENCY_SYMBOL: "EDU-D",
     EXPLORER_URL: "https://blockexplorer.dimikog.org/",
-    API_BASE: "https://poe-api.duckdns.org",
+    API_BASE: "https://mybackend.dimikog.org",
 
     // New
     ADMIN_ADDRESS: "0x5E3a74f09D490F854e12A293E1d6abCBbEad6B60",
