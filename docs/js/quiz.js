@@ -18,12 +18,19 @@ const QUIZZES_URL = window.QUIZZES_URL || 'data/quizzes.json';
 // Cache the quizzes to avoid re-fetching
 let cachedQuizzes = [];
 
-/** Load quizzes (cached). */
+/** Load quizzes (cached, deduplicated by id). */
 async function loadQuizList() {
     if (cachedQuizzes.length === 0) {
         const res = await fetch(QUIZZES_URL, { cache: 'no-store' });
         if (!res.ok) throw new Error(`Failed to load quizzes.json (${res.status})`);
-        cachedQuizzes = await res.json();
+        const quizzes = await res.json();
+        // Ensure uniqueness by quiz ID
+        const seen = new Set();
+        cachedQuizzes = quizzes.filter(q => {
+            if (seen.has(q.id)) return false;
+            seen.add(q.id);
+            return true;
+        });
     }
     return cachedQuizzes;
 }
