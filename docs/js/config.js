@@ -39,3 +39,9 @@ window.loadABIs = async function loadABIs() {
 window.POE_ADDRESS = window.CONFIG.CONTRACT_ADDRESS;
 window.TOKEN_ADDRESS = window.CONFIG.TOKEN_ADDRESS;
 window.NFT_ADDRESS = window.CONFIG.NFT_CONTRACT_ADDRESS;
+
+window.ABIS = {
+    ProofOfEscape: window.POE_ABI,
+    EscapeToken: window.TOKEN_ABI,
+    PoEQuizRewardNFT: window.NFT_ABI
+};
