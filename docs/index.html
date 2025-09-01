@@ -30,7 +30,9 @@
         <p id="networkWarning" style="display:none;color:red;font-weight:bold;">⚠️ Please switch to the QBFT_Besu_EduNet
             network in MetaMask.</p>
 
-        <p id="walletStatus" aria-live="polite" style="margin-top:0.5rem;"></p>
+        <div id="walletStatus"
+            style="display: none; padding: 10px; margin: 10px 0; border-radius: 8px; font-weight: bold; text-align: center;"
+            aria-live="polite"></div>
 
         <button id="connectButton">Connect Wallet</button>
         <details id="networkInstructionsToggle" style="margin-top:1rem;">
@@ -209,6 +211,23 @@
 
     <!-- 7) Minting script -->
     <script src="js/mint.js"></script>
+
+    <script>
+        window.showTempMessage = function (elementId, htmlMessage, duration = 5000, isError = false) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+
+            el.innerHTML = htmlMessage;
+            el.style.display = 'block';
+            el.style.backgroundColor = isError ? '#ffe0e0' : '#e0ffe0';
+            el.style.color = '#333';
+            el.style.border = '1px solid ' + (isError ? '#cc0000' : '#00aa00');
+
+            setTimeout(() => {
+                el.style.display = 'none';
+            }, duration);
+        };
+    </script>
 </body>
 
 </html>

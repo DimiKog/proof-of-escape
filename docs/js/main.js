@@ -88,6 +88,13 @@ window.addEventListener('DOMContentLoaded', async () => {
             contract = poeContract;
             console.log("✅ Contract set:", contract);
 
+            // 🔔 Add this block to forward the event to quiz.js
+            contract.on('RewardMinted', (quizId, user, amount, event) => {
+                const detail = { user, quizId, amount, event };
+                console.log("🎉 RewardMinted event fired", detail);
+                window.dispatchEvent(new CustomEvent('poe:rewardMinted', { detail }));
+            });
+
             await initializeDapp();
 
         } catch (err) {
