@@ -84,5 +84,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     // Initial setup on page load
     await window.connectWallet();
+    await window.loadABIs?.();
+    window.ABIS_READY = Promise.resolve();
     updateUI();
 });
