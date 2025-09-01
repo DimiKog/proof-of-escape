@@ -63,7 +63,7 @@ async function submitAnswer() {
             if (mintedEvent) {
                 const parsedArgs = contract.interface.parseLog(mintedEvent).args;
                 const amount = ethers.formatUnits(parsedArgs.amount, 18);
-                const explorerLink = `https://explorer.dimikog.org/tx/${receipt.hash}`;
+                const explorerLink = `https://blockexplorer.dimikog.org/tx/${receipt.hash}`;
 
                 resultMessage.innerHTML = `✅ Answer submitted successfully! You received ${amount} ESCAPE tokens.<br>📦 <a href="${explorerLink}" target="_blank">View Transaction</a>`;
                 resultMessage.style.color = 'green';
