@@ -5,6 +5,8 @@ const quizIdInput = document.getElementById('quizId');
 const answerInput = document.getElementById('answer');
 const resultMessage = document.getElementById('result');
 
+let isSubmitting = false;
+
 // Add global event listeners here
 window.addEventListener('poe:quizCompleted', (e) => {
     const { message } = e.detail;
@@ -12,34 +14,41 @@ window.addEventListener('poe:quizCompleted', (e) => {
 });
 
 window.addEventListener('poe:rewardMinted', (e) => {
-    const { amount } = e.detail;
-    resultMessage.innerHTML = `✅ Answer submitted successfully! You received ${amount} ESCAPE tokens.`;
+    const { amount, event } = e.detail;
+    const explorerLink = `https://explorer.dimikog.org/tx/${event.log.transactionHash}`;
+
+    resultMessage.innerHTML = `✅ Answer submitted successfully! You received ${amount} ESCAPE tokens.<br>📦 <a href="${explorerLink}" target="_blank">View Transaction</a>`;
     resultMessage.style.color = 'green';
     submitButton.disabled = false;
     submitButton.textContent = "Submit Answer";
+    isSubmitting = false; // Reset the state here
 });
 
-/**
- * Submits a quiz answer to the smart contract.
- */
+
 async function submitAnswer() {
+    if (isSubmitting) return; // Prevent double-clicking
+    isSubmitting = true;
+
     // Get the contract instance from the global scope
     const contract = window.getCachedContract?.();
     if (!contract) {
         window.showTempMessage('walletStatus', 'Wallet not connected.', 3000, true);
+        isSubmitting = false;
         return;
     }
 
     const quizId = parseInt(quizIdInput.value);
-    const answerHash = answerInput.value;
+    const answerHash = answerInput.value.trim(); // directly use the user's input hash without re-hashing
 
     if (isNaN(quizId) || quizId <= 0) {
         window.showTempMessage('walletStatus', 'Please select a valid Quiz ID.', 3000, true);
+        isSubmitting = false;
         return;
     }
 
     if (!answerHash || !answerHash.startsWith('0x') || answerHash.length !== 66) {
         window.showTempMessage('walletStatus', 'Please provide a valid keccak256 hash.', 3000, true);
+        isSubmitting = false;
         return;
     }
 
@@ -50,16 +59,17 @@ async function submitAnswer() {
         resultMessage.textContent = 'Submitting answer... Please confirm the transaction in your wallet.';
         resultMessage.style.color = 'orange';
 
-        if (!contract) {
-            throw new Error("Smart contract not accessible. Please connect wallet or try again later.");
-        }
-
-        // Connect the contract to the signer to send a transaction
         const contractWithSigner = contract.connect(window.POE.signer);
         const tx = await contractWithSigner.checkQuizAnswer(quizId, answerHash);
 
-        // No need to wait for tx.wait() or check receipt status here.
-        // The event listeners will handle the UI update once the transaction is mined.
+        // Await the transaction receipt. If it reverts, the next line will throw an error.
+        const receipt = await tx.wait();
+        console.log("📦 Transaction hash:", receipt.hash);
+
+        // The UI will be updated by the event listeners after the transaction is mined.
+        // We can display an initial success message here
+        resultMessage.textContent = '✅ Transaction sent. Waiting for confirmation...';
+        resultMessage.style.color = 'green';
 
     } catch (error) {
         console.error("❌ Failed to submit answer:", error);
@@ -74,8 +84,10 @@ async function submitAnswer() {
         resultMessage.textContent = errorMessage;
         resultMessage.style.color = 'red';
         window.showTempMessage('walletStatus', errorMessage, 5000, true);
+
         submitButton.disabled = false;
         submitButton.textContent = "Submit Answer";
+        isSubmitting = false;
     }
 }
 

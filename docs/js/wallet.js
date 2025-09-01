@@ -219,13 +219,14 @@ async function connectWallet() {
             window.dispatchEvent(event);
         });
 
-        window.POE.contract.on("RewardMinted", (user, quizId, amount) => {
-            // Only handle events for the current user
+        window.POE.contract.on("RewardMinted", (user, quizId, amount, event) => {
             if (user.toLowerCase() !== userAddress.toLowerCase()) return;
             const formatted = ethers.formatUnits(amount, 18);
-            console.log("🎉 RewardMinted event received:", { quizId, amount: formatted });
-            const event = new CustomEvent('poe:rewardMinted', { detail: { user, quizId, amount: formatted } });
-            window.dispatchEvent(event);
+            console.log("🎉 RewardMinted event received:", { quizId, amount: formatted, txHash: event.log.transactionHash });
+
+            // IMPORTANT: Include the full event object
+            const customEvent = new CustomEvent('poe:rewardMinted', { detail: { user, quizId, amount: formatted, event } });
+            window.dispatchEvent(customEvent);
         });
 
         // 👉 ensure UI reflects registration state immediately
