@@ -27,8 +27,8 @@
             return;
         }
 
-        // Calculate the hash using the standard keccak256 function
-        const hash = ethers.keccak256(ethers.toUtf8Bytes(plainAnswer));
+        // Use the provided hash directly (already precomputed and pasted by admin)
+        const hash = plainAnswer;
 
         try {
             if (button) {
