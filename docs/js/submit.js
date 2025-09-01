@@ -7,26 +7,8 @@ const resultMessage = document.getElementById('result');
 
 let isSubmitting = false;
 
-// Add global event listeners here
-window.addEventListener('poe:quizCompleted', (e) => {
-    const { message } = e.detail;
-    window.showTempMessage('walletStatus', `✅ ${message}`, 3000, false);
-});
-
-window.addEventListener('poe:rewardMinted', (e) => {
-    const { amount, event } = e.detail;
-    const explorerLink = `https://blockexplorer.dimikog.org/tx/${event.log.transactionHash}`;
-
-    resultMessage.innerHTML = `✅ Answer submitted successfully! You received ${amount} ESCAPE tokens.<br>📦 <a href="${explorerLink}" target="_blank">View Transaction</a>`;
-    resultMessage.style.color = 'green';
-    submitButton.disabled = false;
-    submitButton.textContent = "Submit Answer";
-    isSubmitting = false; // Reset the state here
-});
-
-
 async function submitAnswer() {
-    if (isSubmitting) return; // Prevent double-clicking
+    if (isSubmitting) return;
     isSubmitting = true;
 
     // Get the contract instance from the global scope
@@ -38,7 +20,7 @@ async function submitAnswer() {
     }
 
     const quizId = parseInt(quizIdInput.value);
-    const answerHash = answerInput.value.trim(); // directly use the user's input hash without re-hashing
+    const answerHash = answerInput.value;
 
     if (isNaN(quizId) || quizId <= 0) {
         window.showTempMessage('walletStatus', 'Please select a valid Quiz ID.', 3000, true);
@@ -62,14 +44,42 @@ async function submitAnswer() {
         const contractWithSigner = contract.connect(window.POE.signer);
         const tx = await contractWithSigner.checkQuizAnswer(quizId, answerHash);
 
-        // Await the transaction receipt. If it reverts, the next line will throw an error.
+        // Await the transaction receipt
         const receipt = await tx.wait();
         console.log("📦 Transaction hash:", receipt.hash);
 
-        // The UI will be updated by the event listeners after the transaction is mined.
-        // We can display an initial success message here
-        resultMessage.textContent = '✅ Transaction sent. Waiting for confirmation...';
-        resultMessage.style.color = 'green';
+        if (receipt.status === 1) { // Transaction was successful
+            // Find the RewardMinted event in the receipt
+            const mintedEvent = receipt.logs.find(log => {
+                try {
+                    // Try to parse the log; if it fails, it's not our event
+                    const parsed = contract.interface.parseLog(log);
+                    return parsed && parsed.name === 'RewardMinted';
+                } catch {
+                    return false;
+                }
+            });
+
+            if (mintedEvent) {
+                const parsedArgs = contract.interface.parseLog(mintedEvent).args;
+                const amount = ethers.formatUnits(parsedArgs.amount, 18);
+                const explorerLink = `https://explorer.dimikog.org/tx/${receipt.hash}`;
+
+                resultMessage.innerHTML = `✅ Answer submitted successfully! You received ${amount} ESCAPE tokens.<br>📦 <a href="${explorerLink}" target="_blank">View Transaction</a>`;
+                resultMessage.style.color = 'green';
+            } else {
+                resultMessage.textContent = '✅ Transaction successful, but no reward event found.';
+                resultMessage.style.color = 'orange';
+            }
+
+            window.showTempMessage('walletStatus', 'Answer submitted successfully!', 3000, false);
+
+        } else { // Transaction failed
+            const errorMessage = '❌ Transaction failed. Please check the blockchain explorer.';
+            resultMessage.textContent = errorMessage;
+            resultMessage.style.color = 'red';
+            window.showTempMessage('walletStatus', errorMessage, 5000, true);
+        }
 
     } catch (error) {
         console.error("❌ Failed to submit answer:", error);
@@ -85,11 +95,12 @@ async function submitAnswer() {
         resultMessage.style.color = 'red';
         window.showTempMessage('walletStatus', errorMessage, 5000, true);
 
+    } finally {
+        // Always reset button state
         submitButton.disabled = false;
         submitButton.textContent = "Submit Answer";
         isSubmitting = false;
     }
 }
 
-// Expose submitAnswer globally for main.js to call
 window.submitAnswer = submitAnswer;

@@ -185,17 +185,17 @@ window.initializeQuizDropdown = initializeQuizDropdown;
 window.getCachedContract = () => cachedContract;
 
 // Listen for reward events and display confirmation
-window.addEventListener('poe:rewardMinted', (e) => {
-    const { user, quizId, amount, event } = e.detail;
-    const txHash = event?.log?.transactionHash;
-    const explorerBase = "https://blockexplorer.dimikog.org"; // Replace with your actual explorer URL
-    const txUrl = `${explorerBase}/tx/${txHash}`;
+//window.addEventListener('poe:rewardMinted', (e) => {
+//    const { user, quizId, amount, event } = e.detail;
+//    const txHash = event?.log?.transactionHash;
+//    const explorerBase = "https://blockexplorer.dimikog.org"; // Replace with your actual explorer URL
+//    const txUrl = `${explorerBase}/tx/${txHash}`;
 
-    if (typeof window.showTempMessage === 'function') {
-        window.showTempMessage(
-            'walletStatus',
-            `🎉 Correct! Reward minted for Quiz ${quizId}. <a href="${txUrl}" target="_blank">View on explorer</a>`,
-            7000
-        );
-    }
-});
+//   if (typeof window.showTempMessage === 'function') {
+//       window.showTempMessage(
+//           'walletStatus',
+//           `🎉 Correct! Reward minted for Quiz ${quizId}. <a href="${txUrl}" target="_blank">View on explorer</a>`,
+//           7000
+//       );
+//   }
+//});
