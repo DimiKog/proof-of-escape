@@ -15,7 +15,7 @@ window.addEventListener('poe:quizCompleted', (e) => {
 
 window.addEventListener('poe:rewardMinted', (e) => {
     const { amount, event } = e.detail;
-    const explorerLink = `https://explorer.dimikog.org/tx/${event.log.transactionHash}`;
+    const explorerLink = `https://blockexplorer.dimikog.org/tx/${event.log.transactionHash}`;
 
     resultMessage.innerHTML = `✅ Answer submitted successfully! You received ${amount} ESCAPE tokens.<br>📦 <a href="${explorerLink}" target="_blank">View Transaction</a>`;
     resultMessage.style.color = 'green';
