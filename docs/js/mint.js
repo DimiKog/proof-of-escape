@@ -33,9 +33,9 @@ async function submitQuiz() {
 
     if (score === 10) {
         window.NFT_CLAIM_ADDRESS = address; // store for later use
-        document.getElementById("claim-nft-btn").style.display = "block";
+        document.getElementById("claimNFTButton").style.display = "block";
     } else {
-        document.getElementById("claim-nft-btn").style.display = "none";
+        document.getElementById("claimNFTButton").style.display = "none";
     }
 
     alert(`You scored ${score} out of 10.`);
@@ -59,12 +59,12 @@ async function claimNFTReward() {
     }
 
     try {
-        document.getElementById("claim-nft-btn").disabled = true;
+        document.getElementById("claimNFTButton").disabled = true;
         const tx = await contract.mintReward(address);
         const receipt = await tx.wait();
 
         alert(`✅ NFT minted successfully!\nTransaction Hash:\n${receipt.hash}`);
-        document.getElementById("claim-nft-btn").style.display = "none";
+        document.getElementById("claimNFTButton").style.display = "none";
     } catch (err) {
         console.error("Minting failed:", err);
         alert("❌ Minting failed. See console for details.");
