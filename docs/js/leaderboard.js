@@ -85,7 +85,7 @@
 
       const tdTokens = document.createElement('td');
       tdTokens.className = 'tokens-column';
-      tdTokens.textContent = data.poe_tokens ?? '0';
+      tdTokens.textContent = (Number(data.poe_tokens ?? 0) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 2 });
       tdTokens.style.textAlign = 'right';
       tdTokens.style.fontFamily = 'monospace';
       tr.appendChild(tdTokens);
