@@ -306,7 +306,26 @@
   },
   {
     "type": "event",
-    "name": "QuizFailed",
+    "name": "QuizHashUpdated",
+    "inputs": [
+      {
+        "name": "quizId",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      },
+      {
+        "name": "newHash",
+        "type": "bytes32",
+        "indexed": false,
+        "internalType": "bytes32"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RewardMinted",
     "inputs": [
       {
         "name": "user",
@@ -321,29 +340,10 @@
         "internalType": "uint256"
       },
       {
-        "name": "message",
-        "type": "string",
-        "indexed": false,
-        "internalType": "string"
-      }
-    ],
-    "anonymous": false
-  },
-  {
-    "type": "event",
-    "name": "QuizHashUpdated",
-    "inputs": [
-      {
-        "name": "quizId",
+        "name": "amount",
         "type": "uint256",
-        "indexed": true,
-        "internalType": "uint256"
-      },
-      {
-        "name": "newHash",
-        "type": "bytes32",
         "indexed": false,
-        "internalType": "bytes32"
+        "internalType": "uint256"
       }
     ],
     "anonymous": false
