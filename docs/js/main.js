@@ -8,154 +8,81 @@ window.addEventListener('DOMContentLoaded', async () => {
     const quizSection = document.getElementById('quizSection');
     const adminSection = document.getElementById('adminSection');
 
-    async function initializeDapp() {
+    // Single source of truth for UI updates
+    async function updateUI() {
         try {
-            if (!contract) contract = window.POE?.contract || null;
-
-            if (contract) {
-                connectButton && (connectButton.style.display = 'none');
-
-                const userAddress = window.getUserAddress?.();
-                if (!userAddress) {
-                    connectButton && (connectButton.style.display = 'block');
-                    registerPrompt && (registerPrompt.style.display = 'none');
-                    quizSection && (quizSection.style.display = 'none');
-                    adminSection && (adminSection.style.display = 'none');
-                    return;
-                }
-
-                console.log("Contract:", contract);
-                console.log("Available contract functions:", Object.keys(contract));
-                console.log("Contract.interface.fragments:", contract.interface.fragments.map(f => f.name));
-
-                const isRegistered = await contract.isRegistered(userAddress);
-                const owner = await contract.owner();
-                const isAdmin = owner && userAddress.toLowerCase() === String(owner).toLowerCase();
-
-                // Always show the quiz section when a wallet is connected.
-                // Show/hide registration prompt based on registration status.
-                // Let quiz.js handle enabling/disabling the dropdown based on registration.
-                quizSection && (quizSection.style.display = 'block');
-
-                if (!isRegistered) {
-                    registerPrompt && (registerPrompt.style.display = 'block');
-                } else {
-                    registerPrompt && (registerPrompt.style.display = 'none');
-                }
-
-                // Reinitialize the quiz UI either way; quiz.js should no-op or disable when unregistered.
-                window.initializeQuizDropdown?.(contract);
-
-                adminSection && (adminSection.style.display = isAdmin ? 'block' : 'none');
-            } else {
-                connectButton && (connectButton.style.display = 'block');
-                registerPrompt && (registerPrompt.style.display = 'none');
-                quizSection && (quizSection.style.display = 'none');
-                adminSection && (adminSection.style.display = 'none');
-            }
-        } catch (err) {
-            console.error('initializeDapp error:', err);
-            connectButton && (connectButton.style.display = 'block');
-            registerPrompt && (registerPrompt.style.display = 'none');
-            quizSection && (quizSection.style.display = 'none');
-            adminSection && (adminSection.style.display = 'none');
-        }
-    }
-
-    async function handleConnectionAndInitialization() {
-        try {
-            // ✅ Ensure ABIs are loaded BEFORE connecting / building contracts
-            if (typeof window.loadABIs === 'function') {
-                await window.loadABIs();
-                console.log("✅ ABIs loaded:", {
-                    POE_ABI: window.POE_ABI,
-                    NFT_ABI: window.NFT_ABI
-                });
-                if (!Array.isArray(window.POE_ABI)) {
-                    throw new Error('POE_ABI did not load as an array');
-                }
-            }
-
-            // Correct way to connect the wallet and get the global state
-            await window.connectWallet();
+            const userAddress = window.getUserAddress?.();
             const poeContract = window.POE?.contract;
-            const nftContract = window.NFT?.contract;
+            const nftContract = window.POE_NFT?.contract; // Use a more reliable way to get the NFT contract if needed
 
-            if (!poeContract) {
-                throw new Error('POE contract not initialized');
+            if (!userAddress || !poeContract) {
+                connectButton.style.display = 'block';
+                registerPrompt.style.display = 'none';
+                quizSection.style.display = 'none';
+                adminSection.style.display = 'none';
+                return;
             }
 
-            contract = poeContract;
-            console.log("✅ Contract set:", contract);
+            connectButton.style.display = 'none';
+            quizSection.style.display = 'block';
 
-            // 🔔 Add this block to forward the event to quiz.js
-            contract.on('RewardMinted', (quizId, user, amount, event) => {
-                const detail = { user, quizId, amount, event };
-                console.log("🎉 RewardMinted event fired", detail);
-                window.dispatchEvent(new CustomEvent('poe:rewardMinted', { detail }));
-            });
+            // Check if registered
+            const isRegistered = await poeContract.isRegistered(userAddress);
+            registerPrompt.style.display = isRegistered ? 'none' : 'block';
+            window.initializeQuizDropdown?.(poeContract);
 
-            await initializeDapp();
+            // Check if admin
+            const owner = await poeContract.owner();
+            const isAdmin = userAddress.toLowerCase() === String(owner).toLowerCase();
+            adminSection.style.display = isAdmin ? 'block' : 'none';
+
+            // Now, and only now, call the NFT check function
+            window.checkAndShowMintButton?.();
 
         } catch (err) {
-            console.error("Wallet connection or contract initialization failed:", err);
-            connectButton && (connectButton.style.display = 'block');
-            registerPrompt && (registerPrompt.style.display = 'none');
-            quizSection && (quizSection.style.display = 'none');
-            adminSection && (adminSection.style.display = 'none');
+            console.error('updateUI error:', err);
+            // Fallback UI state
+            connectButton.style.display = 'block';
+            registerPrompt.style.display = 'none';
+            quizSection.style.display = 'none';
+            adminSection.style.display = 'none';
         }
     }
 
-    // Buttons
+    // Wire up event listeners
     connectButton?.addEventListener('click', async () => {
-        try {
-            await window.connectWallet();
-            const poeContract = window.POE?.contract;
-            const nftContract = window.NFT?.contract;
-
-            if (!poeContract) {
-                throw new Error('POE contract not initialized');
-            }
-
-            contract = poeContract;
-            await initializeDapp();
-        } catch (err) {
-            console.error("Wallet connection failed:", err);
-        }
+        await window.connectWallet();
+        updateUI();
     });
 
     document.getElementById('registerButton')?.addEventListener('click', async () => {
-        if (!contract) contract = window.POE?.contract || null;
-        if (!contract) return;
-        await window.registerWallet(contract);
-        await initializeDapp();
-    });
-
-    document.getElementById('generateHashButton')?.addEventListener('click', window.handleHashGeneration);
-    document.getElementById('copyHashButton')?.addEventListener('click', () => {
-        const hash = document.getElementById('hashResult')?.textContent || '';
-        window.copyToClipboard(hash, 'copyHashButton');
+        if (window.POE?.contract) {
+            await window.registerWallet(window.POE.contract);
+            updateUI();
+        }
     });
 
     document.getElementById('submitAnswer')?.addEventListener('click', () => {
-        if (!contract) contract = window.POE?.contract || null;
-        if (contract) window.submitAnswer(contract);
+        if (window.POE?.contract) {
+            window.submitAnswer(window.POE.contract);
+        }
     });
 
     document.getElementById('uploadHashButton')?.addEventListener('click', () => {
-        const poe = window.POE?.contract;
-        if (poe) window.handleAdminUpload(poe);
+        if (window.POE?.contract) {
+            window.handleAdminUpload(window.POE.contract);
+        }
     });
 
-    if (typeof window.ethereum !== 'undefined') {
-        window.ethereum.on('chainChanged', () => window.location.reload());
-        window.ethereum.on('accountsChanged', () => window.location.reload());
-    }
+    document.getElementById('generateHashButton')?.addEventListener('click', window.handleHashGeneration);
+    // You can remove the separate copy button listener if it's handled in `handleHashGeneration`
 
-    window.addEventListener('poe:registered', initializeDapp);
-    window.addEventListener('poe:walletChanged', initializeDapp);
-    // Optional sanity check
-    if (!window.POE_ADDRESS || !window.NFT_ADDRESS) {
-        console.error("❌ Contract address missing in config.js!");
-    }
+    // Listen for events that change the UI state
+    window.addEventListener('poe:walletChanged', updateUI);
+    window.addEventListener('poe:registered', updateUI);
+    window.addEventListener('poe:quizCompleted', updateUI);
+
+    // Initial setup on page load
+    await window.connectWallet();
+    updateUI();
 });
