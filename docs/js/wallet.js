@@ -382,7 +382,7 @@ async function registerWallet(contract) {
         await tx.wait();
         window.showTempMessage?.('walletStatus', '✅ Registration successful!', 3000);
         window.dispatchEvent(new CustomEvent('poe:registered', { detail: { address: userAddress } }));
-        await refreshRegistrationUI();
+        await refreshRegistrationUI(contract, userAddress);
     } catch (error) {
         console.error('Failed to register wallet:', error);
         let msg = 'Failed to register. Check console.';
