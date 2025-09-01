@@ -17,6 +17,7 @@ const QUIZZES_URL = window.QUIZZES_URL || 'data/quizzes.json';
 
 // Cache the quizzes to avoid re-fetching
 let cachedQuizzes = [];
+let cachedContract = null;
 
 /** Load quizzes (cached, deduplicated by id). */
 async function loadQuizList() {
@@ -65,6 +66,7 @@ async function initializeQuizDropdown(contractInstance) {
 
         // Assume not registered unless we can prove otherwise
         let registered = false;
+        cachedContract = contractInstance;
 
         if (contractInstance && userAddress) {
             try {
@@ -180,3 +182,4 @@ if (startQuizBtn) {
 
 // Expose for main.js
 window.initializeQuizDropdown = initializeQuizDropdown;
+window.getCachedContract = () => cachedContract;

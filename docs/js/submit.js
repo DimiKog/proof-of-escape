@@ -24,7 +24,7 @@ window.addEventListener('poe:rewardMinted', (e) => {
  */
 async function submitAnswer() {
     // Get the contract instance from the global scope
-    const contract = window.POE?.contract;
+    const contract = window.getCachedContract?.();
     if (!contract) {
         window.showTempMessage('walletStatus', 'Wallet not connected.', 3000, true);
         return;
@@ -49,6 +49,10 @@ async function submitAnswer() {
         submitButton.textContent = "Submitting...";
         resultMessage.textContent = 'Submitting answer... Please confirm the transaction in your wallet.';
         resultMessage.style.color = 'orange';
+
+        if (!contract) {
+            throw new Error("Smart contract not accessible. Please connect wallet or try again later.");
+        }
 
         // Connect the contract to the signer to send a transaction
         const contractWithSigner = contract.connect(window.POE.signer);
