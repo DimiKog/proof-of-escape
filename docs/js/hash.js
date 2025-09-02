@@ -18,19 +18,39 @@ function handleHashGeneration() {
 
     const answer = answerInput.value;
     if (answer.trim() === '') {
-        window.showTempMessage('walletStatus', 'Please enter an answer to generate the hash.', 3000, true);
+        if (typeof window.showTempMessage === 'function') {
+            window.showTempMessage('walletStatus', 'Please enter an answer to generate the hash.', 3000, true);
+        } else {
+            console.warn('showTempMessage is not defined.');
+        }
         return;
     }
 
     try {
         const hash = ethers.keccak256(ethers.toUtf8Bytes(answer));
-        hashResultDisplay.textContent = hash;
+        if (hashResultDisplay) {
+            hashResultDisplay.textContent = hash;
+        } else {
+            console.warn('Hash result display element not found.');
+        }
         submissionField.value = hash;
-        window.copyToClipboard(hash, 'walletStatus');
-        window.showTempMessage('walletStatus', 'Hash generated and placed in submission field.', 3000, false);
+        if (typeof window.copyToClipboard === 'function') {
+            window.copyToClipboard(hash, 'walletStatus');
+        } else {
+            console.warn('copyToClipboard is not defined.');
+        }
+        if (typeof window.showTempMessage === 'function') {
+            window.showTempMessage('walletStatus', 'Hash generated and placed in submission field.', 3000, false);
+        } else {
+            console.warn('showTempMessage is not defined.');
+        }
     } catch (err) {
         console.error('Error generating hash:', err);
-        window.showTempMessage('walletStatus', '⚠️ Hash generation failed. Check console.', 3000, true);
+        if (typeof window.showTempMessage === 'function') {
+            window.showTempMessage('walletStatus', '⚠️ Hash generation failed. Check console.', 3000, true);
+        } else {
+            console.warn('showTempMessage is not defined.');
+        }
     }
 }
 
