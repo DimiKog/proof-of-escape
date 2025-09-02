@@ -56,3 +56,13 @@ function handleHashGeneration() {
 
 // Expose function to the global scope
 window.handleHashGeneration = handleHashGeneration;
+
+// Ensure the button is properly bound after DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    const hashBtn = document.getElementById('generateHashButton');
+    if (hashBtn) {
+        hashBtn.addEventListener('click', handleHashGeneration);
+    } else {
+        console.warn('generateHashBtn not found');
+    }
+});
