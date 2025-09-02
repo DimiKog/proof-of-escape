@@ -1,14 +1,14 @@
-/Users/dimitriskogias/Desktop/proof-of-escape/docs/style.css body {
+body {
   font-family: 'Inter', sans-serif;
-  background-color: #f7f9fc;
-  color: #222;
+  background-color: #ffffff;
+  color: #333;
   margin: 0;
   padding: 0;
   text-align: center;
 }
 
 header {
-  background-color: #2d3748;
+  background-color: #1a202c;
   color: white;
   padding: 20px 0;
 }
@@ -17,7 +17,7 @@ section {
   max-width: 600px;
   margin: 30px auto;
   padding: 20px;
-  background: white;
+  background: #f9f9f9;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
