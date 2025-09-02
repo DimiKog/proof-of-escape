@@ -187,7 +187,10 @@
     });
   }
   if (els.refreshRegisteredBtn) {
-    els.refreshRegisteredBtn.addEventListener('click', loadRegistered);
+    els.refreshRegisteredBtn.addEventListener('click', () => {
+      console.log('[PoE] 🔄 Refresh Registered Users button clicked');
+      loadRegistered();
+    });
   }
 
   function init() {

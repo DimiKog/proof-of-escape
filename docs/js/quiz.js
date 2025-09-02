@@ -32,6 +32,8 @@ async function loadQuizList() {
             seen.add(q.id);
             return true;
         });
+        // Sort quizzes by ID ascending
+        cachedQuizzes.sort((a, b) => Number(a.id) - Number(b.id));
     }
     return cachedQuizzes;
 }
@@ -101,16 +103,60 @@ async function initializeQuizDropdown(contractInstance) {
 
         const quizzes = await loadQuizList();
 
-        if (quizDropdown) {
-            quizzes.forEach((quiz) => {
-                const opt = document.createElement('option');
-                opt.value = quiz.id;
-                opt.textContent = `Quiz ${quiz.id}: ${quiz.title}`;
-                quizDropdown.appendChild(opt);
-            });
+        // Find the next uncompleted quiz for the user
+        let nextQuiz = null;
+        if (contractInstance && userAddress) {
+            for (const quiz of quizzes) {
+                try {
+                    if (typeof contractInstance.completedQuizzes === 'function') {
+                        const completed = await contractInstance.completedQuizzes(userAddress, quiz.id);
+                        if (!completed) {
+                            nextQuiz = quiz;
+                            break;
+                        }
+                    } else {
+                        // If no completedQuizzes method, fallback to first quiz
+                        nextQuiz = quiz;
+                        break;
+                    }
+                } catch (err) {
+                    console.warn('Error checking quiz completion:', err);
+                    // Fallback: treat as not completed
+                    nextQuiz = quiz;
+                    break;
+                }
+            }
+        } else {
+            // If no contract or userAddress, fallback to first quiz
+            nextQuiz = quizzes.length > 0 ? quizzes[0] : null;
         }
 
-        if (quizDescription) quizDescription.textContent = 'Select a quiz to view details.';
+        if (quizDropdown) {
+            if (nextQuiz) {
+                const opt = document.createElement('option');
+                opt.value = nextQuiz.id;
+                opt.textContent = `Quiz ${nextQuiz.id}: ${nextQuiz.title}`;
+                quizDropdown.appendChild(opt);
+                quizDropdown.value = nextQuiz.id;
+
+                // Trigger change event manually to display quiz details
+                quizDropdown.dispatchEvent(new Event('change'));
+            } else {
+                // All quizzes completed
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = 'All quizzes completed!';
+                quizDropdown.appendChild(opt);
+                quizDropdown.disabled = true;
+                if (quizDescription) quizDescription.textContent = '🎉 You have completed all available quizzes.';
+                if (quizDetails) quizDetails.style.display = 'none';
+                if (quizHint) quizHint.textContent = '';
+                if (quizReward) quizReward.textContent = '';
+                if (quizIdDisplay) quizIdDisplay.textContent = 'None';
+            }
+        }
+
+        if (quizDescription && nextQuiz) quizDescription.textContent = 'Select a quiz to view details.';
     } catch (error) {
         console.error('Error initializing quiz dropdown:', error);
         if (quizDescription) quizDescription.textContent = '⚠️ Error loading quizzes. Check console.';

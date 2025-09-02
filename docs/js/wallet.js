@@ -346,6 +346,15 @@ function disconnectWallet() {
     window.POE = undefined;
     const wa = document.getElementById('walletAddress');
     if (wa) wa.textContent = 'Not connected';
+
+    // Update disconnect/connect button
+    const btn = document.getElementById('disconnectButton');
+    if (btn) {
+        btn.textContent = 'Connect Wallet';
+        btn.removeEventListener('click', disconnectWallet);
+        btn._wired = false;
+        btn.addEventListener('click', connectWallet);
+    }
 }
 
 function addDisconnectButton() {
@@ -353,7 +362,17 @@ function addDisconnectButton() {
     if (btn) {
         btn.style.display = 'inline-block';
         if (!btn._wired) {
-            btn.addEventListener('click', disconnectWallet);
+            // Remove all click listeners before wiring
+            btn.replaceWith(btn.cloneNode(true));
+            btn = document.getElementById('disconnectButton');
+            // Conditionally wire based on connection state
+            if (userAddress) {
+                btn.textContent = 'Disconnect Wallet';
+                btn.addEventListener('click', disconnectWallet);
+            } else {
+                btn.textContent = 'Connect Wallet';
+                btn.addEventListener('click', connectWallet);
+            }
             btn._wired = true;
         }
         return;
@@ -363,8 +382,15 @@ function addDisconnectButton() {
 
     btn = document.createElement('button');
     btn.id = 'disconnectButton';
-    btn.textContent = 'Disconnect Wallet';
-    btn.addEventListener('click', disconnectWallet);
+    // Conditionally wire based on connection state
+    if (userAddress) {
+        btn.textContent = 'Disconnect Wallet';
+        btn.addEventListener('click', disconnectWallet);
+    } else {
+        btn.textContent = 'Connect Wallet';
+        btn.addEventListener('click', connectWallet);
+    }
+    btn._wired = true;
     btn.style.marginLeft = '10px';
     btn.style.padding = '5px 10px';
     btn.style.cursor = 'pointer';
