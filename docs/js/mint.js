@@ -71,7 +71,7 @@ async function claimNFTReward() {
         document.getElementById("claimNFTButton").disabled = true;
         document.getElementById("mintStatus").textContent = "⏳ Requesting mint from backend...";
 
-        const response = await fetch("https://poe-backend.dimikog.org/mint-nft", {
+        const response = await fetch("https://mybackend.dimikog.org/mint-nft", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
