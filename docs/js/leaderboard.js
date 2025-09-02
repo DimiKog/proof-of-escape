@@ -100,6 +100,13 @@
       tdRate.title = "Solved quizzes per PoE token";
       tr.appendChild(tdRate);
     } else {
+      const tdAddr = document.createElement('td');
+      tdAddr.className = 'address-column';
+      tdAddr.textContent = fullAddr || '—';
+      tdAddr.title = fullAddr;
+      tdAddr.style.fontFamily = 'monospace';
+      tr.appendChild(tdAddr);
+
       const tdWhen = document.createElement('td');
       tdWhen.textContent = fmtDate(data.registered_at);
       tr.appendChild(tdWhen);
