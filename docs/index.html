@@ -160,6 +160,11 @@
         <p>Congratulations on solving all 10 quizzes! Click the button below to claim your NFT reward.</p>
         <button id="claimNFTButton">Claim NFT Reward</button>
         <p id="mintStatus" aria-live="polite" style="margin-top:0.5rem;"></p>
+        <div id="nftPreview" style="margin-top:1rem; display:none;">
+            <img id="nftImage" src="" alt="Your PoE NFT"
+                style="max-width:200px; border-radius:8px; box-shadow:0 0 6px rgba(0,0,0,0.2);" />
+            <p><a id="explorerLink" href="#" target="_blank">🔗 View on Explorer</a></p>
+        </div>
     </section>
 
     <section id="adminSection" style="display:none;margin-top:2rem;">
@@ -231,6 +236,7 @@
             }, duration);
         };
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </body>
 
 </html>
