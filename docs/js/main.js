@@ -8,15 +8,13 @@ window.addEventListener('DOMContentLoaded', async () => {
     const quizSection = document.getElementById('quizSection');
     const adminSection = document.getElementById('adminSection');
 
-    // Ensure ABIs are loaded first
-    await window.loadABIs?.();
-    window.ABIS_READY = Promise.resolve();
-
+    // The single, authoritative function to update the UI
     async function updateUI() {
         try {
             const userAddress = window.getUserAddress?.();
             const poeContract = window.POE?.contract;
 
+            // This check is crucial and is the primary gatekeeper for the UI.
             if (!userAddress || !poeContract) {
                 connectButton.style.display = 'block';
                 registerPrompt.style.display = 'none';
@@ -31,46 +29,53 @@ window.addEventListener('DOMContentLoaded', async () => {
 
             const isRegistered = await poeContract.isRegistered(userAddress);
             registerPrompt.style.display = isRegistered ? 'none' : 'block';
+
+            // Ensure quiz dropdown is always initialized with the current contract
             window.initializeQuizDropdown?.(poeContract);
 
             const owner = await poeContract.owner();
             const isAdmin = userAddress.toLowerCase() === String(owner).toLowerCase();
             adminSection.style.display = isAdmin ? 'block' : 'none';
 
-            console.log("✅ NFT Address:", window.CONFIG.POE_QUIZ_REWARD_NFT_ADDRESS);
-            console.log("✅ NFT ABI:", window.ABIS?.PoEQuizRewardNFT);
+            // --- NFT Logic (Check for required data before proceeding) ---
+            const nftAddress = window.CONFIG?.POE_QUIZ_REWARD_NFT_ADDRESS;
+            const nftAbi = window.ABIS?.PoEQuizRewardNFT;
 
-            // --- NFT Logic (Now integrated) ---
-            const nftContractInstance = new ethers.Contract(
-                window.CONFIG.POE_QUIZ_REWARD_NFT_ADDRESS,
-                window.ABIS.PoEQuizRewardNFT,
-                window.getProvider()
-            );
+            if (nftAddress && nftAbi) {
+                const nftContractInstance = new ethers.Contract(
+                    nftAddress,
+                    nftAbi,
+                    window.getProvider()
+                );
 
-            const alreadyMinted = await nftContractInstance.balanceOf(userAddress);
-            if (alreadyMinted > 0n) {
-                document.getElementById("nftClaimSection").style.display = "block";
-                document.getElementById("claimNFTButton").style.display = "none";
-                document.getElementById("mintStatus").textContent = "You have already claimed your NFT reward.";
-            } else {
-                const totalQuizzes = 10;
-                let completedCount = 0;
-                for (let i = 1; i <= totalQuizzes; i++) {
-                    const isCompleted = await poeContract.completedQuizzes(userAddress, i);
-                    if (isCompleted) {
-                        completedCount++;
-                    }
-                }
-
-                if (completedCount === totalQuizzes) {
-                    document.getElementById("nftClaimSection").style.display = "block";
-                    document.getElementById("claimNFTButton").style.display = "block";
-                    document.getElementById("mintStatus").textContent = `Congratulations! You have completed all ${totalQuizzes} quizzes. Click the button to claim your NFT.`;
-                } else {
+                const alreadyMinted = await nftContractInstance.balanceOf(userAddress);
+                if (alreadyMinted > 0n) {
                     document.getElementById("nftClaimSection").style.display = "block";
                     document.getElementById("claimNFTButton").style.display = "none";
-                    document.getElementById("mintStatus").textContent = `You have completed ${completedCount} of ${totalQuizzes} quizzes. Keep going!`;
+                    document.getElementById("mintStatus").textContent = "You have already claimed your NFT reward.";
+                } else {
+                    const totalQuizzes = 10;
+                    let completedCount = 0;
+                    for (let i = 1; i <= totalQuizzes; i++) {
+                        const isCompleted = await poeContract.completedQuizzes(userAddress, i);
+                        if (isCompleted) {
+                            completedCount++;
+                        }
+                    }
+
+                    if (completedCount === totalQuizzes) {
+                        document.getElementById("nftClaimSection").style.display = "block";
+                        document.getElementById("claimNFTButton").style.display = "block";
+                        document.getElementById("mintStatus").textContent = `Congratulations! You have completed all ${totalQuizzes} quizzes. Click the button to claim your NFT.`;
+                    } else {
+                        document.getElementById("nftClaimSection").style.display = "block";
+                        document.getElementById("claimNFTButton").style.display = "none";
+                        document.getElementById("mintStatus").textContent = `You have completed ${completedCount} of ${totalQuizzes} quizzes. Keep going!`;
+                    }
                 }
+            } else {
+                console.error("NFT contract address or ABI is missing.");
+                document.getElementById("nftClaimSection").style.display = "none";
             }
 
         } catch (err) {
@@ -85,24 +90,29 @@ window.addEventListener('DOMContentLoaded', async () => {
     // Event Listeners
     connectButton?.addEventListener('click', async () => {
         await window.connectWallet();
-        updateUI();
+        updateUI(); // Call updateUI only after connecting
     });
 
     document.getElementById('registerButton')?.addEventListener('click', async () => {
         if (window.POE?.contract) {
             await window.registerWallet(window.POE.contract);
-            updateUI();
+            updateUI(); // Call updateUI after registering
         }
     });
 
-    document.getElementById('submitAnswer')?.addEventListener('click', () => {
+    document.getElementById('submitAnswer')?.addEventListener('click', async () => {
         if (window.POE?.contract) {
-            window.submitAnswer(window.POE.contract);
+            await window.submitAnswer(window.POE.contract);
+            updateUI(); // Call updateUI after submitting an answer
         }
     });
 
-    // ... (other event listeners)
+    // Hash generation button
+    document.getElementById('generateHashButton')?.addEventListener('click', () => {
+        window.handleHashGeneration?.();
+    });
 
+    // Listen for events that change the UI state
     window.addEventListener('poe:walletChanged', updateUI);
     window.addEventListener('poe:registered', updateUI);
     window.addEventListener('poe:quizCompleted', updateUI);
