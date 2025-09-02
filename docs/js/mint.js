@@ -64,25 +64,32 @@ async function checkAndShowMintButton() {
 }
 
 async function claimNFTReward() {
-    await window.ABIS_READY;
-
-    const signer = await window.getSigner();
-    const nftContract = new ethers.Contract(
-        window.CONFIG.POE_QUIZ_REWARD_NFT_ADDRESS,
-        window.ABIS.PoEQuizRewardNFT,
-        signer
-    );
+    const userAddress = await window.getUserAddress();
+    if (!userAddress) return;
 
     try {
         document.getElementById("claimNFTButton").disabled = true;
-        document.getElementById("mintStatus").textContent = "Minting in progress... Please confirm transaction in your wallet.";
-        const tx = await nftContract.mintReward(await signer.getAddress());
-        const receipt = await tx.wait();
+        document.getElementById("mintStatus").textContent = "⏳ Requesting mint from backend...";
 
-        document.getElementById("mintStatus").innerHTML = `✅ NFT minted successfully!<br>Transaction Hash: <a href="https://blockexplorer.dimikog.org/tx/${receipt.hash}" target="_blank">${receipt.hash}</a>`;
-        document.getElementById("claimNFTButton").style.display = "none";
+        const response = await fetch("https://poe-backend.dimikog.org/mint-nft", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ to: userAddress }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+            document.getElementById("mintStatus").innerHTML = `✅ NFT minted successfully!<br>Transaction Hash: <a href="https://blockexplorer.dimikog.org/tx/${data.result.transactionHash}" target="_blank">${data.result.transactionHash}</a>`;
+            document.getElementById("claimNFTButton").style.display = "none";
+        } else {
+            throw new Error(data.error || "Minting failed");
+        }
+
     } catch (err) {
-        console.error("Minting failed:", err);
+        console.error("❌ Minting failed:", err);
         document.getElementById("mintStatus").textContent = "❌ Minting failed. See console for details.";
         document.getElementById("claimNFTButton").disabled = false;
     }
