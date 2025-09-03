@@ -1,3 +1,5 @@
+
+import { addBesuNetwork } from './network.js';
 // main.js
 
 let contract;
@@ -164,5 +166,6 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     // Initial setup on page load
     await window.connectWallet();
+    await addBesuNetwork();
     updateUI();
 });
