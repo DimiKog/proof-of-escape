@@ -50,18 +50,6 @@ async function getQuizById(id) {
  */
 async function initializeQuizDropdown(contractInstance) {
     try {
-        // Clear and disable by default
-        if (quizDropdown) {
-            while (quizDropdown.firstChild) {
-                quizDropdown.removeChild(quizDropdown.firstChild);
-            }
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = '-- Select Quiz --';
-            quizDropdown.appendChild(defaultOption);
-            quizDropdown.disabled = true;
-        }
-
         // Detect connected address (wallet.js should expose this)
         const getAddr = typeof window.getUserAddress === 'function' ? window.getUserAddress : null;
         const userAddress = getAddr ? getAddr() : null;
@@ -85,7 +73,7 @@ async function initializeQuizDropdown(contractInstance) {
             }
         }
 
-        // Not registered → keep section visible, dropdown disabled, show notice
+        // Clear dropdown only once, after verifying registration
         if (!registered) {
             if (quizDescription) quizDescription.textContent = '⚠️ Please register your wallet to see available quizzes.';
             if (quizDetails) quizDetails.style.display = 'none';
@@ -94,12 +82,27 @@ async function initializeQuizDropdown(contractInstance) {
             if (quizIdDisplay) quizIdDisplay.textContent = 'None';
             if (registrationNotice) registrationNotice.style.display = 'block';
             if (quizGateHint) quizGateHint.textContent = 'You need to register before you can take quizzes.';
-            return; // Do not fetch quizzes.json until registered
+            if (quizDropdown) {
+                while (quizDropdown.firstChild) {
+                    quizDropdown.removeChild(quizDropdown.firstChild);
+                }
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = '-- Select Quiz --';
+                quizDropdown.appendChild(defaultOption);
+                quizDropdown.disabled = true;
+            }
+            return;
         }
 
-        // Registered → enable & populate dropdown, hide notice
+        // Registered → enable dropdown and clear previous options
         if (registrationNotice) registrationNotice.style.display = 'none';
-        if (quizDropdown) quizDropdown.disabled = false;
+        if (quizDropdown) {
+            quizDropdown.disabled = false;
+            while (quizDropdown.firstChild) {
+                quizDropdown.removeChild(quizDropdown.firstChild);
+            }
+        }
 
         const quizzes = await loadQuizList();
 
