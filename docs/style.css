@@ -284,3 +284,8 @@ button:disabled {
   font-weight: bold;
   font-size: 14px;
 }
+
+#claimNFTButton.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+}
