@@ -144,7 +144,16 @@ window.addEventListener('DOMContentLoaded', async () => {
     const claimNFTBtn = document.getElementById('claimNFTButton');
     if (claimNFTBtn) {
         claimNFTBtn.addEventListener('click', async () => {
-            await window.claimNFTReward?.();
+            try {
+                // The function call is now in a try-catch block
+                await window.claimNFTReward?.();
+            } catch (error) {
+                console.error('An error occurred during the NFT claim process:', error);
+                document.getElementById("mintStatus").textContent = "❌ Minting failed. See console for details.";
+                // Re-enable the button in case of an error
+                claimNFTBtn.disabled = false;
+                claimNFTBtn.classList.remove("disabled");
+            }
         });
     }
 
