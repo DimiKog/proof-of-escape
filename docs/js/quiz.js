@@ -134,6 +134,9 @@ async function initializeQuizDropdown(contractInstance) {
 
         if (quizDropdown) {
             if (nextQuiz) {
+                while (quizDropdown.firstChild) {
+                    quizDropdown.removeChild(quizDropdown.firstChild);
+                }
                 const opt = document.createElement('option');
                 opt.value = nextQuiz.id;
                 opt.textContent = `Quiz ${nextQuiz.id}: ${nextQuiz.title}`;
