@@ -110,9 +110,12 @@ async function claimNFTReward() {
 }
 
 // Attach event listeners for updates
-document.addEventListener('DOMContentLoaded', checkAndShowMintButton);
-document.getElementById("connectButton").addEventListener('click', checkAndShowMintButton);
-document.getElementById("claimNFTButton").addEventListener('click', claimNFTReward);
+document.addEventListener('DOMContentLoaded', () => {
+    checkAndShowMintButton();
+
+    document.getElementById("connectButton")?.addEventListener('click', checkAndShowMintButton);
+    document.getElementById("claimNFTButton")?.addEventListener('click', claimNFTReward);
+});
 window.addEventListener('poe:walletChanged', checkAndShowMintButton);
 window.addEventListener('poe:registered', checkAndShowMintButton);
 window.addEventListener('poe:quizCompleted', checkAndShowMintButton);
