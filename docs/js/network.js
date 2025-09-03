@@ -1,21 +1,21 @@
 // js/network.js
 
 export async function addBesuNetwork() {
-    const chainId = '0x67b66a'; // 424242 in hex
+    const chainId = '0x67932'; // 424242 in hex
 
     try {
         await window.ethereum.request({
             method: 'wallet_addEthereumChain',
             params: [{
                 chainId,
-                chainName: 'PoE Besu QBFT',
+                chainName: 'QBFT_Besu_EduNet',
                 nativeCurrency: {
-                    name: 'Besu Fantoken',
-                    symbol: 'BFT',
+                    name: 'EDU-D',
+                    symbol: 'EDU-D',
                     decimals: 18,
                 },
-                rpcUrls: ['https://rpc.dimikog.org'],
-                blockExplorerUrls: ['https://blockexplorer.dimikog.org'],
+                rpcUrls: ['https://rpc.dimikog.org/rpc/'],
+                blockExplorerUrls: ['https://blockexplorer.dimikog.org/'],
             }],
         });
     } catch (err) {
