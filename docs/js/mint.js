@@ -65,7 +65,7 @@ function triggerCelebration(txHash) {
     }
 
     // Optional: Play sound effect
-    const sound = new Audio('/assets/sounds/success.mp3'); // Make sure this file exists
+    const sound = new Audio('../assets/sounds/success.mp3'); // Make sure this file exists
     sound.volume = 0.25;
     sound.play().catch(() => { });
 
