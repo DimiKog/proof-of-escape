@@ -7,8 +7,8 @@ These tokens (EDU-D) are used to pay for transaction gas fees.
 
 ## 🔗 Faucet Access
 
-Open your browser and visit:
-http://195.251.92.149/faucet/
+The faucet is available at:  
+https://faucet.poe.dimikog.org/
 
 ---
 
@@ -16,7 +16,7 @@ http://195.251.92.149/faucet/
 
 1. Make sure you’re connected to the **QBFT_Besu_EduNet** network in MetaMask.
 2. Copy your wallet address from MetaMask.
-3. Paste it into the faucet form field on the page or use the respective button to connect your wallet.
+3. Paste it into the faucet form field, or connect your wallet directly using the **Connect Wallet** button.
 4. Click **Request Funds**.
 
 You should see a confirmation message. Your wallet will soon receive a small amount of EDU-D.
@@ -35,7 +35,7 @@ You should see a confirmation message. Your wallet will soon receive a small amo
 
 - If you don’t see your EDU-D balance, try refreshing MetaMask.
 - If the faucet shows an error, wait a few minutes and try again.
-- Make sure you’ve added the Besu QBFT EduNet correctly in MetaMask (see [MetaMask Setup Guide](./besu-setup-metamask.md)).
+- Make sure you’ve added the Besu QBFT EduNet correctly in MetaMask (see the [MetaMask Setup Guide](./besu-setup-metamask.md) for detailed steps).
 
 ---
 

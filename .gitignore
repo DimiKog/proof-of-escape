@@ -2,35 +2,33 @@
 node_modules/
 package-lock.json
 
-# 🔨 Foundry (Forge) build and cache
-out/
-cache/
+# 🔨 Foundry (Forge) build artifacts
+**/out/
+**/cache/
+**/build-info/
 broadcast/
-lib/
 remappings.txt
 
-# 🔐 Secrets
+# 📚 Libraries (installed via forge install)
+lib/
+
+# 🔐 Secrets and environment config
 .env
 .env.*
+.env.local
 
-# 🧪 Test coverage or logs (if you add later)
+# 🧪 Test coverage, logs, and temporary files
 coverage/
 logs/
 *.log
 *.env
 
-# ⛓️ VSCode
-node_modules/
+# ⛓️ VS Code and macOS system files
 .DS_Store
 
-# Environment and config files
-.env
-.env.local
-.env.*
-
-# Ignore old JS scripts
+# 📜 Legacy or non-source files
 testToken.js
 
-#Ignore of txt files
+# 📂 Text files (ignore except under meta/)
 *.txt
 !meta/*.txt

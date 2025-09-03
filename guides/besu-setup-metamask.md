@@ -25,10 +25,10 @@ Use the following settings:
 | Field                     | Value                                       |
 |--------------------------|----------------------------------------------|
 | **Network Name**         | QBFT_Besu_EduNet                             |
-| **New RPC URL**          | `http://195.251.92.200/rpc/`                      |
+| **New RPC URL**          | `https://rpc.dimikog.org/rpc`                    |
 | **Chain ID**             | `424242`                                     |
 | **Currency Symbol**      | `EDU-D`                                      |
-| **Block Explorer URL**   | `http://83.212.76.39`                        |
+| **Block Explorer URL**   | `https://blockexplorer.dimikog.org`              |
 
 Click **Save**.
 
@@ -43,7 +43,7 @@ Click **Save**.
 
 ## 💧 5. Get Test ETH
 
-Use the [Besu Faucet Guide](https://github.com/DimiKog/proof-of-escape/blob/main/guides/info-for-besu-faucet.md) to request EDU-D tokens for gas fees.
+Visit the [Besu Faucet Guide](https://github.com/DimiKog/proof-of-escape/blob/main/guides/info-for-besu-faucet.md) and follow the instructions to request EDU-D tokens using your MetaMask wallet address.
 
 ---
 
@@ -53,7 +53,7 @@ To track your rewards:
 
 1. Click **Import Tokens** at the bottom of MetaMask.
 2. Enter:
-   - **Token Contract Address:** `0xb62C4826BfF365827c923a14CCB5137eA0360402`
+   - **Token Contract Address:** `0x352f1BBc9Ef3977A5F04A67EdeFE164627e7a6E2`
    - The rest will auto-fill.
 3. Click **Add Custom Token** → **Import Tokens**
 
