@@ -101,6 +101,12 @@ async function refreshRegistrationUI(contract = (window.POE?.contract), addr = u
 
         const isReg = await checkRegistered(contract, addr);
 
+        // Optional global prompt outside main section
+        const regPrompt = document.getElementById('registerPrompt');
+        if (regPrompt) {
+            regPrompt.style.display = isReg ? 'none' : 'block';
+        }
+
         // Register button
         if (regBtn) regBtn.style.display = isReg ? 'none' : 'inline-block';
 
