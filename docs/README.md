@@ -30,7 +30,7 @@ Main interface for the DApp. Contains:
 - NFT minting section
 
 ### `js/` folder
-Modular JS files handling key functionality:
+Modular JS files handling key functionality and network integration:
 - `wallet.js` – Connects MetaMask and manages user session
 - `quiz.js` – Loads quiz list and logic gating
 - `hash.js` – Generates SHA256 hash and auto-copies to clipboard
@@ -39,6 +39,7 @@ Modular JS files handling key functionality:
 - `leaderboard.js` – Displays registered users and completions
 - `admin.js` – Admin tools (e.g., set quiz hash)
 - `config.js` – Holds contract addresses and URLs
+- `network.js` – Detects and adds the correct Besu network to MetaMask if missing
 - `utils.js` – Helper functions
 - `main.js` – Orchestrates UI and event logic
 

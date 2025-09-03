@@ -43,11 +43,27 @@ The app consists of several sections, each guiding your learning journey:
 - **Leaderboard**: View registered users and track completions.
 - **Claim NFT**: After completing all quizzes, unlock and mint a special Proof of Escape NFT.
 
+
 ## 👛 View ESCAPE Tokens in MetaMask
 
 - Network: QBFT Education Network  
 - Token Contract: `0xb62C4826BfF365827c923a14CCB5137eA0360402`  
 - Add this token manually in MetaMask to see your ESCAPE balance.
+
+## 🖼️ View Your PoE NFT in MetaMask
+
+After completing all quizzes, you can mint a special Proof of Escape NFT. This NFT is a badge of your achievement and will also be used in future game phases.
+
+To view the NFT in MetaMask:
+
+1. Open MetaMask and switch to the **QBFT Education Network**.
+2. Go to the **NFTs** tab (available in the mobile app or MetaMask Portfolio).
+3. Click **Import NFT**.
+4. Enter the following:
+   - **NFT Contract Address**: `0x095dbc84D218695B09Ab6Ac662C11C8312621ed5`
+   - **Token ID**: Use the ID shown after minting (usually `1` if it's your first).
+
+📌 **Keep this NFT** — it will unlock access **to the next phase of the Proof of Escape experience**, coming soon!
 
 ## 📂 Project Structure
 
