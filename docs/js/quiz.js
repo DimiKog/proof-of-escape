@@ -99,9 +99,7 @@ async function initializeQuizDropdown(contractInstance) {
         if (registrationNotice) registrationNotice.style.display = 'none';
         if (quizDropdown) {
             quizDropdown.disabled = false;
-            while (quizDropdown.firstChild) {
-                quizDropdown.removeChild(quizDropdown.firstChild);
-            }
+            quizDropdown.innerHTML = ''; // Clears all child nodes to avoid duplicates
         }
 
         const quizzes = await loadQuizList();
