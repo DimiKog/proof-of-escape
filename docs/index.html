@@ -11,227 +11,233 @@
 </head>
 
 <body>
-    <header>
-        <h1>🔐 Proof of Escape</h1>
-        <p>Answer quizzes. Prove it. Earn tokens.</p>
-    </header>
+    <main class="container">
+        <header>
+            <h1>🔐 Proof of Escape</h1>
+            <p>Answer quizzes. Prove it. Earn tokens.</p>
+        </header>
 
-    <!-- Optional: No-JS warning -->
-    <noscript>
-        <p style="color:#b00020;font-weight:bold">
-            ⚠️ This app requires JavaScript to run. Please enable it in your browser.
-        </p>
-    </noscript>
-
-    <section>
-        <h2>🦊 Wallet</h2>
-        <p><strong>Connected Wallet:</strong> <span id="walletAddress">Not connected</span></p>
-        <p id="networkStatus" style="display:none;color:green;font-weight:bold;">✅ Connected to QBFT_Besu_EduNet</p>
-        <p id="networkWarning" style="display:none;color:red;font-weight:bold;">⚠️ Please switch to the QBFT_Besu_EduNet
-            network in MetaMask.</p>
-
-        <div id="walletStatus"
-            style="display: none; padding: 10px; margin: 10px 0; border-radius: 8px; font-weight: bold; text-align: center;"
-            aria-live="polite"></div>
-
-        <button id="connectButton">Connect Wallet</button>
-        <details id="networkInstructionsToggle" style="margin-top:1rem;">
-            <summary><strong>🛠️ QBFT_Besu_EduNet Setup Instructions</strong></summary>
-            <ul style="font-size:.95rem;margin-top:.5rem;">
-                <li><strong>Network Name:</strong> QBFT_Besu_EduNet</li>
-                <li><strong>New RPC URL:</strong> <code>https://rpc.dimikog.org/rpc/</code></li>
-                <li><strong>Chain ID:</strong> <code>424242</code></li>
-                <li><strong>Currency Symbol:</strong> <code>EDU-D</code></li>
-                <li><strong>Block Explorer URL:</strong> <code>https://blockexplorer.dimikog.orgå</code></li>
-            </ul>
-            <p>Click <em>MetaMask ➝ Settings ➝ Networks ➝ Add Network</em>, fill in the above, then
-                <strong>Save</strong>.
+        <!-- Optional: No-JS warning -->
+        <noscript>
+            <p style="color:#b00020;font-weight:bold">
+                ⚠️ This app requires JavaScript to run. Please enable it in your browser.
             </p>
-        </details>
+        </noscript>
 
-        <div id="registerPrompt" style="margin-top:1rem; display:none;">
-            <p>You must register your wallet to access quizzes.</p>
-            <button id="registerButton">Register</button>
-        </div>
-    </section>
+        <section class="wallet-section">
+            <h2>🦊 Wallet</h2>
+            <p><strong>Connected Wallet:</strong> <span id="walletAddress">Not connected</span></p>
+            <p id="networkStatus" style="display:none;color:green;font-weight:bold;">✅ Connected to QBFT_Besu_EduNet</p>
+            <p id="networkWarning" style="display:none;color:red;font-weight:bold;">⚠️ Please switch to the
+                QBFT_Besu_EduNet
+                network in MetaMask.</p>
 
-    <div id="quizSection">
-        <section id="quizSelector">
-            <h2>🧠 Choose a Quiz</h2>
-            <p id="quizGateHint" style="color:#888;margin-top:.5rem;"></p>
-            <label for="quizDropdown">Select unlocked quiz:</label>
-            <select id="quizDropdown">
-                <option value="">-- Select Quiz --</option>
-            </select>
+            <div id="walletStatus"
+                style="display: none; padding: 10px; margin: 10px 0; border-radius: 8px; font-weight: bold; text-align: center;"
+                aria-live="polite"></div>
 
-            <div id="quizInfo" style="margin-top:1rem;">
-                <p id="quizDescription"></p>
-                <details id="quizDetails" style="display:none;">
-                    <summary>More Info</summary>
-                    <p id="quizDetailsContent"></p>
-                </details>
-                <p id="quizHint"></p>
-                <p id="quizReward"></p>
-                <button id="startQuizBtn" style="margin-top:1rem;">Start Quiz</button>
-            </div>
+            <button id="connectButton" type="button">Connect Wallet</button>
+            <details id="networkInstructionsToggle" style="margin-top:1rem;">
+                <summary><strong>🛠️ QBFT_Besu_EduNet Setup Instructions</strong></summary>
+                <ul style="font-size:.95rem;margin-top:.5rem;">
+                    <li><strong>Network Name:</strong> QBFT_Besu_EduNet</li>
+                    <li><strong>New RPC URL:</strong> <code>https://rpc.dimikog.org/rpc/</code></li>
+                    <li><strong>Chain ID:</strong> <code>424242</code></li>
+                    <li><strong>Currency Symbol:</strong> <code>EDU-D</code></li>
+                    <li><strong>Block Explorer URL:</strong> <code>https://blockexplorer.dimikog.orgå</code></li>
+                </ul>
+                <p>Click <em>MetaMask ➝ Settings ➝ Networks ➝ Add Network</em>, fill in the above, then
+                    <strong>Save</strong>.
+                </p>
+            </details>
 
-            <div id="registrationNotice" style="margin-top:1rem;color:red;font-weight:bold;display:none;">
-                🛑 You must register before accessing quizzes.
+            <div id="registerPrompt" style="margin-top:1rem; display:none;">
+                <p>You must register your wallet to access quizzes.</p>
+                <button id="registerButton" type="button">Register</button>
             </div>
         </section>
-    </div>
 
-    <section>
-        <h2>🧪 Hash Generator</h2>
-        <p>Type your answer exactly as you would submit it (lowercase, no punctuation).</p>
-        <label for="hashTestInput">Answer (for hashing):</label>
-        <input id="hashTestInput" type="text" placeholder="Type your answer..." />
-        <button id="generateHashButton">Generate Hash & Copy</button>
-        <p><strong>Hash Output:</strong></p>
-        <pre id="hashResult"></pre>
-    </section>
+        <div id="quizSection">
+            <section id="quizSelector" class="quiz-section">
+                <h2>🧠 Choose a Quiz</h2>
+                <p id="quizGateHint" style="color:#888;margin-top:.5rem;"></p>
+                <label for="quizDropdown">Select unlocked quiz:</label>
+                <select id="quizDropdown">
+                    <option value="">-- Select Quiz --</option>
+                </select>
 
-    <section id="answerSection">
-        <h2>📩 Submit a Quiz Answer</h2>
-        <div>
-            <label for="quizId">Quiz ID:</label>
-            <input type="number" id="quizId" placeholder="e.g., 1" />
-        </div>
-        <div>
-            <label for="answer">Your keccak256 Hash (starts with 0x):</label>
-            <input type="text" id="answer" placeholder="0x..." />
-        </div>
+                <div id="quizInfo" style="margin-top:1rem;">
+                    <p id="quizDescription"></p>
+                    <details id="quizDetails" style="display:none;">
+                        <summary>More Info</summary>
+                        <p id="quizDetailsContent"></p>
+                    </details>
+                    <p id="quizHint"></p>
+                    <p id="quizReward"></p>
+                    <button id="startQuizBtn" type="button" style="margin-top:1rem;">Start Quiz</button>
+                </div>
 
-        <button id="submitAnswer">Submit Answer</button>
-        <p id="result" aria-live="polite"></p>
-        <p><strong>Selected Quiz ID:</strong> <span id="quizIdDisplay">None</span></p>
-    </section>
-
-    <!-- 🏅 Leaderboard -->
-    <section id="leaderboardSection" style="margin-top:2rem;">
-        <h2>🏅 Leaderboard</h2>
-
-        <div class="actions-row">
-            <button id="refreshLeaderboardBtn">Refresh Leaderboard</button>
-            <button id="refreshRegisteredUsers">Refresh Registered Users</button>
+                <div id="registrationNotice" style="margin-top:1rem;color:red;font-weight:bold;display:none;">
+                    🛑 You must register before accessing quizzes.
+                </div>
+            </section>
         </div>
 
-        <div id="leaderboardStatus" style="min-height:1.2em;margin:6px 0;color:#666;" aria-live="polite"></div>
-        <div id="leaderboardPageInfo" style="margin:0.5rem 0; font-weight:bold; text-align:center;"></div>
+        <section class="hash-section">
+            <h2>🧪 Hash Generator</h2>
+            <p>Type your answer exactly as you would submit it (lowercase, no punctuation).</p>
+            <label for="hashTestInput">Answer (for hashing):</label>
+            <input id="hashTestInput" type="text" placeholder="Type your answer..." />
+            <button id="generateHashButton" type="button">Generate Hash & Copy</button>
+            <p><strong>Hash Output:</strong></p>
+            <pre id="hashResult"></pre>
+        </section>
 
-        <h3>Top Solvers</h3>
-        <table id="leaderboardTable" class="poe-table" style="width:100%;border-collapse:collapse;">
-            <thead>
-                <tr>
-                    <th style="text-align:left;">#</th>
-                    <th style="text-align:left;">Address</th>
-                    <th style="text-align:right;">Solved</th>
-                    <th style="text-align:left;">Last Solved</th>
-                    <th style="text-align:right;">PoE Tokens</th>
-                    <th style="text-align:right;">Solved per Token</th>
+        <section id="answerSection" class="submit-section">
+            <h2>📩 Submit a Quiz Answer</h2>
+            <div>
+                <label for="quizId">Quiz ID:</label>
+                <input type="number" id="quizId" placeholder="e.g., 1" />
+            </div>
+            <div>
+                <label for="answer">Your keccak256 Hash (starts with 0x):</label>
+                <input type="text" id="answer" placeholder="0x..." />
+            </div>
+
+            <button id="submitAnswer" type="button">Submit Answer</button>
+            <p id="result" aria-live="polite"></p>
+            <p><strong>Selected Quiz ID:</strong> <span id="quizIdDisplay">None</span></p>
+        </section>
+
+        <!-- 🏅 Leaderboard -->
+        <section id="leaderboardSection" style="margin-top:2rem;">
+            <h2>🏅 Leaderboard</h2>
+
+            <div class="actions-row">
+                <button id="refreshLeaderboardBtn" type="button">Refresh Leaderboard</button>
+                <button id="refreshRegisteredUsers" type="button">Refresh Registered Users</button>
+            </div>
+
+            <div id="leaderboardStatus" style="min-height:1.2em;margin:6px 0;color:#666;" aria-live="polite"></div>
+            <div id="leaderboardPageInfo" style="margin:0.5rem 0; font-weight:bold; text-align:center;"></div>
+
+            <h3>Top Solvers</h3>
+            <table id="leaderboardTable" class="poe-table" style="width:100%;border-collapse:collapse;">
+                <thead>
+                    <tr>
+                        <th style="text-align:left;">#</th>
+                        <th style="text-align:left;">Address</th>
+                        <th style="text-align:right;">Solved</th>
+                        <th style="text-align:left;">Last Solved</th>
+                        <th style="text-align:right;">PoE Tokens</th>
+                        <th style="text-align:right;">Solved per Token</th>
+                    </tr>
+                </thead>
+                <tbody><!-- filled by JS --></tbody>
+                <tr id="leaderboardEmptyRow" style="display:none;">
+                    <td colspan="6" style="text-align:center;">No entries yet.</td>
                 </tr>
-            </thead>
-            <tbody><!-- filled by JS --></tbody>
-            <tr id="leaderboardEmptyRow" style="display:none;">
-                <td colspan="6" style="text-align:center;">No entries yet.</td>
-            </tr>
-        </table>
-        <div class="pagination-controls" style="display:flex;justify-content:center;gap:1rem;margin-top:0.5rem;">
-            <button id="firstPageBtn">⏮️ First</button>
-            <button id="prevPageBtn" disabled style="opacity:0.5;cursor:not-allowed;">Previous</button>
-            <button id="nextPageBtn">Next</button>
-            <button id="lastPageBtn">Last ⏭️</button>
-        </div>
+            </table>
+            <div class="pagination-controls" style="display:flex;justify-content:center;gap:1rem;margin-top:0.5rem;">
+                <button id="firstPageBtn" type="button">⏮️ First</button>
+                <button id="prevPageBtn" disabled style="opacity:0.5;cursor:not-allowed;"
+                    type="button">Previous</button>
+                <button id="nextPageBtn" type="button">Next</button>
+                <button id="lastPageBtn" type="button">Last ⏭️</button>
+            </div>
 
-        <h3 style="margin-top:1.5rem;">Registered Users</h3>
-        <table id="registeredTable" class="poe-table" style="width:100%;border-collapse:collapse;">
-            <thead>
-                <tr>
-                    <th style="text-align:left;">Address</th>
-                    <th style="text-align:left;">Registered At</th>
-                </tr>
-            </thead>
-            <tbody><!-- filled by JS --></tbody>
-        </table>
-    </section>
+            <h3 style="margin-top:1.5rem;">Registered Users</h3>
+            <table id="registeredTable" class="poe-table" style="width:100%;border-collapse:collapse;">
+                <thead>
+                    <tr>
+                        <th style="text-align:left;">Address</th>
+                        <th style="text-align:left;">Registered At</th>
+                    </tr>
+                </thead>
+                <tbody><!-- filled by JS --></tbody>
+            </table>
+        </section>
 
-    <section id="nftClaimSection" style="display:none;margin-top:2rem;">
-        <h2>🎖️ Claim Your PoE NFT</h2>
-        <p>Congratulations on solving all 10 quizzes! Click the button below to claim your NFT reward.</p>
-        <div style="display: flex; justify-content: center; margin-top: 1rem;">
-            <button id="claimNFTButton">Claim NFT Reward</button>
-        </div>
-        <p id="mintStatus" aria-live="polite" style="margin-top:0.5rem;"></p>
-        <div id="nftPreview" style="margin-top:1rem; display:none;">
-            <img id="nftImage" src="" alt="Your PoE NFT"
-                style="max-width:200px; border-radius:8px; box-shadow:0 0 6px rgba(0,0,0,0.2);" />
-            <p><a id="explorerLink" href="#" target="_blank">🔗 View on Explorer</a></p>
-        </div>
-    </section>
+        <section id="nftClaimSection" style="display:none;margin-top:2rem;">
+            <div class="nft-claim-box">
+                <h2>🎖️ Claim Your PoE NFT</h2>
+                <p>Congratulations on solving all 10 quizzes! Click the button below to claim your NFT reward.</p>
+                <div style="display: flex; justify-content: center; margin-top: 1rem;">
+                    <button id="claimNFTButton" type="button">Claim NFT Reward</button>
+                </div>
+                <p id="mintStatus" aria-live="polite" style="margin-top:0.5rem;"></p>
+                <div id="nftPreview" style="margin-top:1rem; display:none;">
+                    <img id="nftImage" src="" alt="Your PoE NFT"
+                        style="max-width:200px; border-radius:8px; box-shadow:0 0 6px rgba(0,0,0,0.2);" />
+                    <p><a id="explorerLink" href="#" target="_blank">🔗 View on Explorer</a></p>
+                </div>
+            </div>
+        </section>
 
-    <section id="adminSection" style="display:none;margin-top:2rem;">
-        <h2>🛠️ Admin: Upload Answer Hash</h2>
-        <div>
-            <label for="adminQuizId">Quiz ID:</label>
-            <input type="number" id="adminQuizId" placeholder="e.g., 3" />
-        </div>
-        <div>
-            <label for="adminPlainAnswer">Correct Answer:</label>
-            <input type="text" id="adminPlainAnswer" placeholder="e.g., the moon" />
-        </div>
-        <div>
-            <label for="adminQuizReward">Reward Amount:</label>
-            <input type="text" id="adminQuizReward" placeholder="e.g., 1000000000000000000" />
-        </div>
-        <button id="uploadHashButton">📤 Upload Hash</button>
-        <p id="uploadStatus" aria-live="polite"></p>
-    </section>
+        <section id="adminSection" class="admin-section" style="display:none;margin-top:2rem;">
+            <h2>🛠️ Admin: Upload Answer Hash</h2>
+            <div>
+                <label for="adminQuizId">Quiz ID:</label>
+                <input type="number" id="adminQuizId" placeholder="e.g., 3" />
+            </div>
+            <div>
+                <label for="adminPlainAnswer">Correct Answer:</label>
+                <input type="text" id="adminPlainAnswer" placeholder="e.g., the moon" />
+            </div>
+            <div>
+                <label for="adminQuizReward">Reward Amount:</label>
+                <input type="text" id="adminQuizReward" placeholder="e.g., 1000000000000000000" />
+            </div>
+            <button id="uploadHashButton" type="button">📤 Upload Hash</button>
+            <p id="uploadStatus" aria-live="polite"></p>
+        </section>
 
-    <!-- 1) Ethers UMD first (no defer so it's ready immediately) -->
-    <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
+        <!-- 1) Ethers UMD first (no defer so it's ready immediately) -->
+        <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.2/dist/ethers.umd.min.js"></script>
 
-    <!-- 2) Your config (defines window.CONFIG and window.loadABIs) -->
-    <script src="js/config.js"></script>
+        <!-- 2) Your config (defines window.CONFIG and window.loadABIs) -->
+        <script src="js/config.js"></script>
 
-    <!-- 3) Bridge values from CONFIG and kick off ABI loading early -->
-    <script>
-        // Make the API base visible to leaderboard.js
-        window.POE_API_BASE = window.CONFIG.API_BASE;
+        <!-- 3) Bridge values from CONFIG and kick off ABI loading early -->
+        <script>
+            // Make the API base visible to leaderboard.js
+            window.POE_API_BASE = window.CONFIG.API_BASE;
 
-        // Start loading ABIs ASAP; other scripts can await this if needed
-        window.ABIS_READY = window.loadABIs();
-    </script>
+            // Start loading ABIs ASAP; other scripts can await this if needed
+            window.ABIS_READY = window.loadABIs();
+        </script>
 
-    <script src="js/utils.js"></script>
-    <script src="js/wallet.js"></script>
-    <script src="js/quiz.js"></script>
-    <script src="js/submit.js"></script>
-    <script src="js/admin.js"></script>
-    <script src="js/leaderboard.js"></script>
+        <script src="js/utils.js"></script>
+        <script src="js/wallet.js"></script>
+        <script src="js/quiz.js"></script>
+        <script src="js/submit.js"></script>
+        <script src="js/admin.js"></script>
+        <script src="js/leaderboard.js"></script>
 
-    <script src="js/network.js" type="module"></script>
-    <script src="js/hash.js" type="module"></script>
-    <script src="js/mint.js" type="module"></script>
-    <script src="js/main.js" type="module"></script>
+        <script src="js/network.js" type="module"></script>
+        <script src="js/hash.js" type="module"></script>
+        <script src="js/mint.js" type="module"></script>
+        <script src="js/main.js" type="module"></script>
 
 
-    <script>
-        window.showTempMessage = function (elementId, htmlMessage, duration = 5000, isError = false) {
-            const el = document.getElementById(elementId);
-            if (!el) return;
+        <script>
+            window.showTempMessage = function (elementId, htmlMessage, duration = 5000, isError = false) {
+                const el = document.getElementById(elementId);
+                if (!el) return;
 
-            el.innerHTML = htmlMessage;
-            el.style.display = 'block';
-            el.style.backgroundColor = isError ? '#ffe0e0' : '#e0ffe0';
-            el.style.color = '#333';
-            el.style.border = '1px solid ' + (isError ? '#cc0000' : '#00aa00');
+                el.innerHTML = htmlMessage;
+                el.style.display = 'block';
+                el.style.backgroundColor = isError ? '#ffe0e0' : '#e0ffe0';
+                el.style.color = '#333';
+                el.style.border = '1px solid ' + (isError ? '#cc0000' : '#00aa00');
 
-            setTimeout(() => {
-                el.style.display = 'none';
-            }, duration);
-        };
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+                setTimeout(() => {
+                    el.style.display = 'none';
+                }, duration);
+            };
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    </main>
 </body>
 
 </html>

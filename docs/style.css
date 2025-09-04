@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: 'Inter', sans-serif;
   background-color: #ffffff;
@@ -5,6 +9,8 @@ body {
   margin: 0;
   padding: 0;
   text-align: center;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 header {
@@ -22,6 +28,12 @@ section {
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
+main.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 0 1rem;
+}
+
 input,
 button,
 select {
@@ -31,6 +43,7 @@ select {
   max-width: 400px;
   font-size: 16px;
   box-sizing: border-box; /* Ensures padding doesn't affect total width */
+  transition: all 0.3s ease-in-out;
 }
 
 button {
@@ -40,6 +53,8 @@ button {
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 400px;
 }
 
 button:hover {
@@ -91,10 +106,16 @@ button:disabled {
     margin: 15px;
     padding: 15px;
   }
+
   input,
   button,
   select {
     font-size: 14px;
+    width: 100%;
+  }
+
+  .button-group {
+    flex-direction: column;
   }
 }
 
@@ -104,6 +125,18 @@ button:disabled {
   flex-wrap: wrap;
   margin-bottom: 8px;
   justify-content: center; /* centers the group */
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.button-group button {
+  flex: 1 1 140px;
+  max-width: 300px;
 }
 
 /* ===== Leaderboard Styles ===== */
@@ -138,6 +171,8 @@ button:disabled {
 #leaderboardTable {
   width: 100%;
   border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
 }
 
 #leaderboardTable th,
@@ -263,7 +298,7 @@ button:disabled {
   text-align: center;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
 }
 
 #nftClaimSection h2 {
@@ -288,4 +323,55 @@ button:disabled {
 #claimNFTButton.disabled {
     opacity: 0.6;
     pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 16px 0;
+    font-size: 18px;
+  }
+
+  section {
+    margin: 20px 10px;
+    padding: 16px;
+  }
+
+  input,
+  button,
+  select {
+    font-size: 15px;
+    width: 100%;
+  }
+
+  #leaderboardSection,
+  #nftClaimSection {
+    padding: 16px;
+  }
+
+  #leaderboardTable th,
+  #leaderboardTable td {
+    padding: 6px;
+  }
+}
+
+/* Accessibility */
+button:focus,
+input:focus,
+select:focus {
+  outline: 2px solid #3182ce;
+  outline-offset: 2px;
+}
+
+/* Section Divider */
+section + section {
+  border-top: 1px solid #e2e8f0;
+  margin-top: 2rem;
+  padding-top: 2rem;
+}
+
+/* Smooth transitions */
+button,
+input,
+select {
+  transition: all 0.3s ease-in-out;
 }
