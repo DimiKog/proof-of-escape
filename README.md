@@ -1,9 +1,9 @@
 # 🏆 Proof of Escape — Learn Blockchain by Escaping!
 
-[🇬🇧 English](#-proof-of-escape--learn-blockchain-by-escaping) | [🇬🇷 Ελληνικά](#-proof-of-escape---μάθε-blockchain-μέσα-από-την-απόδραση)
+[🇬🇧 English](#en) | [🇬🇷 Ελληνικά](#el)
 
 ---
-
+<a id="en"></a>
 ## 🇬🇧 Proof of Escape — Learn Blockchain by Escaping!
 
 ### 🔍 What is Proof of Escape?
@@ -110,6 +110,7 @@ MIT License — see LICENSE file for details.
 
 ## 🇬🇷 Proof of Escape — Μάθε για το Blockchain βρίσκοντας τις απαντήσεις και φτάνοντας στην Απόδραση!
 
+<a id="el"></a>
 ### 🔍 Τι είναι το Proof of Escape;
 
 Το **Proof of Escape** είναι μια παιγνιοποιημένη πρόκληση Web3, όπου οι χρήστες αλληλεπιδρούν με ένα πραγματικό blockchain δίκτυο (Besu QBFT, Ethereum) για να:  
