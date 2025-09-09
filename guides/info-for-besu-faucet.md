@@ -8,7 +8,7 @@ These tokens (EDU-D) are used to pay for transaction gas fees.
 ## 🔗 Faucet Access
 
 The faucet is available at:  
-https://faucet.poe.dimikog.org/
+https://faucet.dimikog.org/
 
 ---
 
