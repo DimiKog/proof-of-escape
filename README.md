@@ -23,7 +23,7 @@ This project helps you:
 
 1. Visit the app: [https://dimikog.github.io/proof-of-escape/](https://dimikog.github.io/proof-of-escape/)  
 2. Connect your MetaMask wallet to the QBFT Education Network  
-2a. [Set up MetaMask for QBFT_Besu_EduNet](./guides/setup-metamask.md) if you haven’t already.  
+2a. [Set up MetaMask for QBFT_Besu_EduNet](./guides/besu-setup-metamask.md) if you haven’t already.  
 3. Register and start solving quizzes  
 4. Use the built-in hash tool to compute keccak256 hashes  
 5. Submit answers and claim ESCAPE tokens  
