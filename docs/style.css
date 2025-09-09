@@ -375,3 +375,13 @@ input,
 select {
   transition: all 0.3s ease-in-out;
 }
+
+.faucet-box {
+  max-width: 600px;
+  margin: 1rem auto; /* 👈 this centers it horizontally */
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f9f9f9;
+  text-align: center;
+}
