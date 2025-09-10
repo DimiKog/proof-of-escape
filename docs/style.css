@@ -9,10 +9,15 @@
   --button-disabled-bg: #a0aec0;
   --success-color: green;
   --error-color: red;
-  --card-bg: #f9f9f9;
-  --text-color: #222;
+  --card-bg: #ffffff;
+  --card-text: #111827;
   --link-color: #4B0082;
   --bg-color: #ffffff;
+}
+
+html[data-theme='dark'] {
+  --card-bg: #1e293b;
+  --card-text: #f1f5f9;
 }
 
 [data-theme="dark"] {
@@ -79,6 +84,12 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+body,
+.container,
+.card {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 a {
   color: var(--link-color);
 }
@@ -106,6 +117,9 @@ main.container {
   max-width: 1000px;
   margin: auto;
   padding: 0 1rem;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 input,
@@ -584,9 +598,6 @@ body.dark-theme th {
 
 .card {
   background-color: var(--card-bg);
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: var(--card-text);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
