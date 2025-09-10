@@ -165,6 +165,24 @@ window.addEventListener('DOMContentLoaded', async () => {
     window.addEventListener('poe:quizCompleted', updateUI);
 
     // Initial setup on page load
+
+    // --- Handle Dark Theme Toggle ---
+    const currentTheme = localStorage.getItem('theme');
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+    } else {
+        document.body.classList.remove('dark-theme');
+    }
+
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+    }
+
     await window.connectWallet();
     await addBesuNetwork();
     updateUI();

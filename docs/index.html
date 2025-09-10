@@ -8,16 +8,49 @@
     <link rel="icon" href="data:,">
     <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .faucet-helper {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: var(--bg-secondary, #f0f0f0);
+            color: var(--text-color, #111);
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            font-size: 0.95rem;
+            z-index: 998;
+            line-height: 1.5;
+        }
+
+        .faucet-helper a {
+            color: var(--link-color, #1a73e8);
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        body.dark-mode .faucet-helper {
+            background-color: #222;
+            color: #eee;
+        }
+
+        body.dark-mode .faucet-helper a {
+            color: #90cdf4;
+        }
+    </style>
 </head>
 
 <body>
-    <a href="https://faucet.dimikog.org/" target="_blank" class="floating-faucet-badge">💧 Faucet</a>
     <main class="container">
-        <a href="https://github.com/DimiKog/proof-of-escape/tree/main/guides" target="_blank"
-            class="floating-guides-badge">📘 Guides</a>
         <header>
             <h1>🔐 Proof of Escape</h1>
             <p>Answer quizzes. Prove it. Earn tokens.</p>
+            <!-- Floating Faucet Helper -->
+            <div class="faucet-helper">
+                💧 Need tokens? <a href="https://faucet.dimikog.org/" target="_blank" rel="noopener">Click here</a><br>
+                📘 <a href="https://github.com/DimiKog/proof-of-escape/tree/main/guides" target="_blank"
+                    rel="noopener">Guides</a>
+            </div>
         </header>
 
         <section class="faucet-box">
@@ -251,6 +284,26 @@
         </script>
         <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     </main>
+
+    <!-- Theme Toggle Button and Script -->
+    <button id="themeToggle" title="Toggle Light/Dark Mode"
+        style="position:fixed;top:20px;right:20px;padding:10px 14px;border-radius:6px;border:none;background:#333;color:#fff;font-weight:bold;cursor:pointer;z-index:999;box-shadow:0 2px 6px rgba(0,0,0,0.2);">
+        🌓
+    </button>
+    <script defer>
+        const toggleBtn = document.getElementById('themeToggle');
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+
+        // Load theme preference
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        });
+    </script>
 </body>
 
 </html>
