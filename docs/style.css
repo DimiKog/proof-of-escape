@@ -9,6 +9,17 @@
   --button-disabled-bg: #a0aec0;
   --success-color: green;
   --error-color: red;
+  --card-bg: #f9f9f9;
+  --text-color: #222;
+  --link-color: #4B0082;
+  --bg-color: #ffffff;
+}
+
+[data-theme="dark"] {
+  --card-bg: #1f2937;
+  --text-color: #f3f4f6;
+  --link-color: #a78bfa;
+  --bg-color: #0f172a;
 }
 
 body.light-theme {
@@ -58,13 +69,22 @@ html {
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: var(--background-color);
+  background-color: var(--bg-color);
   color: var(--text-color);
   margin: 0;
   padding: 0;
   text-align: center;
   font-size: 16px;
   line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+  color: var(--link-color);
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 header {
@@ -559,5 +579,14 @@ body.dark-theme th {
 }
 
 * {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
