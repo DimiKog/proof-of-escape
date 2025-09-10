@@ -475,3 +475,22 @@ body.dark-theme #leaderboardTable td {
     transition: none !important;
   }
 }
+/* ===== Dark Theme Improvements for Registered Users and Table Contrast ===== */
+body.dark-theme .section-registered-users {
+  background-color: #2c2f36;
+  color: #f1f1f1;
+}
+
+body.dark-theme .text-muted {
+  color: #cccccc;
+}
+
+body.dark-theme table {
+  background-color: #1f2229;
+  color: #eaeaea;
+}
+
+body.dark-theme th {
+  background-color: #272b32;
+  color: #ffffff;
+}
