@@ -1,9 +1,9 @@
 :root {
   --background-color: #ffffff;
-  --text-color: #333;
-  --header-bg: #1a202c;
-  --header-text: #ffffff;
-  --section-bg: #f9f9f9;
+  --text-color: #111827;
+  --header-bg: #ffffff;
+  --header-text: #111827;
+  --section-bg: #ffffff;
   --button-bg: #4299e1;
   --button-hover-bg: #3182ce;
   --button-disabled-bg: #a0aec0;
@@ -15,42 +15,22 @@
   --bg-color: #ffffff;
 }
 
-html[data-theme='dark'] {
-  --card-bg: #1e293b;
-  --card-text: #f1f5f9;
-}
-
-[data-theme="dark"] {
-  --card-bg: #1f2937;
-  --text-color: #f3f4f6;
-  --link-color: #a78bfa;
-  --bg-color: #0f172a;
-}
-
-body.light-theme {
-  --background-color: #ffffff;
-  --text-color: #333;
-  --header-bg: #1a202c;
-  --header-text: #ffffff;
-  --section-bg: #f9f9f9;
-  --button-bg: #4299e1;
-  --button-hover-bg: #3182ce;
-  --button-disabled-bg: #a0aec0;
-  --success-color: green;
-  --error-color: red;
-}
-
+html[data-theme='dark'],
 body.dark-theme {
-  --background-color: #1a202c;
-  --text-color: #f7fafc;
-  --header-bg: #2d3748;
-  --header-text: #edf2f7;
-  --section-bg: #2d3748;
+  --background-color: #0f172a;
+  --text-color: #f1f5f9;
+  --header-bg: #1a202c;
+  --header-text: #f1f5f9;
+  --section-bg: #1e293b;
   --button-bg: #4a5568;
   --button-hover-bg: #718096;
   --button-disabled-bg: #2d3748;
   --success-color: #48bb78;
   --error-color: #f56565;
+  --card-bg: #1e293b;
+  --card-text: #f1f5f9;
+  --link-color: #a78bfa;
+  --bg-color: #0f172a;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -413,53 +393,12 @@ button:disabled {
     pointer-events: none;
 }
 
-body.dark-theme #nftClaimSection {
-  background-color: #2d3748;
-  border-color: #4299e1;
-  color: #f7fafc;
-}
-
 body.dark-theme #nftClaimSection h2 {
   color: #f6ad55;
 }
 
 body.dark-theme #mintStatus {
   color: #e2e8f0;
-}
-
-body.light-theme .faucet-box {
-  background: #f9f9f9;
-  color: #111;
-  border-color: #ccc;
-}
-
-body.light-theme #nftClaimSection {
-  background-color: #e6f0ff;
-  color: #111;
-  border-color: #4299e1;
-}
-
-body.light-theme #nftClaimSection h2 {
-  color: #b7791f;
-}
-
-body.light-theme #mintStatus {
-  color: #333;
-}
-
-body.light-theme #leaderboardSection {
-  background-color: #ffffff;
-  color: #111;
-}
-
-body.light-theme #leaderboardTable th {
-  background-color: #edf2f7;
-  color: #2d3748;
-}
-
-body.light-theme #leaderboardTable td {
-  background-color: #ffffff;
-  color: #333;
 }
 
 @media (max-width: 768px) {
@@ -540,22 +479,6 @@ body, header, section, button, .faucet-box {
   z-index: 1000;
 }
 
-/* Dark mode styles for leaderboard and faucet box */
-body.dark-theme .faucet-box {
-  background: #2d3748;
-  border-color: #4a5568;
-  color: #edf2f7;
-}
-
-body.dark-theme #leaderboardTable th {
-  background-color: #4a5568;
-}
-
-body.dark-theme #leaderboardTable td {
-  background-color: #2d3748;
-  color: #f7fafc;
-}
-
 /* Toggle icon animation */
 .theme-toggle-icon {
   transition: transform 0.3s ease;
@@ -600,4 +523,16 @@ body.dark-theme th {
   background-color: var(--card-bg);
   color: var(--card-text);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card, section, .faucet-box, #nftClaimSection, #leaderboardSection {
+  background-color: var(--card-bg);
+  color: var(--card-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#leaderboardTable th,
+#leaderboardTable td {
+  background-color: var(--card-bg);
+  color: var(--card-text);
 }
