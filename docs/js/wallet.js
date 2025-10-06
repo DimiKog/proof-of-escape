@@ -414,16 +414,44 @@ async function registerWallet(contract) {
         return;
     }
     try {
-        const tx = await contract.register();
-        await tx.wait();
-        window.showTempMessage?.('walletStatus', '✅ Registration successful!', 3000);
-        window.dispatchEvent(new CustomEvent('poe:registered', { detail: { address: userAddress } }));
-        await refreshRegistrationUI(contract, userAddress);
+        const gasLimit = await contract.register.estimateGas();
+        console.log("✅ Gas estimate successful:", gasLimit.toString()); // Log for verification
+
+        // Add a small buffer to the gas limit, which sometimes bypasses
+        // transient estimation failures on custom networks.
+        const bufferedGasLimit = (gasLimit * 120n) / 100n; // 20% buffer
+
+        // Send the transaction with the manually estimated gas limit
+        const tx = await contract.register({
+            gasLimit: bufferedGasLimit
+        });
+
+        window.showTempMessage?.('walletStatus', `⏳ Registration transaction sent...`, 5000);
+
+        const receipt = await tx.wait();
+
+        if (receipt.status === 1) {
+            window.showTempMessage?.('walletStatus', '✅ Registration successful!', 3000);
+            window.dispatchEvent(new CustomEvent('poe:registered', { detail: { address: userAddress } }));
+            await refreshRegistrationUI(contract, userAddress);
+        } else {
+            // Transaction failed on-chain (should be rare if estimateGas worked)
+            throw new Error("Transaction mined but failed on-chain (status 0).");
+        }
+
     } catch (error) {
         console.error('Failed to register wallet:', error);
         let msg = 'Failed to register. Check console.';
-        if (error?.reason?.includes('Already registered')) msg = 'You are already registered.';
-        if (error?.code === 'ACTION_REJECTED') msg = 'Registration was rejected.';
+
+        // Improve error messaging based on Ethers codes
+        if (error?.code === 'CALL_EXCEPTION') {
+            msg = "Transaction simulation failed. Check contract deployment or RPC health.";
+        } else if (error?.code === 'ACTION_REJECTED') {
+            msg = 'Registration was rejected in MetaMask.';
+        } else if (error?.message?.includes('Already registered')) {
+            msg = 'You are already registered.';
+        }
+
         window.showTempMessage?.('walletStatus', `⚠️ ${msg}`, 4500, true);
     }
 }
