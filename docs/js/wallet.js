@@ -413,18 +413,31 @@ async function registerWallet(contract) {
         window.showTempMessage?.('walletStatus', 'Wallet not connected.', 3000, true);
         return;
     }
+
+    // 1. **CRITICAL FIX: Get Fee Data and use legacy gasPrice**
+    const feeData = await getProvider().getFeeData();
+    const gasPrice = feeData.gasPrice;
+
+    if (!gasPrice) {
+        // If gasPrice is null/undefined, the network is definitely broken.
+        console.error('Network Fee Data Missing:', feeData);
+        window.showTempMessage?.('walletStatus', '⚠️ Network fee data is missing. Check RPC/Node status.', 6000, true);
+        return;
+    }
+
+    const txOptions = { gasPrice: gasPrice }; // Force legacy gas model
+
     try {
-        const gasLimit = await contract.register.estimateGas();
-        console.log("✅ Gas estimate successful:", gasLimit.toString()); // Log for verification
+        // 2. Estimate Gas and apply buffer
+        const gasLimit = await contract.register.estimateGas(txOptions);
+        console.log("✅ Gas estimate successful:", gasLimit.toString());
 
-        // Add a small buffer to the gas limit, which sometimes bypasses
-        // transient estimation failures on custom networks.
-        const bufferedGasLimit = (gasLimit * 120n) / 100n; // 20% buffer
+        // 20% buffer
+        const bufferedGasLimit = (gasLimit * 120n) / 100n;
+        txOptions.gasLimit = bufferedGasLimit;
 
-        // Send the transaction with the manually estimated gas limit
-        const tx = await contract.register({
-            gasLimit: bufferedGasLimit
-        });
+        // 3. Send the transaction
+        const tx = await contract.register(txOptions);
 
         window.showTempMessage?.('walletStatus', `⏳ Registration transaction sent...`, 5000);
 
@@ -435,7 +448,6 @@ async function registerWallet(contract) {
             window.dispatchEvent(new CustomEvent('poe:registered', { detail: { address: userAddress } }));
             await refreshRegistrationUI(contract, userAddress);
         } else {
-            // Transaction failed on-chain (should be rare if estimateGas worked)
             throw new Error("Transaction mined but failed on-chain (status 0).");
         }
 
@@ -443,9 +455,9 @@ async function registerWallet(contract) {
         console.error('Failed to register wallet:', error);
         let msg = 'Failed to register. Check console.';
 
-        // Improve error messaging based on Ethers codes
-        if (error?.code === 'CALL_EXCEPTION') {
-            msg = "Transaction simulation failed. Check contract deployment or RPC health.";
+        // Handle the specific error we see
+        if (error?.code === 'CALL_EXCEPTION' || error?.message?.includes('missing revert data')) {
+            msg = "Transaction simulation failed. (Potential contract dependency or RPC error).";
         } else if (error?.code === 'ACTION_REJECTED') {
             msg = 'Registration was rejected in MetaMask.';
         } else if (error?.message?.includes('Already registered')) {
