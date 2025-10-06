@@ -414,30 +414,24 @@ async function registerWallet(contract) {
         return;
     }
 
-    // 1. **CRITICAL FIX: Get Fee Data and use legacy gasPrice**
-    const feeData = await getProvider().getFeeData();
-    const gasPrice = feeData.gasPrice;
-
-    if (!gasPrice) {
-        // If gasPrice is null/undefined, the network is definitely broken.
-        console.error('Network Fee Data Missing:', feeData);
-        window.showTempMessage?.('walletStatus', '⚠️ Network fee data is missing. Check RPC/Node status.', 6000, true);
-        return;
-    }
-
-    const txOptions = { gasPrice: gasPrice }; // Force legacy gas model
+    // --- FINAL CRITICAL FIX: HARDCODE GAS PRICE ---
+    // Use 1 Gwei (1,000,000,000 Wei) for a low, acceptable gas price on Besu.
+    const ONE_GWEI = 1000000000n; // Ethers.js BigInt for 1 Gwei
 
     try {
-        // 2. Estimate Gas and apply buffer
-        const gasLimit = await contract.register.estimateGas(txOptions);
+        // 1. Manually estimate gas (This is where it currently fails, but we need the limit)
+        // We pass the hardcoded gasPrice to ensure the estimation request is well-formed.
+        const gasLimit = await contract.register.estimateGas({ gasPrice: ONE_GWEI });
         console.log("✅ Gas estimate successful:", gasLimit.toString());
 
-        // 20% buffer
-        const bufferedGasLimit = (gasLimit * 120n) / 100n;
-        txOptions.gasLimit = bufferedGasLimit;
+        // 2. Add a buffer
+        const bufferedGasLimit = (gasLimit * 120n) / 100n; // 20% buffer
 
-        // 3. Send the transaction
-        const tx = await contract.register(txOptions);
+        // 3. Send the transaction with both the gasPrice and the estimated limit
+        const tx = await contract.register({
+            gasPrice: ONE_GWEI,      // Force the legacy gas price
+            gasLimit: bufferedGasLimit // Use the estimated limit
+        });
 
         window.showTempMessage?.('walletStatus', `⏳ Registration transaction sent...`, 5000);
 
@@ -453,18 +447,18 @@ async function registerWallet(contract) {
 
     } catch (error) {
         console.error('Failed to register wallet:', error);
+
         let msg = 'Failed to register. Check console.';
 
-        // Handle the specific error we see
         if (error?.code === 'CALL_EXCEPTION' || error?.message?.includes('missing revert data')) {
-            msg = "Transaction simulation failed. (Potential contract dependency or RPC error).";
+            msg = 'CRITICAL: Transaction signing/submission failed. Check MetaMask settings (Advanced -> Reset Account).';
         } else if (error?.code === 'ACTION_REJECTED') {
             msg = 'Registration was rejected in MetaMask.';
         } else if (error?.message?.includes('Already registered')) {
             msg = 'You are already registered.';
         }
 
-        window.showTempMessage?.('walletStatus', `⚠️ ${msg}`, 4500, true);
+        window.showTempMessage?.('walletStatus', `⚠️ ${msg}`, 6000, true);
     }
 }
 
