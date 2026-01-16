@@ -80,7 +80,9 @@ window.addEventListener('DOMContentLoaded', async () => {
             const alreadyMinted = await nftContractInstance.balanceOf(userAddress);
             if (alreadyMinted > 0n) {
                 document.getElementById("nftClaimSection").style.display = "block";
-                document.getElementById("claimNFTButton").style.display = "none";
+                const claimButton = document.getElementById("claimNFTButton");
+                claimButton.style.display = "none";
+                document.getElementById("mintIntro").textContent = "You have already claimed your NFT reward.";
                 document.getElementById("mintStatus").textContent = "You have already claimed your NFT reward.";
                 const returnWrapper = document.getElementById("returnToWeb3Edu");
                 if (returnWrapper) returnWrapper.style.display = "none";
@@ -103,13 +105,23 @@ window.addEventListener('DOMContentLoaded', async () => {
 
             if (completedCount === totalQuizzes) {
                 document.getElementById("nftClaimSection").style.display = "block";
-                document.getElementById("claimNFTButton").style.display = "block";
+                const claimButton = document.getElementById("claimNFTButton");
+                claimButton.style.display = "inline-block";
+                claimButton.disabled = false;
+                claimButton.classList.remove("disabled");
+                claimButton.textContent = "Claim NFT Reward";
+                document.getElementById("mintIntro").textContent = `Congratulations on solving all ${totalQuizzes} quizzes! Click the button below to claim your NFT reward.`;
                 document.getElementById("mintStatus").textContent = `Congratulations! You have completed all ${totalQuizzes} quizzes. Click the button to claim your NFT.`;
                 const returnWrapper = document.getElementById("returnToWeb3Edu");
                 if (returnWrapper) returnWrapper.style.display = "none";
             } else {
                 document.getElementById("nftClaimSection").style.display = "block";
-                document.getElementById("claimNFTButton").style.display = "none";
+                const claimButton = document.getElementById("claimNFTButton");
+                claimButton.style.display = "inline-block";
+                claimButton.disabled = true;
+                claimButton.classList.add("disabled");
+                claimButton.textContent = "🔒 Claim NFT Reward (Locked)";
+                document.getElementById("mintIntro").textContent = `Complete all ${totalQuizzes} quizzes to unlock your NFT reward.`;
                 document.getElementById("mintStatus").textContent = `You have completed ${completedCount} of ${totalQuizzes} quizzes. Keep going!`;
                 const returnWrapper = document.getElementById("returnToWeb3Edu");
                 if (returnWrapper) returnWrapper.style.display = "none";
@@ -118,7 +130,12 @@ window.addEventListener('DOMContentLoaded', async () => {
         } catch (err) {
             console.error("Error checking NFT minting status:", err);
             document.getElementById("nftClaimSection").style.display = "block";
-            document.getElementById("claimNFTButton").style.display = "none";
+            const claimButton = document.getElementById("claimNFTButton");
+            claimButton.style.display = "inline-block";
+            claimButton.disabled = true;
+            claimButton.classList.add("disabled");
+            claimButton.textContent = "🔒 Claim NFT Reward (Locked)";
+            document.getElementById("mintIntro").textContent = "Unable to check completion status right now.";
             document.getElementById("mintStatus").textContent = "Error checking completion status. See console for details.";
             const returnWrapper = document.getElementById("returnToWeb3Edu");
             if (returnWrapper) returnWrapper.style.display = "none";

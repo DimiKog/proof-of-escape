@@ -389,7 +389,9 @@ button:disabled {
 }
 
 #claimNFTButton.disabled {
-    opacity: 0.6;
+    opacity: 0.7;
+    background-color: #718096; /* muted gray */
+    cursor: not-allowed;
     pointer-events: none;
 }
 
