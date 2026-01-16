@@ -515,6 +515,28 @@ body.dark-theme th {
   color: #ffffff;
 }
 
+body.dark-theme #leaderboardTable td.address-column {
+  color: #e2e8f0;
+}
+
+body.dark-theme #leaderboardTable td.solved-column,
+body.dark-theme #leaderboardTable td.tokens-column {
+  color: #93c5fd;
+}
+
+body.dark-theme #leaderboardTable tr:nth-child(odd) {
+  background-color: #1b1f27;
+}
+
+body.dark-theme #leaderboardTable tr:hover {
+  background-color: #2a2f3a;
+}
+
+body.dark-theme #leaderboardTable tr.current-user {
+  background-color: #0f3a44;
+  border-left-color: #4fd1c5;
+}
+
 * {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
