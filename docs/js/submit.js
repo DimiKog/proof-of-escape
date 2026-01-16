@@ -3,6 +3,8 @@
 const submitButton = document.getElementById('submitAnswer');
 const quizIdInput = document.getElementById('quizId');
 const answerInput = document.getElementById('answer');
+const hashTestInput = document.getElementById('hashTestInput');
+const hashResultDisplay = document.getElementById('hashResult');
 const resultMessage = document.getElementById('result');
 
 let isSubmitting = false;
@@ -50,6 +52,8 @@ async function submitAnswer() {
 
         if (receipt.status === 1) { // Transaction was successful
             if (answerInput) answerInput.value = '';
+            if (hashTestInput) hashTestInput.value = '';
+            if (hashResultDisplay) hashResultDisplay.textContent = '';
 
             // Find the RewardMinted event in the receipt
             const mintedEvent = receipt.logs.find(log => {
