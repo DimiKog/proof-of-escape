@@ -49,6 +49,8 @@ async function submitAnswer() {
         console.log("📦 Transaction hash:", receipt.hash);
 
         if (receipt.status === 1) { // Transaction was successful
+            if (answerInput) answerInput.value = '';
+
             // Find the RewardMinted event in the receipt
             const mintedEvent = receipt.logs.find(log => {
                 try {
