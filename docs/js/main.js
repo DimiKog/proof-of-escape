@@ -82,6 +82,8 @@ window.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById("nftClaimSection").style.display = "block";
                 document.getElementById("claimNFTButton").style.display = "none";
                 document.getElementById("mintStatus").textContent = "You have already claimed your NFT reward.";
+                const returnWrapper = document.getElementById("returnToWeb3Edu");
+                if (returnWrapper) returnWrapper.style.display = "none";
                 return;
             }
 
@@ -103,10 +105,14 @@ window.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById("nftClaimSection").style.display = "block";
                 document.getElementById("claimNFTButton").style.display = "block";
                 document.getElementById("mintStatus").textContent = `Congratulations! You have completed all ${totalQuizzes} quizzes. Click the button to claim your NFT.`;
+                const returnWrapper = document.getElementById("returnToWeb3Edu");
+                if (returnWrapper) returnWrapper.style.display = "none";
             } else {
                 document.getElementById("nftClaimSection").style.display = "block";
                 document.getElementById("claimNFTButton").style.display = "none";
                 document.getElementById("mintStatus").textContent = `You have completed ${completedCount} of ${totalQuizzes} quizzes. Keep going!`;
+                const returnWrapper = document.getElementById("returnToWeb3Edu");
+                if (returnWrapper) returnWrapper.style.display = "none";
             }
 
         } catch (err) {
@@ -114,6 +120,8 @@ window.addEventListener('DOMContentLoaded', async () => {
             document.getElementById("nftClaimSection").style.display = "block";
             document.getElementById("claimNFTButton").style.display = "none";
             document.getElementById("mintStatus").textContent = "Error checking completion status. See console for details.";
+            const returnWrapper = document.getElementById("returnToWeb3Edu");
+            if (returnWrapper) returnWrapper.style.display = "none";
         }
     }
 

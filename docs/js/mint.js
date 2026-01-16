@@ -4,6 +4,11 @@ import confetti from 'https://cdn.skypack.dev/canvas-confetti';
 
 let mintInProgress = false;
 
+function hideReturnToWeb3EduLink() {
+    const wrapper = document.getElementById("returnToWeb3Edu");
+    if (wrapper) wrapper.style.display = "none";
+}
+
 async function claimNFTReward() {
     const userAddress = await window.getUserAddress();
     if (mintInProgress) return;
@@ -33,6 +38,8 @@ async function claimNFTReward() {
             setTimeout(() => btn.style.display = "none", 500);
             // 🎉 Trigger success animation
             triggerCelebration(data.result.transactionHash);
+            const tokenId = resolveTokenId(data.result);
+            await showReturnToWeb3EduLink(tokenId);
         } else {
             throw new Error(data.error || "Minting failed");
         }
@@ -40,6 +47,7 @@ async function claimNFTReward() {
     } catch (err) {
         console.error("❌ Minting failed:", err);
         document.getElementById("mintStatus").textContent = "❌ Minting failed. See console for details.";
+        hideReturnToWeb3EduLink();
         document.getElementById("claimNFTButton").classList.remove("disabled");
         document.getElementById("claimNFTButton").disabled = false;
         mintInProgress = false;
@@ -77,6 +85,46 @@ function triggerCelebration(txHash) {
             <p><a href="https://blockexplorer.dimikog.org/tx/${txHash}" target="_blank" style="color: purple;">View on Explorer</a></p>
         </div>`;
     document.getElementById("mintStatus").insertAdjacentHTML('beforeend', previewHTML);
+}
+
+function resolveTokenId(mintResult) {
+    if (!mintResult || typeof mintResult !== "object") return "";
+
+    if (mintResult.tokenId != null) return mintResult.tokenId;
+
+    if (mintResult.token_id != null || mintResult.tokenID != null) {
+        console.warn('Mint response uses non-standard tokenId key. Expected "tokenId".', {
+            keys: Object.keys(mintResult)
+        });
+        return mintResult.token_id ?? mintResult.tokenID;
+    }
+
+    console.warn('Mint response missing "tokenId".', { keys: Object.keys(mintResult) });
+    return "";
+}
+
+async function showReturnToWeb3EduLink(tokenId) {
+    const returnBase = "https://web3edu.dimikog.org/labs/poe";
+    const POE_CONTRACT_ADDRESS = window.POE_ADDRESS || window.CONFIG?.CONTRACT_ADDRESS || "";
+    let chainId = window.CONFIG?.CHAIN_ID;
+    if (!chainId && window.POE?.provider?.getNetwork) {
+        const net = await window.POE.provider.getNetwork();
+        chainId = Number(net.chainId);
+    }
+
+    const params = new URLSearchParams({
+        source: "poe",
+        contract: POE_CONTRACT_ADDRESS,
+        chainId: chainId ? chainId.toString() : "",
+        tokenId: tokenId?.toString() || ""
+    });
+
+    const returnUrl = `${returnBase}?${params.toString()}`;
+
+    const link = document.getElementById("returnLink");
+    if (!link) return;
+    link.href = returnUrl;
+    document.getElementById("returnToWeb3Edu").style.display = "block";
 }
 
 // Expose the function to the global scope so it can be called from main.js
