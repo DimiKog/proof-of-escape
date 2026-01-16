@@ -104,7 +104,7 @@ function resolveTokenId(mintResult) {
 }
 
 async function showReturnToWeb3EduLink(tokenId) {
-    const returnBase = "https://web3edu.dimikog.org/labs/poe";
+    const returnBase = "https://web3edu.dimikog.org/#/labs/proof-of-escape";
     const POE_CONTRACT_ADDRESS = window.POE_ADDRESS || window.CONFIG?.CONTRACT_ADDRESS || "";
     let chainId = window.CONFIG?.CHAIN_ID;
     if (!chainId && window.POE?.provider?.getNetwork) {
@@ -120,6 +120,14 @@ async function showReturnToWeb3EduLink(tokenId) {
     });
 
     const returnUrl = `${returnBase}?${params.toString()}`;
+    try {
+        localStorage.setItem("poeReturnUrl", returnUrl);
+        if (tokenId != null && tokenId !== "") {
+            localStorage.setItem("poeTokenId", tokenId.toString());
+        }
+    } catch (err) {
+        console.warn("Unable to persist return URL.", err);
+    }
 
     const link = document.getElementById("returnLink");
     if (!link) return;

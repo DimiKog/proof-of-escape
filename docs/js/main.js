@@ -55,6 +55,42 @@ window.addEventListener('DOMContentLoaded', async () => {
     async function updateNFTSection() {
         const userAddress = window.getUserAddress?.();
         const poeContract = window.POE?.contract;
+        const returnBase = "https://web3edu.dimikog.org/#/labs/proof-of-escape";
+        const buildReturnUrl = async (tokenId) => {
+            const POE_CONTRACT_ADDRESS = window.POE_ADDRESS || window.CONFIG?.CONTRACT_ADDRESS || "";
+            let chainId = window.CONFIG?.CHAIN_ID;
+            if (!chainId && window.POE?.provider?.getNetwork) {
+                const net = await window.POE.provider.getNetwork();
+                chainId = Number(net.chainId);
+            }
+
+            const params = new URLSearchParams({
+                source: "poe",
+                contract: POE_CONTRACT_ADDRESS,
+                chainId: chainId ? chainId.toString() : "",
+                tokenId: tokenId ? tokenId.toString() : ""
+            });
+
+            return `${returnBase}?${params.toString()}`;
+        };
+        const showReturnLink = async (tokenId) => {
+            const returnWrapper = document.getElementById("returnToWeb3Edu");
+            const link = document.getElementById("returnLink");
+            if (!returnWrapper || !link) return;
+            const storedReturn = (() => {
+                try {
+                    return localStorage.getItem("poeReturnUrl");
+                } catch (err) {
+                    return "";
+                }
+            })();
+            try {
+                link.href = tokenId || storedReturn ? await buildReturnUrl(tokenId) : returnBase;
+            } catch (err) {
+                link.href = storedReturn || returnBase;
+            }
+            returnWrapper.style.display = "block";
+        };
 
         if (!userAddress || !poeContract) {
             document.getElementById("nftClaimSection").style.display = "none";
@@ -83,9 +119,37 @@ window.addEventListener('DOMContentLoaded', async () => {
                 const claimButton = document.getElementById("claimNFTButton");
                 claimButton.style.display = "none";
                 document.getElementById("mintIntro").textContent = "You have already claimed your NFT reward.";
-                document.getElementById("mintStatus").textContent = "You have already claimed your NFT reward.";
-                const returnWrapper = document.getElementById("returnToWeb3Edu");
-                if (returnWrapper) returnWrapper.style.display = "none";
+                let tokenId = "";
+                try {
+                    tokenId = localStorage.getItem("poeTokenId") || "";
+                } catch (err) {
+                    tokenId = "";
+                }
+
+                if (!tokenId) {
+                    try {
+                        const filter = nftContractInstance.filters.Transfer(ethers.ZeroAddress, userAddress);
+                        const logs = await nftContractInstance.queryFilter(filter, 0, "latest");
+                        if (logs && logs.length > 0) {
+                            const minted = logs[0]?.args?.tokenId;
+                            if (minted != null) {
+                                tokenId = minted.toString();
+                                try {
+                                    localStorage.setItem("poeTokenId", tokenId);
+                                } catch (err) {
+                                    // Ignore localStorage failures
+                                }
+                            }
+                        }
+                    } catch (err) {
+                        console.warn("Unable to resolve tokenId from logs.", err);
+                    }
+                }
+
+                document.getElementById("mintStatus").textContent = tokenId
+                    ? `You have already claimed your NFT reward. Token ID: ${tokenId}`
+                    : "You have already claimed your NFT reward.";
+                await showReturnLink(tokenId);
                 return;
             }
 
