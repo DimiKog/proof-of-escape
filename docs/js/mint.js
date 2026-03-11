@@ -12,8 +12,8 @@ function hideReturnToWeb3EduLink() {
 async function claimNFTReward() {
     const userAddress = await window.getUserAddress();
     if (mintInProgress) return;
-    mintInProgress = true;
     if (!userAddress) return;
+    mintInProgress = true;
 
     try {
         document.getElementById("claimNFTButton").disabled = true;
@@ -30,26 +30,34 @@ async function claimNFTReward() {
 
         const data = await response.json();
 
-        if (response.ok && data.success) {
-            document.getElementById("mintStatus").innerHTML = `✅ NFT minted successfully!<br>Transaction Hash: <a href="https://blockexplorer.dimikog.org/tx/${data.result.transactionHash}" target="_blank">${data.result.transactionHash}</a>`;
+        const txHash = data?.result?.transactionHash;
+
+        if (response.ok && data.success && txHash) {
+            document.getElementById("mintStatus").innerHTML = `✅ NFT minted successfully!<br>Transaction Hash: <a href="https://blockexplorer.dimikog.org/tx/${txHash}" target="_blank">${txHash}</a>`;
             const btn = document.getElementById("claimNFTButton");
-            btn.style.transition = "opacity 0.5s ease-out";
-            btn.style.opacity = "0";
-            setTimeout(() => btn.style.display = "none", 500);
+            btn.style.opacity = "1";
+            btn.style.display = "inline-block";
+            btn.disabled = true;
+            btn.classList.add("disabled");
+            btn.textContent = "NFT Reward Claimed";
             // 🎉 Trigger success animation
-            triggerCelebration(data.result.transactionHash);
+            triggerCelebration(txHash);
             const tokenId = resolveTokenId(data.result);
             await showReturnToWeb3EduLink(tokenId);
         } else {
-            throw new Error(data.error || "Minting failed");
+            throw new Error(data?.error || "Minting failed");
         }
 
     } catch (err) {
         console.error("❌ Minting failed:", err);
         document.getElementById("mintStatus").textContent = "❌ Minting failed. See console for details.";
         hideReturnToWeb3EduLink();
-        document.getElementById("claimNFTButton").classList.remove("disabled");
-        document.getElementById("claimNFTButton").disabled = false;
+        const btn = document.getElementById("claimNFTButton");
+        btn.style.opacity = "1";
+        btn.style.display = "inline-block";
+        btn.classList.remove("disabled");
+        btn.disabled = false;
+    } finally {
         mintInProgress = false;
     }
 }

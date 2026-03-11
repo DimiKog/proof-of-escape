@@ -117,7 +117,10 @@ window.addEventListener('DOMContentLoaded', async () => {
             if (alreadyMinted > 0n) {
                 document.getElementById("nftClaimSection").style.display = "block";
                 const claimButton = document.getElementById("claimNFTButton");
-                claimButton.style.display = "none";
+                claimButton.style.display = "inline-block";
+                claimButton.disabled = true;
+                claimButton.classList.add("disabled");
+                claimButton.textContent = "NFT Reward Claimed";
                 document.getElementById("mintIntro").textContent = "You have already claimed your NFT reward.";
                 let tokenId = "";
                 try {
