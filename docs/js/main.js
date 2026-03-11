@@ -275,7 +275,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    await window.connectWallet();
     await addBesuNetwork();
+    await window.connectWallet();
     updateUI();
 });

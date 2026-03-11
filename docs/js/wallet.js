@@ -16,6 +16,19 @@ const ADMIN_ADDRESS = window.CONFIG?.ADMIN_ADDRESS || '';
 const CHAIN_ID_DEC = (window.CONFIG?.CHAIN_ID) ?? 424242;
 const CONTRACT_ADDRESS = (window.CONFIG?.CONTRACT_ADDRESS) || '';
 
+function toChainBigInt(value) {
+    if (value == null) return null;
+    if (typeof value === 'bigint') return value;
+    if (typeof value === 'number') return BigInt(value);
+    if (typeof value === 'string') {
+        const trimmed = value.trim();
+        if (!trimmed) return null;
+        if (trimmed.startsWith('0x') || trimmed.startsWith('0X')) return BigInt(trimmed);
+        return BigInt(Number(trimmed));
+    }
+    return null;
+}
+
 /**
  * Normalize a loaded ABI artifact to just the ABI array.
  */
@@ -166,7 +179,17 @@ async function connectWallet() {
 
         // Network check
         const net = await provider.getNetwork();
-        const onBesu = net && net.chainId && BigInt(net.chainId) === BigInt(CHAIN_ID_DEC);
+        let activeChain = toChainBigInt(net?.chainId);
+        if (activeChain == null && window.ethereum?.request) {
+            try {
+                const rawChainId = await window.ethereum.request({ method: 'eth_chainId' });
+                activeChain = toChainBigInt(rawChainId);
+            } catch (e) {
+                console.warn('eth_chainId fallback failed:', e);
+            }
+        }
+        const targetChain = toChainBigInt(CHAIN_ID_DEC);
+        const onBesu = activeChain != null && targetChain != null && activeChain === targetChain;
         const ns = document.getElementById('networkStatus');
         const nw = document.getElementById('networkWarning');
         if (ns) ns.style.display = onBesu ? 'block' : 'none';
@@ -260,9 +283,7 @@ async function connectWallet() {
             window.ethereum.on('chainChanged', async (cidHex) => {
                 const ns = document.getElementById('networkStatus');
                 const nw = document.getElementById('networkWarning');
-                const toBigInt = (v) =>
-                    (typeof v === 'string' && v.startsWith('0x')) ? BigInt(v) : BigInt(Number(v));
-                const onBesuNow = (toBigInt(cidHex) === toBigInt(CHAIN_ID_DEC));
+                const onBesuNow = (toChainBigInt(cidHex) === toChainBigInt(CHAIN_ID_DEC));
                 if (ns) ns.style.display = onBesuNow ? 'block' : 'none';
                 if (nw) nw.style.display = onBesuNow ? 'none' : 'block';
 
