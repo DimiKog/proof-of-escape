@@ -3,10 +3,47 @@
 import confetti from 'https://cdn.skypack.dev/canvas-confetti';
 
 let mintInProgress = false;
+const MINT_REQUEST_TIMEOUT_MS = 45000;
 
 function hideReturnToWeb3EduLink() {
     const wrapper = document.getElementById("returnToWeb3Edu");
     if (wrapper) wrapper.style.display = "none";
+}
+
+async function parseBodySafe(response) {
+    const raw = await response.text();
+    if (!raw) return { data: null, raw: "" };
+    try {
+        return { data: JSON.parse(raw), raw };
+    } catch (err) {
+        return { data: null, raw };
+    }
+}
+
+async function requestMintFromBackend(userAddress) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), MINT_REQUEST_TIMEOUT_MS);
+
+    try {
+        const response = await fetch("https://mybackend.dimikog.org/mint-nft", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ to: userAddress }),
+            signal: controller.signal
+        });
+
+        const { data, raw } = await parseBodySafe(response);
+        return { response, data, raw };
+    } catch (err) {
+        if (err?.name === "AbortError") {
+            throw new Error("Mint request timed out. Please try again.");
+        }
+        throw err;
+    } finally {
+        clearTimeout(timeoutId);
+    }
 }
 
 async function claimNFTReward() {
@@ -18,17 +55,9 @@ async function claimNFTReward() {
     try {
         document.getElementById("claimNFTButton").disabled = true;
         document.getElementById("claimNFTButton").classList.add("disabled");
-        document.getElementById("mintStatus").textContent = "⏳ Requesting mint from backend...";
+        document.getElementById("mintStatus").textContent = "⏳ Requesting mint from backend (up to 45s)...";
 
-        const response = await fetch("https://mybackend.dimikog.org/mint-nft", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ to: userAddress }),
-        });
-
-        const data = await response.json();
+        const { response, data, raw } = await requestMintFromBackend(userAddress);
 
         const txHash = data?.result?.transactionHash;
 
@@ -45,12 +74,22 @@ async function claimNFTReward() {
             const tokenId = resolveTokenId(data.result);
             await showReturnToWeb3EduLink(tokenId);
         } else {
-            throw new Error(data?.error || "Minting failed");
+            const backendMessage = data?.error || data?.message;
+            const htmlLikeResponse = typeof raw === "string" && raw.trim().startsWith("<");
+            const fallbackMessage = response.ok
+                ? "Minting failed"
+                : `Backend request failed (${response.status})`;
+            const detail = backendMessage
+                ? `${fallbackMessage}: ${backendMessage}`
+                : htmlLikeResponse
+                    ? `${fallbackMessage}: server returned non-JSON error page`
+                    : fallbackMessage;
+            throw new Error(detail);
         }
 
     } catch (err) {
         console.error("❌ Minting failed:", err);
-        document.getElementById("mintStatus").textContent = "❌ Minting failed. See console for details.";
+        document.getElementById("mintStatus").textContent = `❌ ${err?.message || "Minting failed. See console for details."}`;
         hideReturnToWeb3EduLink();
         const btn = document.getElementById("claimNFTButton");
         btn.style.opacity = "1";
