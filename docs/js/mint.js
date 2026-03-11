@@ -4,6 +4,12 @@ import confetti from 'https://cdn.skypack.dev/canvas-confetti';
 
 let mintInProgress = false;
 const MINT_REQUEST_TIMEOUT_MS = 45000;
+const STATUS_REQUEST_TIMEOUT_MS = 15000;
+const MINT_STATUS_POLL_INTERVAL_MS = 3000;
+const MINT_STATUS_MAX_POLLS = 60;
+const BACKEND_BASE_URL = "https://mybackend.dimikog.org";
+const EXPLORER_BASE_URL = "https://blockexplorer.dimikog.org";
+const PENDING_MINT_TX_KEY = "poePendingMintTxHash";
 
 function hideReturnToWeb3EduLink() {
     const wrapper = document.getElementById("returnToWeb3Edu");
@@ -25,7 +31,7 @@ async function requestMintFromBackend(userAddress) {
     const timeoutId = setTimeout(() => controller.abort(), MINT_REQUEST_TIMEOUT_MS);
 
     try {
-        const response = await fetch("https://mybackend.dimikog.org/mint-nft", {
+        const response = await fetch(`${BACKEND_BASE_URL}/mint-nft`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -46,6 +52,117 @@ async function requestMintFromBackend(userAddress) {
     }
 }
 
+async function requestMintStatus(txHash) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), STATUS_REQUEST_TIMEOUT_MS);
+
+    try {
+        const response = await fetch(`${BACKEND_BASE_URL}/mint-status/${txHash}`, {
+            method: "GET",
+            signal: controller.signal
+        });
+        const { data } = await parseBodySafe(response);
+        return {
+            ok: response.ok,
+            statusCode: response.status,
+            data
+        };
+    } catch (err) {
+        if (err?.name === "AbortError") {
+            return { ok: false, statusCode: 408, data: { error: "Status check timed out" } };
+        }
+        return { ok: false, statusCode: 0, data: { error: err?.message || "Status check failed" } };
+    } finally {
+        clearTimeout(timeoutId);
+    }
+}
+
+function explorerTxUrl(txHash) {
+    return `${EXPLORER_BASE_URL}/tx/${txHash}`;
+}
+
+function getPendingMintTxHash() {
+    try {
+        return localStorage.getItem(PENDING_MINT_TX_KEY) || "";
+    } catch (err) {
+        return "";
+    }
+}
+
+function setPendingMintTxHash(txHash) {
+    try {
+        localStorage.setItem(PENDING_MINT_TX_KEY, txHash);
+    } catch (err) {
+        console.warn("Unable to persist pending mint tx hash.", err);
+    }
+}
+
+function clearPendingMintTxHash() {
+    try {
+        localStorage.removeItem(PENDING_MINT_TX_KEY);
+    } catch (err) {
+        console.warn("Unable to clear pending mint tx hash.", err);
+    }
+}
+
+function setClaimButtonClaimed() {
+    const btn = document.getElementById("claimNFTButton");
+    btn.style.opacity = "1";
+    btn.style.display = "inline-block";
+    btn.disabled = true;
+    btn.classList.add("disabled");
+    btn.textContent = "NFT Reward Claimed";
+}
+
+function setClaimButtonCheckPending() {
+    const btn = document.getElementById("claimNFTButton");
+    btn.style.opacity = "1";
+    btn.style.display = "inline-block";
+    btn.disabled = false;
+    btn.classList.remove("disabled");
+    btn.textContent = "Check Mint Status";
+}
+
+function setClaimButtonReadyToClaim() {
+    const btn = document.getElementById("claimNFTButton");
+    btn.style.opacity = "1";
+    btn.style.display = "inline-block";
+    btn.disabled = false;
+    btn.classList.remove("disabled");
+    btn.textContent = "Claim NFT Reward";
+}
+
+async function finalizeMintSuccess(txHash, tokenId) {
+    clearPendingMintTxHash();
+    document.getElementById("mintStatus").innerHTML = `✅ NFT minted successfully!<br>Transaction Hash: <a href="${explorerTxUrl(txHash)}" target="_blank">${txHash}</a>`;
+    setClaimButtonClaimed();
+    triggerCelebration(txHash);
+    await showReturnToWeb3EduLink(tokenId || "");
+}
+
+function showPendingMintStatus(txHash, note = "") {
+    const suffix = note ? `<br><small>${note}</small>` : "";
+    document.getElementById("mintStatus").innerHTML = `⏳ Mint transaction submitted and waiting for confirmation...<br>Transaction Hash: <a href="${explorerTxUrl(txHash)}" target="_blank">${txHash}</a>${suffix}`;
+}
+
+async function waitForMintConfirmation(txHash) {
+    for (let i = 0; i < MINT_STATUS_MAX_POLLS; i++) {
+        const result = await requestMintStatus(txHash);
+        const status = result?.data?.result?.status;
+        const tokenId = result?.data?.result?.tokenId;
+
+        if (result.ok && status === "confirmed") {
+            return { state: "confirmed", tokenId };
+        }
+        if (result.ok && status === "failed") {
+            return { state: "failed" };
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, MINT_STATUS_POLL_INTERVAL_MS));
+    }
+    return { state: "pending_timeout" };
+}
+
 async function claimNFTReward() {
     const userAddress = await window.getUserAddress();
     if (mintInProgress) return;
@@ -57,22 +174,56 @@ async function claimNFTReward() {
         document.getElementById("claimNFTButton").classList.add("disabled");
         document.getElementById("mintStatus").textContent = "⏳ Requesting mint from backend (up to 45s)...";
 
+        const existingPendingTx = getPendingMintTxHash();
+        if (existingPendingTx) {
+            showPendingMintStatus(existingPendingTx, "Checking current pending mint.");
+            const existingStatus = await requestMintStatus(existingPendingTx);
+            const state = existingStatus?.data?.result?.status;
+            const tokenId = existingStatus?.data?.result?.tokenId;
+            if (existingStatus.ok && state === "confirmed") {
+                await finalizeMintSuccess(existingPendingTx, tokenId);
+            } else if (existingStatus.ok && state === "failed") {
+                clearPendingMintTxHash();
+                document.getElementById("mintStatus").textContent = "❌ Previous mint transaction failed. You can claim again.";
+                hideReturnToWeb3EduLink();
+                setClaimButtonReadyToClaim();
+            } else {
+                showPendingMintStatus(existingPendingTx, "Still pending. Click 'Check Mint Status' to refresh.");
+                hideReturnToWeb3EduLink();
+                setClaimButtonCheckPending();
+            }
+            return;
+        }
+
         const { response, data, raw } = await requestMintFromBackend(userAddress);
 
         const txHash = data?.result?.transactionHash;
+        const status = data?.result?.status;
 
         if (response.ok && data.success && txHash) {
-            document.getElementById("mintStatus").innerHTML = `✅ NFT minted successfully!<br>Transaction Hash: <a href="https://blockexplorer.dimikog.org/tx/${txHash}" target="_blank">${txHash}</a>`;
-            const btn = document.getElementById("claimNFTButton");
-            btn.style.opacity = "1";
-            btn.style.display = "inline-block";
-            btn.disabled = true;
-            btn.classList.add("disabled");
-            btn.textContent = "NFT Reward Claimed";
-            // 🎉 Trigger success animation
-            triggerCelebration(txHash);
-            const tokenId = resolveTokenId(data.result);
-            await showReturnToWeb3EduLink(tokenId);
+            setPendingMintTxHash(txHash);
+            showPendingMintStatus(txHash, "Waiting for on-chain confirmation...");
+            setClaimButtonCheckPending();
+
+            if (status === "confirmed") {
+                const confirmedTokenId = resolveTokenId(data.result);
+                await finalizeMintSuccess(txHash, confirmedTokenId);
+                return;
+            }
+
+            const pollResult = await waitForMintConfirmation(txHash);
+            if (pollResult.state === "confirmed") {
+                await finalizeMintSuccess(txHash, pollResult.tokenId);
+            } else if (pollResult.state === "failed") {
+                clearPendingMintTxHash();
+                document.getElementById("mintStatus").innerHTML = `❌ Mint transaction failed.<br>Transaction Hash: <a href="${explorerTxUrl(txHash)}" target="_blank">${txHash}</a>`;
+                hideReturnToWeb3EduLink();
+                setClaimButtonReadyToClaim();
+            } else {
+                showPendingMintStatus(txHash, "Still pending after extended wait. Use 'Check Mint Status' later.");
+                hideReturnToWeb3EduLink();
+                setClaimButtonCheckPending();
+            }
         } else {
             const backendMessage = data?.error || data?.message;
             const htmlLikeResponse = typeof raw === "string" && raw.trim().startsWith("<");
@@ -91,11 +242,7 @@ async function claimNFTReward() {
         console.error("❌ Minting failed:", err);
         document.getElementById("mintStatus").textContent = `❌ ${err?.message || "Minting failed. See console for details."}`;
         hideReturnToWeb3EduLink();
-        const btn = document.getElementById("claimNFTButton");
-        btn.style.opacity = "1";
-        btn.style.display = "inline-block";
-        btn.classList.remove("disabled");
-        btn.disabled = false;
+        setClaimButtonReadyToClaim();
     } finally {
         mintInProgress = false;
     }
@@ -129,7 +276,7 @@ function triggerCelebration(txHash) {
     const previewHTML = `
         <div style="margin-top: 20px; text-align: center;">
             <img src="${imgUrl}" alt="Your NFT" style="max-width: 200px; border-radius: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.2);" />
-            <p><a href="https://blockexplorer.dimikog.org/tx/${txHash}" target="_blank" style="color: purple;">View on Explorer</a></p>
+            <p><a href="${explorerTxUrl(txHash)}" target="_blank" style="color: purple;">View on Explorer</a></p>
         </div>`;
     document.getElementById("mintStatus").insertAdjacentHTML('beforeend', previewHTML);
 }
