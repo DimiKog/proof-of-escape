@@ -13,7 +13,7 @@ window.CONFIG = {
     EXPLORER_URL: "https://blockexplorer.dimikog.org/",
     API_BASE: "https://mybackend.dimikog.org",
 
-    ADMIN_ADDRESS: "0x5E3a74f09D490F854e12A293E1d6abCBbEad6B60",
+    ADMIN_ADDRESS: "0xe63761BFE4599AAb4a7D4CFbb2229103199b3631",
 
     POE_QUIZ_REWARD_NFT_ADDRESS: "0x095dbc84D218695B09Ab6Ac662C11C8312621ed5",
     NFT_ABI_PATH: "./abi/PoEQuizRewardNFT.json"
