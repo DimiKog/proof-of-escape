@@ -1,6 +1,8 @@
 // js/mint.js
 
-import confetti from 'https://cdn.skypack.dev/canvas-confetti';
+// canvas-confetti is loaded as a global script in index.html (jsDelivr).
+// Bind it here so this module can call confetti() normally.
+const confetti = window.confetti;
 
 let mintInProgress = false;
 const MINT_REQUEST_TIMEOUT_MS = 45000;
@@ -111,6 +113,7 @@ function setClaimButtonClaimed() {
     btn.style.display = "inline-block";
     btn.disabled = true;
     btn.classList.add("disabled");
+    btn.dataset.mode = "claimed";
     btn.textContent = "NFT Reward Claimed";
 }
 
@@ -120,6 +123,7 @@ function setClaimButtonCheckPending() {
     btn.style.display = "inline-block";
     btn.disabled = false;
     btn.classList.remove("disabled");
+    btn.dataset.mode = "pending";
     btn.textContent = "Check Mint Status";
 }
 
@@ -129,6 +133,7 @@ function setClaimButtonReadyToClaim() {
     btn.style.display = "inline-block";
     btn.disabled = false;
     btn.classList.remove("disabled");
+    btn.dataset.mode = "claim";
     btn.textContent = "Claim NFT Reward";
 }
 
@@ -164,9 +169,17 @@ async function waitForMintConfirmation(txHash) {
 }
 
 async function claimNFTReward() {
-    const userAddress = await window.getUserAddress();
-    if (mintInProgress) return;
-    if (!userAddress) return;
+    if (mintInProgress) {
+        document.getElementById("mintStatus").textContent = "⏳ A mint is already in progress. Please wait.";
+        return;
+    }
+
+    const userAddress = window.getUserAddress?.();
+    if (!userAddress) {
+        document.getElementById("mintStatus").textContent = "⚠️ Wallet not connected. Please connect your wallet first.";
+        return;
+    }
+
     mintInProgress = true;
 
     try {

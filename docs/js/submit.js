@@ -37,6 +37,15 @@ async function submitAnswer() {
     }
 
     try {
+        // Balance guard — same proxy issue as registration: eth_estimateGas can return
+        // a mangled -32601 error instead of a clear "insufficient funds" message.
+        const balance = await window.POE.provider.getBalance(window.getUserAddress());
+        if (balance === 0n) {
+            window.showTempMessage('walletStatus', '⚠️ Your wallet has no EDU-D. Visit the faucet to get tokens.', 6000, true);
+            isSubmitting = false;
+            return;
+        }
+
         resultMessage.innerHTML = '';
         submitButton.disabled = true;
         submitButton.textContent = "Submitting...";
@@ -91,10 +100,20 @@ async function submitAnswer() {
         console.error("❌ Failed to submit answer:", error);
         let errorMessage = 'Failed to submit answer. Check the console for details.';
 
-        if (error.reason) {
-            errorMessage = `❌ Failed to submit answer: ${error.reason}`;
-        } else if (error.code === 'ACTION_REJECTED') {
+        const vendorMsg = error?.info?.error?.data?.details?.vendorMessage || '';
+        const rawMsg = [
+            error?.reason, error?.shortMessage,
+            error?.info?.error?.message, error?.message, vendorMsg
+        ].filter(Boolean).join(' ').toLowerCase();
+
+        if (error.code === 'ACTION_REJECTED') {
             errorMessage = 'Transaction was rejected by the user.';
+        } else if (rawMsg.includes('insufficient funds') || rawMsg.includes('upfront cost exceeds')) {
+            errorMessage = '⚠️ Insufficient EDU-D for gas. Visit the faucet.';
+        } else if (rawMsg.includes('already completed') || rawMsg.includes('already submitted')) {
+            errorMessage = '⚠️ You have already submitted an answer for this quiz.';
+        } else if (error.reason) {
+            errorMessage = `❌ Failed to submit answer: ${error.reason}`;
         }
 
         resultMessage.textContent = errorMessage;

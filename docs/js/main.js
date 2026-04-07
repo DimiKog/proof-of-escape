@@ -120,6 +120,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                 claimButton.style.display = "inline-block";
                 claimButton.disabled = true;
                 claimButton.classList.add("disabled");
+                claimButton.dataset.mode = "claimed";
                 claimButton.textContent = "NFT Reward Claimed";
                 document.getElementById("mintIntro").textContent = "You have already claimed your NFT reward.";
                 let tokenId = "";
@@ -176,6 +177,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                 claimButton.style.display = "inline-block";
                 claimButton.disabled = false;
                 claimButton.classList.remove("disabled");
+                claimButton.dataset.mode = "claim";
                 claimButton.textContent = "Claim NFT Reward";
                 document.getElementById("mintIntro").textContent = `Congratulations on solving all ${totalQuizzes} quizzes! Click the button below to claim your NFT reward.`;
                 document.getElementById("mintStatus").textContent = `Congratulations! You have completed all ${totalQuizzes} quizzes. Click the button to claim your NFT.`;
@@ -187,6 +189,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                 claimButton.style.display = "inline-block";
                 claimButton.disabled = true;
                 claimButton.classList.add("disabled");
+                claimButton.dataset.mode = "locked";
                 claimButton.textContent = "🔒 Claim NFT Reward (Locked)";
                 document.getElementById("mintIntro").textContent = `Complete all ${totalQuizzes} quizzes to unlock your NFT reward.`;
                 document.getElementById("mintStatus").textContent = `You have completed ${completedCount} of ${totalQuizzes} quizzes. Keep going!`;
@@ -199,11 +202,13 @@ window.addEventListener('DOMContentLoaded', async () => {
             document.getElementById("nftClaimSection").style.display = "block";
             const claimButton = document.getElementById("claimNFTButton");
             claimButton.style.display = "inline-block";
-            claimButton.disabled = true;
-            claimButton.classList.add("disabled");
-            claimButton.textContent = "🔒 Claim NFT Reward (Locked)";
-            document.getElementById("mintIntro").textContent = "Unable to check completion status right now.";
-            document.getElementById("mintStatus").textContent = "Error checking completion status. See console for details.";
+            // Do NOT permanently lock on a transient RPC error — let the user retry.
+            claimButton.disabled = false;
+            claimButton.classList.remove("disabled");
+            claimButton.dataset.mode = "retry-status";
+            claimButton.textContent = "Retry: Check NFT Status";
+            document.getElementById("mintIntro").textContent = "Could not verify quiz completion. Check your connection and try again.";
+            document.getElementById("mintStatus").textContent = `⚠️ RPC error while checking status: ${err?.shortMessage || err?.message || "unknown error"}`;
             const returnWrapper = document.getElementById("returnToWeb3Edu");
             if (returnWrapper) returnWrapper.style.display = "none";
         }
@@ -239,7 +244,17 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (claimNFTBtn) {
         claimNFTBtn.addEventListener('click', async () => {
             try {
-                // The function call is now in a try-catch block
+                const mode = claimNFTBtn.dataset.mode || "claim";
+                if (mode === "retry-status") {
+                    claimNFTBtn.disabled = true;
+                    claimNFTBtn.classList.add("disabled");
+                    document.getElementById("mintStatus").textContent = "⏳ Re-checking NFT eligibility...";
+                    await updateUI();
+                    return;
+                }
+                if (mode === "locked" || mode === "claimed") {
+                    return;
+                }
                 await window.claimNFTReward?.();
             } catch (error) {
                 console.error('An error occurred during the NFT claim process:', error);

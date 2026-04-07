@@ -78,17 +78,11 @@ async function loadPoEAbi() {
 async function checkRegistered(contract, addr) {
     if (!contract || !addr) return false;
     try {
-        console.log("Checking registration for", addr);
-        console.log("Contract methods:", Object.keys(contract));
         if (typeof contract.isRegistered === 'function') {
-            const result = await contract.isRegistered(addr);
-            console.log("isRegistered result:", result);
-            return result;
+            return await contract.isRegistered(addr);
         }
         if (typeof contract.registeredUsers === 'function') {
-            const result = await contract.registeredUsers(addr);
-            console.log("registeredUsers result:", result);
-            return result;
+            return await contract.registeredUsers(addr);
         }
     } catch (e) {
         console.warn('checkRegistered failed:', e);
@@ -231,6 +225,9 @@ async function connectWallet() {
         if (!CONTRACT_ADDRESS) {
             console.warn('CONFIG.CONTRACT_ADDRESS is empty. Using 0x00… placeholder will fail calls.');
         }
+
+        // Clean up listeners on any previous contract instance before replacing it
+        try { window.POE?.contract?.removeAllListeners?.(); } catch { /* ignore */ }
 
         // Build contract
         const contract = new ethers.Contract(contractAddress, abi, signer);
@@ -445,14 +442,32 @@ async function registerWallet(contract) {
             return;
         }
 
+        // Balance check — catches zero-balance wallets before the RPC can mangle the error.
+        // eth_estimateGas on some proxies returns -32601 "method not found" instead of
+        // -32004 "insufficient funds", making the real cause invisible to ethers.js.
+        const balance = await provider.getBalance(userAddress);
+        if (balance === 0n) {
+            window.showTempMessage?.('walletStatus', '⚠️ Your wallet has no EDU-D. Visit the faucet to get tokens.', 6000, true);
+            return;
+        }
+
         // Preflight the call first to surface a revert reason when the RPC supports it.
-        await contract.register.staticCall();
+        try {
+            await contract.register.staticCall();
+        } catch (staticErr) {
+            const reason = staticErr?.reason || staticErr?.shortMessage || staticErr?.message || '';
+            if (reason.toLowerCase().includes('already registered')) {
+                window.showTempMessage?.('walletStatus', '⚠️ You are already registered.', 4000, true);
+                await refreshRegistrationUI(contract, userAddress);
+                return;
+            }
+            throw staticErr; // re-throw if it's a different revert
+        }
 
         let gasLimit;
         try {
             const estimated = await contract.register.estimateGas();
             gasLimit = (estimated * 120n) / 100n; // 20% buffer
-            console.log("✅ Gas estimate successful:", estimated.toString());
         } catch (estimateError) {
             console.warn('Gas estimation failed, falling back to fixed gas limit:', estimateError);
             gasLimit = FALLBACK_GAS_LIMIT;
@@ -476,22 +491,32 @@ async function registerWallet(contract) {
         console.error('Failed to register wallet:', error);
 
         let msg = 'Failed to register. Check console.';
-        const rawMessage =
-            error?.reason ||
-            error?.shortMessage ||
-            error?.info?.error?.message ||
-            error?.error?.message ||
-            error?.message ||
-            '';
+        // Collect all possible message text, including nested proxy/vendor fields.
+        const vendorMessage =
+            error?.info?.error?.data?.details?.vendorMessage ||  // RPC proxy wraps real error here
+            error?.data?.vendorMessage || '';
 
-        if (rawMessage.includes('Already registered')) {
+        const rawMessage = [
+            error?.reason,
+            error?.shortMessage,
+            error?.info?.error?.message,
+            error?.error?.message,
+            error?.message,
+            vendorMessage,
+        ].filter(Boolean).join(' ').toLowerCase();
+
+        if (rawMessage.includes('already registered')) {
             msg = 'You are already registered.';
-        } else if (rawMessage.includes('insufficient funds')) {
-            msg = 'Insufficient EDU-D for gas.';
+        } else if (
+            rawMessage.includes('insufficient funds') ||
+            rawMessage.includes('upfront cost exceeds') ||
+            rawMessage.includes('account balance')
+        ) {
+            msg = 'Insufficient EDU-D for gas. Visit the faucet.';
         } else if (error?.code === 'ACTION_REJECTED') {
             msg = 'Registration was rejected in MetaMask.';
         } else if (error?.code === 'CALL_EXCEPTION' || rawMessage.includes('missing revert data')) {
-            msg = 'Registration failed during contract simulation. Check the connected account, network, and contract state.';
+            msg = 'Registration failed during simulation. Check your network, account, and contract state.';
         }
 
         window.showTempMessage?.('walletStatus', `⚠️ ${msg}`, 6000, true);
