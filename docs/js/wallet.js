@@ -435,24 +435,30 @@ async function registerWallet(contract) {
         return;
     }
 
-    // --- FINAL CRITICAL FIX: HARDCODE GAS PRICE ---
-    // Use 1 Gwei (1,000,000,000 Wei) for a low, acceptable gas price on Besu.
-    const ONE_GWEI = 1000000000n; // Ethers.js BigInt for 1 Gwei
+    const FALLBACK_GAS_LIMIT = 150000n;
 
     try {
-        // 1. Manually estimate gas (This is where it currently fails, but we need the limit)
-        // We pass the hardcoded gasPrice to ensure the estimation request is well-formed.
-        const gasLimit = await contract.register.estimateGas({ gasPrice: ONE_GWEI });
-        console.log("✅ Gas estimate successful:", gasLimit.toString());
+        const alreadyRegistered = await checkRegistered(contract, userAddress);
+        if (alreadyRegistered) {
+            window.showTempMessage?.('walletStatus', '⚠️ You are already registered.', 4000, true);
+            await refreshRegistrationUI(contract, userAddress);
+            return;
+        }
 
-        // 2. Add a buffer
-        const bufferedGasLimit = (gasLimit * 120n) / 100n; // 20% buffer
+        // Preflight the call first to surface a revert reason when the RPC supports it.
+        await contract.register.staticCall();
 
-        // 3. Send the transaction with both the gasPrice and the estimated limit
-        const tx = await contract.register({
-            gasPrice: ONE_GWEI,      // Force the legacy gas price
-            gasLimit: bufferedGasLimit // Use the estimated limit
-        });
+        let gasLimit;
+        try {
+            const estimated = await contract.register.estimateGas();
+            gasLimit = (estimated * 120n) / 100n; // 20% buffer
+            console.log("✅ Gas estimate successful:", estimated.toString());
+        } catch (estimateError) {
+            console.warn('Gas estimation failed, falling back to fixed gas limit:', estimateError);
+            gasLimit = FALLBACK_GAS_LIMIT;
+        }
+
+        const tx = await contract.register({ gasLimit });
 
         window.showTempMessage?.('walletStatus', `⏳ Registration transaction sent...`, 5000);
 
@@ -470,13 +476,22 @@ async function registerWallet(contract) {
         console.error('Failed to register wallet:', error);
 
         let msg = 'Failed to register. Check console.';
+        const rawMessage =
+            error?.reason ||
+            error?.shortMessage ||
+            error?.info?.error?.message ||
+            error?.error?.message ||
+            error?.message ||
+            '';
 
-        if (error?.code === 'CALL_EXCEPTION' || error?.message?.includes('missing revert data')) {
-            msg = 'CRITICAL: Transaction signing/submission failed. Check MetaMask settings (Advanced -> Reset Account).';
+        if (rawMessage.includes('Already registered')) {
+            msg = 'You are already registered.';
+        } else if (rawMessage.includes('insufficient funds')) {
+            msg = 'Insufficient EDU-D for gas.';
         } else if (error?.code === 'ACTION_REJECTED') {
             msg = 'Registration was rejected in MetaMask.';
-        } else if (error?.message?.includes('Already registered')) {
-            msg = 'You are already registered.';
+        } else if (error?.code === 'CALL_EXCEPTION' || rawMessage.includes('missing revert data')) {
+            msg = 'Registration failed during contract simulation. Check the connected account, network, and contract state.';
         }
 
         window.showTempMessage?.('walletStatus', `⚠️ ${msg}`, 6000, true);
